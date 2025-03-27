@@ -1,0 +1,7 @@
+{
+  "name": "StoreNetGames",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
