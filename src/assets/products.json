@@ -1,0 +1,33 @@
+[
+    {
+      "id": 1,
+      "name": "Red Dead Redemption 2",
+      "price": 17.539,
+      "image": "assets/img/RDR2.webp"
+    },
+    {
+      "id": 2,
+      "name": "Minecraft",
+      "price": 26.499,
+      "image": "assets/img/minecraft.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Grand Theft Auto VI",
+      "price": 79.999,
+      "image": "assets/img/gta6.webp"
+    },
+    {
+      "id": 4,
+      "name": "The Binding of Isaac",
+      "price": 30.539,
+      "image": "assets/img/Isaac.jpg"
+    },
+    {
+      "id": 5,
+      "name": "R.E.P.O.",
+      "price": 22.539,
+      "image": "assets/img/repo.jpg"
+    }
+]
+  

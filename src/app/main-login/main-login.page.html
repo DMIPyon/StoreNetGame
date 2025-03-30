@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title slot="start" class="title-container">
+      <img src="assets/img/logo.png" alt="NetGames" class="header-logo">
+      <span class="title-text">NetGames</span>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="login-container">
+    <div class="login-box">
+      <div class="logo-container">
+        <img src="assets/img/logo.png" alt="StoreNetGames Logo" class="logo">
+        <h1>NetGames</h1>
+      </div>
+      
+      <div class="form-container">
+        <ion-item>
+          <ion-label position="floating">Correo electrónico</ion-label>
+          <ion-input type="email"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Contraseña</ion-label>
+          <ion-input type="password"></ion-input>
+        </ion-item>
+
+        <div class="button-container">
+          <ion-button expand="block" class="login-button">
+            Iniciar Sesión
+          </ion-button>
+          
+          <ion-button [routerLink]="['/register']" routerDirection="forward" expand="block" class="register-button" fill="outline">
+            Registrarse
+          </ion-button>
+
+          <ion-button [routerLink]="['/home']" routerDirection="forward" expand="block" class="register-button" fill="outline">
+            Volver a la página de inicio
+          </ion-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

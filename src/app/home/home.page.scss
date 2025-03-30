@@ -25,3 +25,254 @@
 #container a {
   text-decoration: none;
 }
+
+// Configuración del header
+ion-toolbar {
+  --background: #171a21;
+  --color: #ffffff;
+  padding: 0 16px;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  
+  .header-logo { 
+    height: 40px; 
+  }
+  
+  .title-text {
+    color: #ffffff;
+    font-size: 1.5rem;
+    transform: translateY(-10px);
+    display: inline-block;
+    line-height: 1;
+    padding: 0px 0px 0px 5px;
+  }
+}
+//asd
+
+.nav-links {
+  margin-left: 20px;
+  
+  ion-button {
+    --color: #b8b6b4;
+    
+    &:hover {
+      --color: #ffffff;
+    }
+  }
+}
+
+// Layout principal
+.content-container {
+  display: flex;
+  background: #1b2838;
+  min-height: 100%;
+}
+
+// Sidebar de categorías
+.sidebar {
+  width: 200px;
+  background: #141e2b;
+  padding: 20px 0;
+  
+  ion-list {
+    background: transparent;
+    ion-item {
+      --background: transparent;
+      --color: #b8b6b4;
+      &:hover { --color: #ffffff; }
+    }
+  }
+}
+
+//Contenido principal (Tarjetas juegos(
+.main-content {
+
+  padding: 20px;
+  
+  h2 {
+    color: #ffffff;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+  }
+}
+
+// Tarjeta de juego
+.game-card {
+  background: #16202d;
+  border-radius: 7px;
+  overflow: hidden;
+  height: 380px; // Altura total de la tarjeta
+  width: 100%;
+  transition: transform 0.2s;
+  
+  // Efecto hover
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    .image-container img { transform: scale(1.05); }
+  }
+  
+  // Contenedor de la imagen
+  .image-container {
+    height: 240px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.2s;
+    }
+
+  }
+  
+  // Información del juego
+  .game-info {
+    padding: 12px;
+    height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    //Talvez sacar
+    background: linear-gradient(to bottom, #16202d, #1b2838);
+    
+    // Título del juego
+    h3 {
+      color: #ffffff;
+      font-size: 1rem;
+      margin: 3px 0 8px 0;
+    }
+    
+    // Contenedor de precios
+    .price-container {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      
+      .original-price {
+        color: #738895;
+        text-decoration: line-through;
+        font-size: 0.8rem;
+      }
+      
+      .final-price {
+        color: #beee11;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Color de fondo general
+ion-content { --background: #1b2838; }
+
+.cart-button {
+  --color: #ffffff;
+
+  img{
+    width: 21px;
+    height: 21px;
+    margin-right: 5px;
+  }
+
+}
+
+.user-button {
+  --color: #ffffff;
+
+  img{
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+  
+  span {
+    color: #ffffff;
+  }
+}
+
+// Estilos para las tarjetas de productos
+.product-card {
+  margin: 12px;
+  background: #1e1e1e;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  height: 450px; // Altura fija para tarjetas más verticales
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+  }
+  
+  .image-container {
+    height: 300px; // Imagen más grande
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  
+  ion-card-header {
+    padding: 12px 16px;
+    
+    ion-card-title {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+  }
+  
+  ion-card-content {
+    padding: 0 16px 16px;
+    color: rgba(255, 255, 255, 0.7);
+    
+    p {
+      margin: 8px 0;
+      font-size: 0.9rem;
+    }
+    
+    strong {
+      color: white;
+    }
+  }
+}
+
+ion-button {
+  --background: #1b2838;
+  --border-radius: 8px;
+  margin-top: 4px;
+  
+  &:hover {
+    --background: #253241;
+  }
+}
+
+h2 {
+  color: white;
+  margin: 24px 0;
+  font-weight: 500;
+  font-size: 1.8rem;
+  letter-spacing: 0.5px;
+}
+// Configuración del grid
+//ion-grid { padding: 0 8px; }
+
+//ion-col {
+//  padding: 6px;
+//  flex: 0 0 180px; // Ancho fijo de las tarjetas
+//  max-width: 180px;
+//}

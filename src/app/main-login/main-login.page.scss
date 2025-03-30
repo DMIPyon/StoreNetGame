@@ -1,0 +1,119 @@
+// Configuración del header
+ion-toolbar {
+  --background: #171a21;
+  --color: #ffffff;
+  padding: 0 16px;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  
+  .header-logo { 
+    height: 40px; 
+  }
+  
+  .title-text {
+    color: #ffffff;
+    font-size: 1.5rem;
+    transform: translateY(-10px);
+    display: inline-block;
+    line-height: 1;
+    padding: 0px 0px 0px 5px;
+  }
+}
+
+// Color de fondo general
+ion-content {
+  --background: #1b2838;
+}
+
+// Contenedor principal
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  padding: 20px;
+}
+
+// Caja de login
+.login-box {
+  background: #16202d;
+  border-radius: 12px;
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+// Contenedor del logo
+.logo-container {
+  text-align: center;
+  margin-bottom: 30px;
+
+  .logo {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 15px;
+  }
+
+  h1 {
+    color: #ffffff;
+    font-size: 2rem;
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+// Contenedor del formulario
+.form-container {
+  ion-item {
+    --background: #1b2838;
+    --border-radius: 8px;
+    --color: #ffffff;
+    margin-bottom: 16px;
+
+    ion-label {
+      color: #b8b6b4;
+    }
+
+    ion-input {
+      --color: #ffffff;
+    }
+  }
+}
+
+// Contenedor de botones
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+
+  ion-button {
+    --border-radius: 8px;
+    height: 48px;
+    font-weight: 500;
+  }
+
+  .login-button {
+    --background: #66c0f4;
+    --color: #ffffff;
+
+    &:hover {
+      --background: #1999ff;
+    }
+  }
+
+  .register-button {
+    --color: #66c0f4;
+    --border-color: #66c0f4;
+
+    &:hover {
+      --color: #1999ff;
+      --border-color: #1999ff;
+    }
+  }
+}
