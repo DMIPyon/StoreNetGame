@@ -1,7 +1,4 @@
 <ion-header>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@7/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://cdn.jsdelivr.net/npm/ionicons@7/dist/ionicons/ionicons.js"></script>
-
   <ion-toolbar>
     <ion-title slot="start" class="title-container">
       <img src="assets/img/logo.png" alt="NetGames" class="header-logo">
@@ -14,56 +11,90 @@
     </div>
     
     <ion-buttons slot="end">
-      <ion-button class="cart-button">
-        <img src="assets/icons/cart.svg" alt="Carrito">
+      <ion-button routerLink="/cart" class="cart-button">
+        <ion-icon name="cart-outline"></ion-icon>
         <span>Carrito</span>
       </ion-button>
-      <ion-button [routerLink]="['/main-login']" routerDirection="forward" class="user-button">
-        <img src="assets/icons/user.svg" alt="Usuario">
+      <ion-button routerLink="/main-login" class="user-button">
+        <ion-icon name="person-outline"></ion-icon>
         <span>Iniciar Sesión</span>
-      </ion-button>      
+      </ion-button>
     </ion-buttons>
-  </ion-toolbar> 
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <!-- Barra de búsqueda -->
+  <div class="search-container">
+    <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="searchProducts()" placeholder="Buscar juegos..." class="custom-searchbar"></ion-searchbar>
+  </div>
+
   <div class="content-container">
+    <!-- Sidebar de categorías -->
     <div class="sidebar">
       <ion-list lines="none">
         <ion-item>
           <ion-label>Categorías</ion-label>
         </ion-item>
-        <ion-item>
-          <ion-label>Acción</ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-label>Aventura</ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-label>RPG</ion-label>
+        
+        <ion-item *ngFor="let category of categories" 
+                  [class.active]="selectedCategory === category.id"
+                  (click)="selectCategory(category.id)" button>
+          <ion-icon [name]="category.icon" slot="start"></ion-icon>
+          <ion-label>{{ category.name }}</ion-label>
         </ion-item>
       </ion-list>
     </div>
 
+    <!-- Contenido principal -->
     <div class="main-content">
-      <h2>Juegos Destacados</h2>
-      <ion-grid>
-        <ion-row>
-          <ion-col *ngFor="let product of products" size="6" size-md="4" size-lg="3">
-            <div class="game-card">
-              <div class="image-container">
-                <img [src]="product.image" [alt]="product.name">
-              </div>
-              <div class="game-info">
-                <h3>{{product.name}}</h3>
-                <div class="price-container">
-                  <div class="final-price">${{product.price}}</div>
+      <!-- Indicador de carga -->
+      <div class="loading-container" *ngIf="isLoading">
+        <ion-spinner name="dots"></ion-spinner>
+        <p>Cargando juegos...</p>
+      </div>
+
+      <!-- Si no hay resultados -->
+      <div class="no-results" *ngIf="!isLoading && products.length === 0">
+        <ion-icon name="search"></ion-icon>
+        <h3>No se encontraron juegos</h3>
+        <p>Intenta con otra búsqueda o categoría</p>
+      </div>
+
+      <!-- Juegos Destacados -->
+      <ng-container *ngIf="!isLoading && products.length > 0">
+        <h2>Juegos Destacados</h2>
+        <ion-grid>
+          <ion-row>
+            <ion-col *ngFor="let product of products" size="6" size-md="4" size-lg="3">
+              <div class="game-card" (click)="viewProductDetails(product.id)">
+                <div class="image-container">
+                  <img [src]="product.image" [alt]="product.name" loading="lazy">
+                  <div class="discount-badge" *ngIf="product.discount">-{{product.discount}}%</div>
+                </div>
+                <div class="game-info">
+                  <h3>{{product.name}}</h3>
+                  
+                  <!-- Desarrollador si está disponible -->
+                  <p class="developer" *ngIf="product.developer">{{product.developer}}</p>
+                  
+                  <!-- Contenedor de precios -->
+                  <div class="price-container">
+                    <div class="price-tag">
+                      <span *ngIf="product.discount" class="discount-badge">-{{product.discount}}%</span>
+                      <span *ngIf="product.originalPrice && product.originalPrice > product.price" class="original-price">{{product.originalPrice | formatClp}}</span>
+                      <span class="final-price">{{product.price | formatClp}}</span>
+                    </div>
+                    <button class="add-cart-btn" (click)="addToCart(product); $event.stopPropagation()">
+                      <ion-icon name="cart-outline"></ion-icon>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ng-container>
     </div>
   </div>
 </ion-content>

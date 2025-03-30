@@ -2,32 +2,151 @@
     {
       "id": 1,
       "name": "Red Dead Redemption 2",
-      "price": 17.539,
-      "image": "assets/img/RDR2.webp"
+      "price": 19000,
+      "originalPrice": 45000,
+      "image": "assets/img/RDR2.webp",
+      "description": "América, 1899. El ocaso del Salvaje Oeste ha comenzado y las fuerzas de la ley dan caza a las últimas bandas de forajidos. Los que no se rinden o sucumben, son asesinados. Tras un desastroso atraco fallido en la ciudad de Blackwater, Arthur Morgan y la banda de Van der Linde se ven obligados a huir.",
+      "category": "Acción",
+      "developer": "Rockstar Games",
+      "releaseDate": "05/12/2019",
+      "tags": ["Mundo abierto", "Western", "Acción", "Aventura"],
+      "rating": 4.9,
+      "discount": 71,
+      "requirements": {
+        "minimum": {
+          "os": "Windows 7",
+          "processor": "Intel Core i5-2500K / AMD FX-6300",
+          "memory": "8 GB RAM",
+          "graphics": "Nvidia GeForce GTX 770 2GB / AMD Radeon R9 280 3GB",
+          "storage": "150 GB"
+        },
+        "recommended": {
+          "os": "Windows 10",
+          "processor": "Intel Core i7-4770K / AMD Ryzen 5 1500X",
+          "memory": "12 GB RAM",
+          "graphics": "Nvidia GeForce GTX 1060 6GB / AMD Radeon RX 480 4GB",
+          "storage": "150 GB"
+        }
+      }
     },
     {
       "id": 2,
       "name": "Minecraft",
-      "price": 26.499,
-      "image": "assets/img/minecraft.jpg"
+      "price": 15000,
+      "originalPrice": 20000,
+      "image": "assets/img/minecraft.jpg",
+      "description": "Explora mundos infinitos y construye desde sencillas casas hasta grandiosos castillos. Juega en modo creativo con recursos ilimitados o extrae en el mundo en modo supervivencia, fabricando armas y armaduras para defenderte de las criaturas peligrosas.",
+      "category": "Aventura",
+      "developer": "Mojang Studios",
+      "releaseDate": "18/11/2011",
+      "tags": ["Sandbox", "Supervivencia", "Construcción", "Multijugador"],
+      "rating": 4.8,
+      "discount": 12,
+      "requirements": {
+        "minimum": {
+          "os": "Windows 7 o superior",
+          "processor": "Intel Core i3-3210 / AMD A8-7600",
+          "memory": "4 GB RAM",
+          "graphics": "Intel HD Graphics 4000 o AMD Radeon R5",
+          "storage": "4 GB"
+        },
+        "recommended": {
+          "os": "Windows 10",
+          "processor": "Intel Core i5-4690 / AMD A10-7800",
+          "memory": "8 GB RAM",
+          "graphics": "GeForce 700 Series / AMD Radeon Rx 200 Series",
+          "storage": "8 GB"
+        }
+      }
     },
     {
       "id": 3,
       "name": "Grand Theft Auto VI",
-      "price": 79.999,
-      "image": "assets/img/gta6.webp"
+      "price": 70000,
+      "originalPrice": 70000,
+      "image": "assets/img/gta6.webp",
+      "description": "Bienvenido a Vice City, una metrópolis llena de luces de neón, glamour y crimen organizado. Asume el papel de dos protagonistas, Lucia y Jason, en la entrada más ambiciosa de la serie GTA. Explora playas, pantanos, clubes nocturnos y más en esta nueva visión de Miami ficticia de Rockstar Games.",
+      "category": "Acción",
+      "developer": "Rockstar Games",
+      "releaseDate": "Otoño 2025",
+      "tags": ["Mundo abierto", "Crimen", "Acción", "Adultos"],
+      "rating": 5.0,
+      "requirements": {
+        "minimum": {
+          "os": "Windows 10",
+          "processor": "Intel Core i5-8600K / AMD Ryzen 5 3600",
+          "memory": "16 GB RAM",
+          "graphics": "NVIDIA GeForce GTX 1070 / AMD Radeon RX 5700",
+          "storage": "150 GB"
+        },
+        "recommended": {
+          "os": "Windows 10/11",
+          "processor": "Intel Core i7-10700K / AMD Ryzen 7 5800X",
+          "memory": "32 GB RAM",
+          "graphics": "NVIDIA GeForce RTX 3070 / AMD Radeon RX 6800 XT",
+          "storage": "150 GB SSD"
+        }
+      }
     },
     {
       "id": 4,
       "name": "The Binding of Isaac",
-      "price": 30.539,
-      "image": "assets/img/Isaac.jpg"
+      "price": 8000,
+      "originalPrice": 15000,
+      "image": "assets/img/Isaac.jpg",
+      "description": "The Binding of Isaac es un juego de acción RPG generado aleatoriamente con elementos de tipo roguelike. Siguiendo a Isaac, un niño que escapa de su madre para salvar su vida, los jugadores descubrirán extraños tesoros que cambiarán la forma de Isaac, le darán habilidades sobrehumanas y le permitirán luchar contra hordas de criaturas misteriosas.",
+      "category": "RPG",
+      "developer": "Edmund McMillen",
+      "releaseDate": "28/09/2011",
+      "tags": ["Roguelike", "Indie", "Difícil", "Mazmorras"],
+      "rating": 4.7,
+      "discount": 34,
+      "requirements": {
+        "minimum": {
+          "os": "Windows XP/Vista/7/8/10",
+          "processor": "Core 2 Duo",
+          "memory": "2 GB RAM",
+          "graphics": "DirectX 9 compatible",
+          "storage": "449 MB"
+        },
+        "recommended": {
+          "os": "Windows 7/8/10",
+          "processor": "Core 2 Duo",
+          "memory": "4 GB RAM",
+          "graphics": "DirectX 9 compatible",
+          "storage": "449 MB"
+        }
+      }
     },
     {
       "id": 5,
       "name": "R.E.P.O.",
-      "price": 22.539,
-      "image": "assets/img/repo.jpg"
+      "price": 12000,
+      "originalPrice": 19000,
+      "image": "assets/img/repo.jpg",
+      "description": "R.E.P.O. combina la exploración espacial con la supervivencia. Como agente de Recuperación Espacial de Propiedades Abandonadas, deberás aventurarte en estaciones espaciales abandonadas, recolectando valiosos recursos mientras evitas amenazas alienígenas y trampas mortales.",
+      "category": "Estrategia",
+      "developer": "Pixel Void Studios",
+      "releaseDate": "15/03/2023",
+      "tags": ["Espacio", "Horror", "Supervivencia", "Indie"],
+      "rating": 4.4,
+      "discount": 36,
+      "requirements": {
+        "minimum": {
+          "os": "Windows 8.1/10",
+          "processor": "Intel Core i3-4160 / AMD FX-8350",
+          "memory": "8 GB RAM",
+          "graphics": "NVIDIA GTX 660 / AMD Radeon R7 370",
+          "storage": "20 GB"
+        },
+        "recommended": {
+          "os": "Windows 10/11",
+          "processor": "Intel Core i5-8400 / AMD Ryzen 5 2600X",
+          "memory": "16 GB RAM",
+          "graphics": "NVIDIA GTX 1060 / AMD RX 580",
+          "storage": "20 GB SSD"
+        }
+      }
     }
 ]
   

@@ -1,0 +1,363 @@
+ion-toolbar {
+  --background: #171a21;
+  --color: #ffffff;
+  
+  ion-back-button {
+    --color: #66c0f4;
+  }
+  
+  ion-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+  
+  ion-button {
+    --color: #66c0f4;
+  }
+}
+
+ion-content {
+  --background: #1b2838;
+}
+
+// Estado de carga
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  
+  ion-spinner {
+    width: 50px;
+    height: 50px;
+    color: #66c0f4;
+    margin-bottom: 15px;
+  }
+  
+  p {
+    color: #8f98a0;
+    font-size: 1rem;
+    margin: 0;
+  }
+}
+
+// Mensaje de no encontrado
+.not-found {
+  text-align: center;
+  padding: 40px 20px;
+  background: #1a3749;
+  border-radius: 8px;
+  margin: 40px auto;
+  max-width: 500px;
+  
+  ion-icon {
+    font-size: 64px;
+    color: #f14668;
+    margin-bottom: 20px;
+  }
+  
+  h2 {
+    color: #ffffff;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    color: #8f98a0;
+    margin-bottom: 25px;
+  }
+  
+  ion-button {
+    --background: #66c0f4;
+    --background-hover: #1a9fff;
+    --color: #ffffff;
+  }
+}
+
+// Contenedor principal
+.game-details-container {
+  background: #1b2838;
+  min-height: 100%;
+}
+
+// Banner del juego
+.game-banner {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  
+  .game-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(27,40,56,1));
+    display: flex;
+    align-items: flex-end;
+  }
+  
+  .game-title {
+    padding: 30px;
+    width: 100%;
+    
+    h1 {
+      color: #ffffff;
+      font-size: 2.5rem;
+      margin: 0;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    p {
+      color: #66c0f4;
+      font-size: 1.1rem;
+      margin: 10px 0 0 0;
+    }
+  }
+}
+
+// Contenido principal
+.main-content {
+  padding: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+// Sección de precio
+.price-section {
+  background: #1a3749;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  
+  .discount-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #4c6b22;
+    color: #a4d007;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-size: 1.2rem;
+  }
+  
+  .price-info {
+    margin-bottom: 20px;
+    
+    .original-price {
+      color: #8f98a0;
+      text-decoration: line-through;
+      font-size: 1.1rem;
+      margin-bottom: 5px;
+    }
+    
+    .final-price {
+      color: #beee11;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+  }
+  
+  ion-button {
+    --background: #beee11;
+    --background-hover: #a4d007;
+    --color: #111920;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+}
+
+// Descripción
+.description-section {
+  margin-bottom: 30px;
+  
+  h2 {
+    color: #ffffff;
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #2a475e;
+    padding-bottom: 10px;
+  }
+  
+  p {
+    color: #acb2b8;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+}
+
+// Características
+.features-section {
+  margin-bottom: 30px;
+  
+  h2 {
+    color: #ffffff;
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #2a475e;
+    padding-bottom: 10px;
+  }
+  
+  ion-list {
+    background: transparent;
+    padding: 0;
+    
+    ion-item {
+      --background: #1a3749;
+      --color: #ffffff;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      
+      ion-icon {
+        color: #66c0f4;
+        font-size: 1.2rem;
+        margin-right: 10px;
+      }
+      
+      ion-label {
+        display: flex;
+        flex-direction: column;
+        
+        .feature-title {
+          color: #8f98a0;
+          font-size: 0.8rem;
+          margin-bottom: 3px;
+        }
+        
+        .feature-value {
+          color: #ffffff;
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+
+// Requisitos del sistema
+.requirements-section {
+  margin-bottom: 30px;
+  
+  h2 {
+    color: #ffffff;
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #2a475e;
+    padding-bottom: 10px;
+  }
+  
+  .requirements-card {
+    background: #1a3749;
+    border-radius: 8px;
+    padding: 20px;
+    height: 100%;
+    
+    h3 {
+      color: #66c0f4;
+      font-size: 1.2rem;
+      margin-top: 0;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    
+    ion-list {
+      background: transparent;
+      padding: 0;
+      
+      ion-item {
+        --background: transparent;
+        --color: #ffffff;
+        --border-color: rgba(255, 255, 255, 0.1);
+        
+        ion-icon {
+          color: #66c0f4;
+          font-size: 1.2rem;
+        }
+        
+        ion-label {
+          display: flex;
+          flex-direction: column;
+          
+          .req-title {
+            color: #8f98a0;
+            font-size: 0.8rem;
+            margin-bottom: 3px;
+          }
+          
+          .req-value {
+            color: #ffffff;
+            font-size: 0.95rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Ajustes para modo responsivo
+@media (max-width: 768px) {
+  .game-banner {
+    height: 300px;
+    
+    .game-title {
+      padding: 20px;
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      p {
+        font-size: 1rem;
+      }
+    }
+  }
+  
+  .main-content {
+    padding: 20px;
+  }
+  
+  .price-section {
+    .price-info {
+      .final-price {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .game-banner {
+    height: 200px;
+    
+    .game-title {
+      padding: 15px;
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  }
+  
+  .main-content {
+    padding: 15px;
+  }
+  
+  .price-section {
+    .discount-badge {
+      top: 10px;
+      right: 10px;
+      font-size: 1rem;
+    }
+  }
+} 

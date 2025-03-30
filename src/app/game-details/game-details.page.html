@@ -1,0 +1,185 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" text="Regresar"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detalles del Juego</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/cart">
+        <ion-icon name="cart-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Estado de carga -->
+  <div class="loading-container" *ngIf="isLoading">
+    <ion-spinner name="dots"></ion-spinner>
+    <p>Cargando detalles...</p>
+  </div>
+
+  <!-- Contenido cuando no se encuentra el producto -->
+  <div class="not-found" *ngIf="!isLoading && !product">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <h2>Juego no encontrado</h2>
+    <p>El juego que buscas no está disponible o no existe</p>
+    <ion-button routerLink="/home">
+      <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+      Volver a la tienda
+    </ion-button>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="game-details-container" *ngIf="!isLoading && product">
+    <!-- Banner del juego -->
+    <div class="game-banner">
+      <img [src]="product.image" [alt]="product.name" class="game-image" loading="lazy">
+      <div class="banner-overlay">
+        <div class="game-title">
+          <h1>{{ product.name }}</h1>
+          <p *ngIf="product.developer">{{ product.developer }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <!-- Sección de precio y compra -->
+      <div class="price-section">
+        <div class="discount-badge" *ngIf="product.discount">-{{ product.discount }}%</div>
+        
+        <div class="price-info">
+          <div class="original-price" *ngIf="product.originalPrice && product.originalPrice > product.price">
+            {{product.originalPrice | formatClp}}
+          </div>
+          <div class="final-price">{{product.price | formatClp}}</div>
+        </div>
+        
+        <ion-button expand="block" (click)="addToCart()">
+          <ion-icon name="cart-outline" slot="start"></ion-icon>
+          Añadir al carrito
+        </ion-button>
+      </div>
+
+      <!-- Descripción del juego -->
+      <div class="description-section">
+        <h2>Acerca de este juego</h2>
+        <p>{{ product.description || 'No hay descripción disponible para este juego.' }}</p>
+      </div>
+
+      <!-- Características -->
+      <div class="features-section">
+        <h2>Características</h2>
+        <ion-list lines="none">
+          <ion-item *ngIf="product.category">
+            <ion-icon name="pricetag-outline" slot="start"></ion-icon>
+            <ion-label>
+              <span class="feature-title">Género</span>
+              <span class="feature-value">{{ product.category }}</span>
+            </ion-label>
+          </ion-item>
+          
+          <ion-item *ngIf="product.developer">
+            <ion-icon name="code-slash-outline" slot="start"></ion-icon>
+            <ion-label>
+              <span class="feature-title">Desarrollador</span>
+              <span class="feature-value">{{ product.developer }}</span>
+            </ion-label>
+          </ion-item>
+          
+          <ion-item *ngIf="product.releaseDate">
+            <ion-icon name="calendar-outline" slot="start"></ion-icon>
+            <ion-label>
+              <span class="feature-title">Fecha de lanzamiento</span>
+              <span class="feature-value">{{ product.releaseDate }}</span>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <!-- Requisitos del sistema si están disponibles -->
+      <div class="requirements-section" *ngIf="product.requirements">
+        <h2>Requisitos del sistema</h2>
+        
+        <ion-grid>
+          <ion-row>
+            <!-- Requisitos mínimos -->
+            <ion-col size-md="6" size="12" *ngIf="product.requirements.minimum">
+              <div class="requirements-card">
+                <h3>Mínimos</h3>
+                <ion-list lines="none">
+                  <ion-item *ngIf="product.requirements.minimum.os">
+                    <ion-icon name="desktop-outline" slot="start"></ion-icon>
+                    <ion-label>
+                      <span class="req-title">Sistema operativo</span>
+                      <span class="req-value">{{ product.requirements.minimum.os }}</span>
+                    </ion-label>
+                  </ion-item>
+                  
+                  <ion-item *ngIf="product.requirements.minimum.processor">
+                    <ion-icon name="hardware-chip-outline" slot="start"></ion-icon>
+                    <ion-label>
+                      <span class="req-title">Procesador</span>
+                      <span class="req-value">{{ product.requirements.minimum.processor }}</span>
+                    </ion-label>
+                  </ion-item>
+                  
+                  <ion-item *ngIf="product.requirements.minimum.memory">
+                    <ion-icon name="layers-outline" slot="start"></ion-icon>
+                    <ion-label>
+                      <span class="req-title">Memoria</span>
+                      <span class="req-value">{{ product.requirements.minimum.memory }}</span>
+                    </ion-label>
+                  </ion-item>
+                  
+                  <ion-item *ngIf="product.requirements.minimum.graphics">
+                    <ion-icon name="tv-outline" slot="start"></ion-icon>
+                    <ion-label>
+                      <span class="req-title">Gráficos</span>
+                      <span class="req-value">{{ product.requirements.minimum.graphics }}</span>
+                    </ion-label>
+                  </ion-item>
+                  
+                  <ion-item *ngIf="product.requirements.minimum.storage">
+                    <ion-icon name="save-outline" slot="start"></ion-icon>
+                    <ion-label>
+                      <span class="req-title">Almacenamiento</span>
+                      <span class="req-value">{{ product.requirements.minimum.storage }}</span>
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
+              </div>
+            </ion-col>
+            
+            <!-- Requisitos recomendados -->
+            <ion-col size-md="6" size="12" *ngIf="product.requirements.recommended">
+              <div class="requirements-card">
+                <h3>Recomendados</h3>
+                <div class="req-item">
+                  <span class="req-label">Sistema operativo:</span>
+                  <span class="req-value">{{ product.requirements.recommended.os }}</span>
+                </div>
+                <div class="req-item">
+                  <span class="req-label">Procesador:</span>
+                  <span class="req-value">{{ product.requirements.recommended.processor }}</span>
+                </div>
+                <div class="req-item">
+                  <span class="req-label">Memoria:</span>
+                  <span class="req-value">{{ product.requirements.recommended.memory }}</span>
+                </div>
+                <div class="req-item">
+                  <span class="req-label">Gráficos:</span>
+                  <span class="req-value">{{ product.requirements.recommended.graphics }}</span>
+                </div>
+                <div class="req-item">
+                  <span class="req-label">Almacenamiento:</span>
+                  <span class="req-value">{{ product.requirements.recommended.storage }}</span>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </div>
+  </div>
+</ion-content> 
