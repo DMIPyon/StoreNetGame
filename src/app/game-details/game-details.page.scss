@@ -547,4 +547,22 @@ ion-content {
       font-size: 1rem;
     }
   }
+}
+
+.cart-button {
+  position: relative;
+  
+  .cart-badge {
+    margin-left: 5px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+    font-size: 11px;
+    --padding-start: 5px;
+    --padding-end: 5px;
+    --padding-top: 3px;
+    --padding-bottom: 3px;
+    height: auto;
+    border-radius: 10px;
+  }
 } 

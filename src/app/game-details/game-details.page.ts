@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ToastController } from '@ionic/angular';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProductService, Product } from '../services/product.service';
 import { CartService } from '../services/cart.service';
@@ -16,11 +16,13 @@ import { FormatClpPipe } from '../pipes/format-clp.pipe';
 export class GameDetailsPage implements OnInit {
   product: Product | undefined;
   isLoading = true;
+  cartItemCount: number = 0;
   
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private cartService: CartService
+    private cartService: CartService,
+    private toastController: ToastController
   ) {}
 
   ngOnInit() {
@@ -46,20 +48,73 @@ export class GameDetailsPage implements OnInit {
         });
       }
     });
+    
+    // Suscribirse al contador de elementos del carrito
+    this.cartService.getCartItemCount().subscribe(count => {
+      this.cartItemCount = count;
+    });
   }
 
   // Agregar al carrito
   addToCart() {
     if (this.product) {
       this.cartService.addToCart(this.product);
-      this.showToast(`${this.product.name} añadido al carrito`);
+      
+      // Crear notificación personalizada
+      this.showCustomNotification();
     }
   }
 
-  // Mostrar mensaje de confirmación (Toast)
-  private showToast(message: string) {
-    // Esta funcionalidad se agregará cuando se implementen los componentes Ionic adecuados
-    console.log('Toast message:', message);
+  // Mostrar notificación personalizada
+  private showCustomNotification() {
+    // Eliminar notificación anterior si existe
+    const existingNotification = document.querySelector('.custom-notification');
+    if (existingNotification) {
+      existingNotification.remove();
+    }
+    
+    // Crear elemento de notificación
+    const notification = document.createElement('div');
+    notification.className = 'custom-notification';
+    notification.innerHTML = `
+      <div class="notification-content">
+        <div class="notification-header">${this.product?.name}</div>
+        <div class="notification-message">Añadido al carrito</div>
+        <div class="notification-icon">
+          <ion-icon name="checkmark-circle"></ion-icon>
+        </div>
+      </div>
+    `;
+    
+    // Añadir al body
+    document.body.appendChild(notification);
+    
+    // Eliminar después de 2.5 segundos
+    setTimeout(() => {
+      notification.classList.add('hide');
+      setTimeout(() => {
+        notification.remove();
+      }, 500);
+    }, 2500);
+  }
+
+  // Método original de toast (mantenido como respaldo)
+  private async showToast(message: string) {
+    const toast = await this.toastController.create({
+      header: this.product?.name,
+      message: 'Añadido al carrito',
+      duration: 2500,
+      position: 'bottom',
+      cssClass: 'cart-toast product-added-toast',
+      buttons: [
+        {
+          icon: 'checkmark-circle',
+          role: 'cancel'
+        }
+      ]
+    });
+    
+    await toast.present();
   }
 
   // Formatear precio para mostrar con 2 decimales y separador de miles

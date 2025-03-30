@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ToastController } from '@ionic/angular';
 import { RouterModule, Router } from '@angular/router';
 import { Product, Category, ProductService } from '../services/product.service';
 import { CartService } from '../services/cart.service';
@@ -21,11 +21,13 @@ export class HomePage implements OnInit {
   selectedCategory: number = 0;
   isLoading: boolean = true;
   searchTerm: string = '';
+  cartItemCount: number = 0;
   
   constructor(
     private productService: ProductService,
     private cartService: CartService,
-    private router: Router
+    private router: Router,
+    private toastController: ToastController
   ) {}
   
   ngOnInit() {
@@ -43,6 +45,11 @@ export class HomePage implements OnInit {
     // Suscribirse al estado de carga
     this.productService.getLoadingState().subscribe(isLoading => {
       this.isLoading = isLoading;
+    });
+    
+    // Suscribirse al contador de elementos del carrito
+    this.cartService.getCartItemCount().subscribe(count => {
+      this.cartItemCount = count;
     });
   }
   
@@ -79,7 +86,40 @@ export class HomePage implements OnInit {
   // Agregar al carrito
   addToCart(product: Product) {
     this.cartService.addToCart(product);
-    this.showToast(`${product.name} añadido al carrito`);
+    this.showCustomNotification(product.name);
+  }
+  
+  // Mostrar notificación personalizada
+  private showCustomNotification(productName: string) {
+    // Eliminar notificación anterior si existe
+    const existingNotification = document.querySelector('.custom-notification');
+    if (existingNotification) {
+      existingNotification.remove();
+    }
+    
+    // Crear elemento de notificación
+    const notification = document.createElement('div');
+    notification.className = 'custom-notification';
+    notification.innerHTML = `
+      <div class="notification-content">
+        <div class="notification-header">${productName}</div>
+        <div class="notification-message">Añadido al carrito</div>
+        <div class="notification-icon">
+          <ion-icon name="checkmark-circle"></ion-icon>
+        </div>
+      </div>
+    `;
+    
+    // Añadir al body
+    document.body.appendChild(notification);
+    
+    // Eliminar después de 2.5 segundos
+    setTimeout(() => {
+      notification.classList.add('hide');
+      setTimeout(() => {
+        notification.remove();
+      }, 500);
+    }, 2500);
   }
   
   // Ver detalles del producto
@@ -87,10 +127,26 @@ export class HomePage implements OnInit {
     this.router.navigate(['/game-details', productId]);
   }
   
-  // Mostrar mensaje de confirmación (Toast)
-  private showToast(message: string) {
-    // Esta funcionalidad se agregará cuando se implementen los componentes Ionic adecuados
-    console.log('Toast message:', message);
+  // Método original de toast (mantenido como respaldo)
+  private async showToast(message: string) {
+    // Extraer el nombre del producto del mensaje
+    const productName = message.replace(' añadido al carrito correctamente', '');
+    
+    const toast = await this.toastController.create({
+      header: productName,
+      message: 'Añadido al carrito',
+      duration: 2500,
+      position: 'bottom',
+      cssClass: 'cart-toast product-added-toast',
+      buttons: [
+        {
+          icon: 'checkmark-circle',
+          role: 'cancel'
+        }
+      ]
+    });
+    
+    await toast.present();
   }
   
   // Formatear precio para mostrar con 2 decimales y separador de miles

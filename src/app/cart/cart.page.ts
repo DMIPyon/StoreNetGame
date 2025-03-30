@@ -95,12 +95,38 @@ export class CartPage implements OnInit {
   }
 
   async presentToast(message: string) {
+    let cssClass = 'cart-toast';
+    let formattedMessage = message;
+    
+    // Verificar si es un mensaje de actualización de cantidad
+    if (message.includes('Cantidad actualizada:')) {
+      cssClass = 'cart-toast quantity-updated-toast';
+      
+      // Extraer el nombre del producto y la cantidad
+      const match = message.match(/Cantidad actualizada: (.*) \((\d+)\)/);
+      if (match) {
+        const productName = match[1];
+        const quantity = match[2];
+        
+        formattedMessage = `
+          <div class="product-name">${productName}</div>
+          <div class="quantity-label">Cantidad: ${quantity}</div>
+        `;
+      }
+    }
+    
     const toast = await this.toastController.create({
-      message,
+      message: formattedMessage,
       duration: 2000,
       position: 'bottom',
-      color: 'success',
-      cssClass: 'custom-toast'
+      color: message.includes('eliminado') ? 'danger' : undefined,
+      cssClass: cssClass,
+      buttons: [
+        {
+          icon: message.includes('eliminado') ? 'close-circle' : 'checkmark-circle',
+          role: 'cancel'
+        }
+      ]
     });
     await toast.present();
   }

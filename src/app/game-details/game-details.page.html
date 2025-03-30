@@ -5,8 +5,9 @@
     </ion-buttons>
     <ion-title>Detalles del Juego</ion-title>
     <ion-buttons slot="end">
-      <ion-button routerLink="/cart">
+      <ion-button routerLink="/cart" class="cart-button">
         <ion-icon name="cart-outline"></ion-icon>
+        <ion-badge *ngIf="cartItemCount > 0" color="danger" class="cart-badge">{{ cartItemCount }}</ion-badge>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

@@ -39,11 +39,11 @@
           <div class="item-actions">
             <div class="quantity-control">
               <button class="quantity-btn" (click)="updateQuantity(item, -1)" [disabled]="item.quantity <= 1">
-                <ion-icon name="remove"></ion-icon>
+                <span class="button-symbol">−</span>
               </button>
               <span class="quantity">{{ item.quantity }}</span>
               <button class="quantity-btn" (click)="updateQuantity(item, 1)">
-                <ion-icon name="add"></ion-icon>
+                <span class="button-symbol">+</span>
               </button>
             </div>
             <button class="remove-btn" (click)="removeItem(item)">

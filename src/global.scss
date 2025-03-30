@@ -35,3 +35,240 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+// Estilos para el toast de confirmación del carrito
+.cart-toast {
+  --background: #2a475e;
+  --color: white;
+  --border-radius: 8px;
+  --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  font-weight: 500;
+  text-align: center;
+  width: 90%;
+  max-width: 360px;
+  margin: 0 auto;
+  
+  .toast-wrapper {
+    border-radius: 8px;
+    padding: 12px 16px;
+    border-left: 4px solid #66c0f4;
+  }
+  
+  .toast-message {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  
+  ion-icon {
+    font-size: 18px;
+    margin-right: 8px;
+    color: #66c0f4;
+  }
+}
+
+// Estilo específico para toast de actualización de cantidad
+.quantity-updated-toast {
+  --background: #1a3749;
+  
+  .toast-wrapper {
+    border-left-color: #ff9f1c;
+  }
+  
+  .toast-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    .product-name {
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+    
+    .quantity-label {
+      font-size: 14px;
+      color: #ff9f1c;
+      font-weight: 600;
+    }
+  }
+}
+
+// Estilo para toast de producto añadido al carrito
+.product-added-toast {
+  --background: rgba(26, 55, 73, 0.95);
+  --box-shadow: 0 6px 25px rgba(0, 0, 0, 0.7);
+  --min-width: 280px;
+  --max-width: 400px;
+  --min-height: 100px;
+  position: fixed !important;
+  top: unset !important;
+  bottom: 20px !important;
+  left: unset !important;
+  right: 20px !important;
+  transform: none !important;
+  z-index: 9999 !important;
+  animation: toastPop 0.5s ease-out forwards;
+  
+  .toast-wrapper {
+    border-left: 5px solid #66c0f4;
+    padding: 18px;
+    border-radius: 12px;
+    backdrop-filter: blur(8px);
+    margin: 0;
+    position: relative;
+    box-shadow: 0 0 20px rgba(102, 192, 244, 0.4), inset 0 0 10px rgba(102, 192, 244, 0.1);
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(102, 192, 244, 0.1), transparent 80%);
+      z-index: -1;
+    }
+  }
+  
+  .toast-header {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 10px;
+    text-align: center;
+    padding: 0;
+    background: transparent;
+    border: none;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  }
+  
+  .toast-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #75ccff;
+    font-weight: 600;
+    text-align: center;
+    padding: 0;
+    letter-spacing: 0.5px;
+  }
+  
+  ion-button {
+    margin-top: 10px;
+  }
+  
+  ion-icon {
+    font-size: 22px;
+    margin-bottom: 4px;
+    color: #4caf50;
+    filter: drop-shadow(0 0 3px rgba(76, 175, 80, 0.5));
+  }
+}
+
+@keyframes toastPop {
+  0% {
+    opacity: 0;
+    transform: translateX(50px) scale(0.8) !important;
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(0) scale(1.05) !important;
+  }
+  70% {
+    transform: translateX(0) scale(0.95) !important;
+  }
+  100% {
+    transform: translateX(0) scale(1) !important;
+  }
+}
+
+// Estilo para la notificación personalizada
+.custom-notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: rgba(26, 55, 73, 0.95);
+  border-radius: 12px;
+  padding: 0;
+  width: 300px;
+  z-index: 9999;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.7),
+              0 0 20px rgba(102, 192, 244, 0.4);
+  animation: notificationSlideIn 0.5s ease-out forwards;
+  transition: all 0.3s ease;
+  border-left: 5px solid #66c0f4;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  
+  &.hide {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(102, 192, 244, 0.15), transparent 80%);
+    z-index: 0;
+  }
+  
+  .notification-content {
+    position: relative;
+    padding: 18px;
+    z-index: 1;
+  }
+  
+  .notification-header {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 10px;
+    text-align: center;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  }
+  
+  .notification-message {
+    font-size: 15px;
+    color: #75ccff;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+  
+  .notification-icon {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    
+    ion-icon {
+      font-size: 28px;
+      color: #4caf50;
+      filter: drop-shadow(0 0 4px rgba(76, 175, 80, 0.6));
+    }
+  }
+}
+
+@keyframes notificationSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(80px) scale(0.9);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(-10px) scale(1.02);
+  }
+  80% {
+    transform: translateX(5px) scale(0.98);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+  }
+}

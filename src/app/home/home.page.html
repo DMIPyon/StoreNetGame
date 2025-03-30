@@ -14,6 +14,7 @@
       <ion-button routerLink="/cart" class="cart-button">
         <ion-icon name="cart-outline"></ion-icon>
         <span>Carrito</span>
+        <ion-badge *ngIf="cartItemCount > 0" color="danger" class="cart-badge">{{ cartItemCount }}</ion-badge>
       </ion-button>
       <ion-button routerLink="/main-login" class="user-button">
         <ion-icon name="person-outline"></ion-icon>
