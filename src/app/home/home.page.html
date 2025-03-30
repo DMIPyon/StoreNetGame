@@ -66,7 +66,7 @@
         <h2>Juegos Destacados</h2>
         <ion-grid>
           <ion-row>
-            <ion-col *ngFor="let product of products" size="6" size-md="4" size-lg="3">
+            <ion-col *ngFor="let product of filteredProducts" size="6" size-md="4" size-lg="3">
               <div class="game-card" (click)="viewProductDetails(product.id)">
                 <div class="image-container">
                   <img [src]="product.image" [alt]="product.name" loading="lazy">

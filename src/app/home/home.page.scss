@@ -131,31 +131,49 @@ ion-toolbar {
   background: #16202d;
   border-radius: 7px;
   overflow: hidden;
-  height: 420px; // Altura total de la tarjeta (aumentada para botón)
+  height: 460px; // Altura ajustada para la imagen más grande
   width: 100%;
-  transition: transform 0.2s, box-shadow 0.3s;
+  transition: all 0.3s ease;
   cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
   
   // Efecto hover
   &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
     
     .image-container img { 
-      transform: scale(1.05); 
+      transform: scale(1.08); 
     }
   }
   
   // Contenedor de la imagen
   .image-container {
-    height: 200px;
+    height: 240px;
     position: relative;
+    overflow: hidden;
+    border-radius: 7px 7px 0 0;
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 40px;
+      background: linear-gradient(to top, rgba(22, 32, 45, 0.9), transparent);
+      z-index: 1;
+    }
 
     img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      transition: transform 0.2s;
+      object-fit: contain;
+      transition: transform 0.3s ease;
     }
     
     .discount-badge {
@@ -168,6 +186,8 @@ ion-toolbar {
       padding: 4px 7px;
       border-radius: 3px;
       font-size: 14px;
+      z-index: 2;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
   }
   

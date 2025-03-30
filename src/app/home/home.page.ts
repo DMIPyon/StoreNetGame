@@ -16,6 +16,7 @@ import { FormatClpPipe } from '../pipes/format-clp.pipe';
 })
 export class HomePage implements OnInit {
   products: Product[] = [];
+  filteredProducts: Product[] = [];
   categories: Category[] = [];
   selectedCategory: number = 0;
   isLoading: boolean = true;
@@ -31,6 +32,7 @@ export class HomePage implements OnInit {
     // Suscribirse a los productos
     this.productService.getProducts().subscribe(products => {
       this.products = products;
+      this.filteredProducts = products;
     });
     
     // Suscribirse a las categorías
@@ -47,12 +49,31 @@ export class HomePage implements OnInit {
   // Filtrar productos por categoría
   selectCategory(categoryId: number) {
     this.selectedCategory = categoryId;
-    this.productService.filterByCategory(categoryId);
+    
+    if (categoryId === 0) {
+      this.filteredProducts = this.products;
+    } else {
+      this.filteredProducts = this.products.filter(product => 
+        product.category === this.categories.find(c => c.id === categoryId)?.name
+      );
+    }
   }
   
   // Buscar productos
   searchProducts() {
-    this.productService.searchProducts(this.searchTerm);
+    if (!this.searchTerm.trim()) {
+      this.selectCategory(this.selectedCategory);
+      return;
+    }
+    
+    const searchTermLower = this.searchTerm.toLowerCase();
+    this.filteredProducts = this.products.filter(product => {
+      const nameMatch = product.name.toLowerCase().includes(searchTermLower);
+      const descMatch = product.description?.toLowerCase().includes(searchTermLower);
+      const devMatch = product.developer?.toLowerCase().includes(searchTermLower);
+      
+      return nameMatch || descMatch || devMatch;
+    });
   }
   
   // Agregar al carrito

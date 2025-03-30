@@ -41,6 +41,10 @@
           <p *ngIf="product.developer">{{ product.developer }}</p>
         </div>
       </div>
+      <!-- Imagen de portada en primer plano -->
+      <div class="game-cover">
+        <img [src]="product.image" [alt]="product.name" loading="lazy">
+      </div>
     </div>
 
     <div class="main-content">
@@ -64,7 +68,7 @@
       <!-- Descripción del juego -->
       <div class="description-section">
         <h2>Acerca de este juego</h2>
-        <p>{{ product.description || 'No hay descripción disponible para este juego.' }}</p>
+        <p [innerHTML]="product.description || 'No hay descripción disponible para este juego.'"></p>
       </div>
 
       <!-- Características -->
@@ -92,6 +96,16 @@
             <ion-label>
               <span class="feature-title">Fecha de lanzamiento</span>
               <span class="feature-value">{{ product.releaseDate }}</span>
+            </ion-label>
+          </ion-item>
+          
+          <ion-item *ngIf="product.tags?.length">
+            <ion-icon name="bookmark-outline" slot="start"></ion-icon>
+            <ion-label>
+              <span class="feature-title">Etiquetas</span>
+              <span class="feature-value">
+                <span class="tag" *ngFor="let tag of product.tags">{{ tag }}</span>
+              </span>
             </ion-label>
           </ion-item>
         </ion-list>
@@ -155,26 +169,47 @@
             <ion-col size-md="6" size="12" *ngIf="product.requirements.recommended">
               <div class="requirements-card">
                 <h3>Recomendados</h3>
-                <div class="req-item">
-                  <span class="req-label">Sistema operativo:</span>
-                  <span class="req-value">{{ product.requirements.recommended.os }}</span>
-                </div>
-                <div class="req-item">
-                  <span class="req-label">Procesador:</span>
-                  <span class="req-value">{{ product.requirements.recommended.processor }}</span>
-                </div>
-                <div class="req-item">
-                  <span class="req-label">Memoria:</span>
-                  <span class="req-value">{{ product.requirements.recommended.memory }}</span>
-                </div>
-                <div class="req-item">
-                  <span class="req-label">Gráficos:</span>
-                  <span class="req-value">{{ product.requirements.recommended.graphics }}</span>
-                </div>
-                <div class="req-item">
-                  <span class="req-label">Almacenamiento:</span>
-                  <span class="req-value">{{ product.requirements.recommended.storage }}</span>
-                </div>
+                <ion-list lines="none">
+                  <ion-item *ngIf="product.requirements.recommended.os">
+                    <ion-icon name="desktop-outline" slot="start"></ion-icon>
+                    <ion-label>
+                      <span class="req-title">Sistema operativo</span>
+                      <span class="req-value">{{ product.requirements.recommended.os }}</span>
+                    </ion-label>
+                  </ion-item>
+                  
+                  <ion-item *ngIf="product.requirements.recommended.processor">
+                    <ion-icon name="hardware-chip-outline" slot="start"></ion-icon>
+                    <ion-label>
+                      <span class="req-title">Procesador</span>
+                      <span class="req-value">{{ product.requirements.recommended.processor }}</span>
+                    </ion-label>
+                  </ion-item>
+                  
+                  <ion-item *ngIf="product.requirements.recommended.memory">
+                    <ion-icon name="layers-outline" slot="start"></ion-icon>
+                    <ion-label>
+                      <span class="req-title">Memoria</span>
+                      <span class="req-value">{{ product.requirements.recommended.memory }}</span>
+                    </ion-label>
+                  </ion-item>
+                  
+                  <ion-item *ngIf="product.requirements.recommended.graphics">
+                    <ion-icon name="tv-outline" slot="start"></ion-icon>
+                    <ion-label>
+                      <span class="req-title">Gráficos</span>
+                      <span class="req-value">{{ product.requirements.recommended.graphics }}</span>
+                    </ion-label>
+                  </ion-item>
+                  
+                  <ion-item *ngIf="product.requirements.recommended.storage">
+                    <ion-icon name="save-outline" slot="start"></ion-icon>
+                    <ion-label>
+                      <span class="req-title">Almacenamiento</span>
+                      <span class="req-value">{{ product.requirements.recommended.storage }}</span>
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
               </div>
             </ion-col>
           </ion-row>

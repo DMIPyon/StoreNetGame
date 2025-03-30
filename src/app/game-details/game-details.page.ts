@@ -26,24 +26,24 @@ export class GameDetailsPage implements OnInit {
   ngOnInit() {
     // Obtener el ID del producto desde la URL
     this.route.paramMap.subscribe(params => {
-      const productId = Number(params.get('id'));
-      if (productId) {
-        this.loadProductDetails(productId);
-      }
-    });
-  }
-
-  // Cargar detalles del producto
-  loadProductDetails(productId: number) {
-    this.isLoading = true;
-    
-    this.productService.getProductById(productId).subscribe(product => {
-      this.product = product;
-      this.isLoading = false;
-      
-      if (!product) {
-        // Producto no encontrado
-        console.error(`Producto con ID ${productId} no encontrado`);
+      const id = Number(params.get('id'));
+      if (id) {
+        this.isLoading = true;
+        this.productService.getProductById(id).subscribe(product => {
+          this.product = product;
+          
+          // Procesar la descripción para mejorar el formato del texto
+          if (this.product && this.product.description) {
+            this.product.description = this.processDescription(this.product.description);
+          }
+          
+          this.isLoading = false;
+          
+          if (!product) {
+            // Producto no encontrado
+            console.error(`Producto con ID ${id} no encontrado`);
+          }
+        });
       }
     });
   }
@@ -73,5 +73,25 @@ export class GameDetailsPage implements OnInit {
     
     // Agregar separadores de miles
     return formattedValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
+
+  // Añadir procesamiento para el texto de la descripción
+  processDescription(description: string | undefined): string {
+    if (!description) {
+      return 'No hay descripción disponible para este juego.';
+    }
+    
+    // Formatear párrafos (doble salto de línea)
+    let formattedText = description.replace(/\n\n/g, '</p><p>');
+    
+    // Formatear saltos de línea simples
+    formattedText = formattedText.replace(/\n/g, '<br>');
+    
+    // Envolver en párrafos si no comienza con etiqueta <p>
+    if (!formattedText.startsWith('<p>')) {
+      formattedText = '<p>' + formattedText + '</p>';
+    }
+    
+    return formattedText;
   }
 } 
