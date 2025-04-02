@@ -2,19 +2,19 @@
     {
       "id": 1,
       "name": "Red Dead Redemption 2",
-      "price": 19000,
-      "originalPrice": 45000,
+      "price": 19990,
+      "originalPrice": 39990,
       "image": "assets/img/RDR2.webp",
       "description": "América, 1899. El ocaso del Salvaje Oeste ha comenzado y las fuerzas de la ley dan caza a las últimas bandas de forajidos. Los que no se rinden o sucumben, son asesinados. Tras un desastroso atraco fallido en la ciudad de Blackwater, Arthur Morgan y la banda de Van der Linde se ven obligados a huir.",
-      "category": "Acción",
+      "categories": ["Acción", "Aventura"],
       "developer": "Rockstar Games",
       "releaseDate": "05/12/2019",
-      "tags": ["Mundo abierto", "Western", "Acción", "Aventura"],
+      "tags": ["Mundo abierto", "Western", "Historia", "Multijugador"],
       "rating": 4.9,
-      "discount": 71,
+      "discount": 50,
       "requirements": {
         "minimum": {
-          "os": "Windows 7",
+          "os": "Windows 7 SP1",
           "processor": "Intel Core i5-2500K / AMD FX-6300",
           "memory": "8 GB RAM",
           "graphics": "Nvidia GeForce GTX 770 2GB / AMD Radeon R9 280 3GB",
@@ -32,22 +32,22 @@
     {
       "id": 2,
       "name": "Minecraft",
-      "price": 15000,
-      "originalPrice": 20000,
+      "price": 12990,
+      "originalPrice": 21990,
       "image": "assets/img/minecraft.jpg",
       "description": "Explora mundos infinitos y construye desde sencillas casas hasta grandiosos castillos. Juega en modo creativo con recursos ilimitados o extrae en el mundo en modo supervivencia, fabricando armas y armaduras para defenderte de las criaturas peligrosas.",
-      "category": "Aventura",
+      "categories": ["Aventura", "Indie"],
       "developer": "Mojang Studios",
       "releaseDate": "18/11/2011",
-      "tags": ["Sandbox", "Supervivencia", "Construcción", "Multijugador"],
+      "tags": ["Sandbox", "Supervivencia", "Multijugador", "Construcción"],
       "rating": 4.8,
-      "discount": 12,
+      "discount": 40,
       "requirements": {
         "minimum": {
-          "os": "Windows 7 o superior",
+          "os": "Windows 7",
           "processor": "Intel Core i3-3210 / AMD A8-7600",
           "memory": "4 GB RAM",
-          "graphics": "Intel HD Graphics 4000 o AMD Radeon R5",
+          "graphics": "Intel HD Graphics 4000 / AMD Radeon R5",
           "storage": "4 GB"
         },
         "recommended": {
@@ -62,28 +62,28 @@
     {
       "id": 3,
       "name": "Grand Theft Auto VI",
-      "price": 70000,
-      "originalPrice": 70000,
+      "price": 69990,
+      "originalPrice": 69990,
       "image": "assets/img/gta6.webp",
       "description": "Bienvenido a Vice City, una metrópolis llena de luces de neón, glamour y crimen organizado. Asume el papel de dos protagonistas, Lucia y Jason, en la entrada más ambiciosa de la serie GTA. Explora playas, pantanos, clubes nocturnos y más en esta nueva visión de Miami ficticia de Rockstar Games.",
-      "category": "Acción",
+      "categories": ["Acción", "Aventura"],
       "developer": "Rockstar Games",
       "releaseDate": "Otoño 2025",
-      "tags": ["Mundo abierto", "Crimen", "Acción", "Adultos"],
+      "tags": ["Mundo abierto", "Crimen", "Adulto", "Ciudad"],
       "rating": 5.0,
       "requirements": {
         "minimum": {
-          "os": "Windows 10",
-          "processor": "Intel Core i5-8600K / AMD Ryzen 5 3600",
+          "os": "Windows 10 64-bit",
+          "processor": "Intel Core i7-8700K / AMD Ryzen 5 3600X",
           "memory": "16 GB RAM",
-          "graphics": "NVIDIA GeForce GTX 1070 / AMD Radeon RX 5700",
-          "storage": "150 GB"
+          "graphics": "NVIDIA GeForce RTX 2070 / AMD Radeon RX 5700 XT",
+          "storage": "150 GB SSD"
         },
         "recommended": {
-          "os": "Windows 10/11",
-          "processor": "Intel Core i7-10700K / AMD Ryzen 7 5800X",
+          "os": "Windows 10/11 64-bit",
+          "processor": "Intel Core i9-10900K / AMD Ryzen 7 5800X",
           "memory": "32 GB RAM",
-          "graphics": "NVIDIA GeForce RTX 3070 / AMD Radeon RX 6800 XT",
+          "graphics": "NVIDIA GeForce RTX 3080 / AMD Radeon RX 6800 XT",
           "storage": "150 GB SSD"
         }
       }
@@ -91,60 +91,269 @@
     {
       "id": 4,
       "name": "The Binding of Isaac",
-      "price": 8000,
-      "originalPrice": 15000,
+      "price": 7990,
+      "originalPrice": 14990,
       "image": "assets/img/Isaac.jpg",
       "description": "The Binding of Isaac es un juego de acción RPG generado aleatoriamente con elementos de tipo roguelike. Siguiendo a Isaac, un niño que escapa de su madre para salvar su vida, los jugadores descubrirán extraños tesoros que cambiarán la forma de Isaac, le darán habilidades sobrehumanas y le permitirán luchar contra hordas de criaturas misteriosas.",
-      "category": "RPG",
+      "categories": ["RPG", "Indie", "Acción"],
       "developer": "Edmund McMillen",
       "releaseDate": "28/09/2011",
-      "tags": ["Roguelike", "Indie", "Difícil", "Mazmorras"],
+      "tags": ["Roguelike", "Difícil", "2D", "Procedural"],
       "rating": 4.7,
-      "discount": 34,
+      "discount": 45,
       "requirements": {
         "minimum": {
-          "os": "Windows XP/Vista/7/8/10",
+          "os": "Windows XP",
           "processor": "Core 2 Duo",
           "memory": "2 GB RAM",
-          "graphics": "DirectX 9 compatible",
-          "storage": "449 MB"
+          "graphics": "Tarjeta compatible con DirectX 9",
+          "storage": "500 MB"
         },
         "recommended": {
-          "os": "Windows 7/8/10",
-          "processor": "Core 2 Duo",
+          "os": "Windows 7",
+          "processor": "Core i3",
           "memory": "4 GB RAM",
-          "graphics": "DirectX 9 compatible",
-          "storage": "449 MB"
+          "graphics": "Tarjeta compatible con DirectX 10",
+          "storage": "500 MB"
         }
       }
     },
     {
       "id": 5,
       "name": "R.E.P.O.",
-      "price": 12000,
-      "originalPrice": 19000,
+      "price": 11990,
+      "originalPrice": 18990,
       "image": "assets/img/repo.jpg",
       "description": "R.E.P.O. combina la exploración espacial con la supervivencia. Como agente de Recuperación Espacial de Propiedades Abandonadas, deberás aventurarte en estaciones espaciales abandonadas, recolectando valiosos recursos mientras evitas amenazas alienígenas y trampas mortales.",
-      "category": "Estrategia",
+      "categories": ["Estrategia", "Indie", "Acción"],
       "developer": "Pixel Void Studios",
       "releaseDate": "15/03/2023",
-      "tags": ["Espacio", "Horror", "Supervivencia", "Indie"],
+      "tags": ["Exploración", "Espacio", "Supervivencia", "Indie"],
       "rating": 4.4,
-      "discount": 36,
+      "discount": 35,
       "requirements": {
         "minimum": {
-          "os": "Windows 8.1/10",
-          "processor": "Intel Core i3-4160 / AMD FX-8350",
+          "os": "Windows 8.1",
+          "processor": "Intel Core i3-4160",
+          "memory": "6 GB RAM",
+          "graphics": "NVIDIA GTX 750",
+          "storage": "8 GB"
+        },
+        "recommended": {
+          "os": "Windows 10",
+          "processor": "Intel Core i5-6600",
           "memory": "8 GB RAM",
-          "graphics": "NVIDIA GTX 660 / AMD Radeon R7 370",
-          "storage": "20 GB"
+          "graphics": "NVIDIA GTX 970",
+          "storage": "8 GB"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "name": "Hollow Knight",
+      "price": 8990,
+      "originalPrice": 14990,
+      "image": "assets/img/Hollow_Knight.webp",
+      "description": "Forja tu propio camino en Hollow Knight, una épica aventura de acción a través de un vasto reino en ruinas de insectos y héroes. Explora cavernas serpenteantes, lucha contra criaturas contaminadas y hazte amigo de extraños insectos, todo en un estilo clásico dibujado a mano en 2D.",
+      "categories": ["Indie", "Aventura", "Acción"],
+      "developer": "Team Cherry",
+      "releaseDate": "24/02/2017",
+      "tags": ["Metroidvania", "Souls-like", "Plataformas", "Indie"],
+      "rating": 4.9,
+      "discount": 40,
+      "requirements": {
+        "minimum": {
+          "os": "Windows 7",
+          "processor": "Intel Core 2 Duo E5200",
+          "memory": "4 GB RAM",
+          "graphics": "GeForce 9800GTX+ (1GB)",
+          "storage": "9 GB"
+        },
+        "recommended": {
+          "os": "Windows 10",
+          "processor": "Intel Core i5",
+          "memory": "8 GB RAM",
+          "graphics": "GeForce GTX 560+",
+          "storage": "9 GB"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "name": "Hollow Knight: Silksong",
+      "price": 24990,
+      "originalPrice": 24990,
+      "image": "assets/img/silksong.jpg",
+      "description": "Descubre un nuevo reino. Hazte con nuevas armas. Enfréntate a hordas de insectos y bestias. Hollow Knight: Silksong es la épica secuela de Hollow Knight. Como la princesa cazadora Hornet, viaja a nuevas tierras, descubre nuevos poderes y enfréntate a vastos hordas de insectos y bestias.",
+      "categories": ["Indie", "Aventura", "Acción"],
+      "developer": "Team Cherry",
+      "releaseDate": "Por anunciar",
+      "tags": ["Metroidvania", "Souls-like", "Plataformas", "Indie"],
+      "rating": 5.0,
+      "requirements": {
+        "minimum": {
+          "os": "Windows 10",
+          "processor": "Intel Core i3-6100",
+          "memory": "4 GB RAM",
+          "graphics": "NVIDIA GTX 650 Ti",
+          "storage": "10 GB"
         },
         "recommended": {
           "os": "Windows 10/11",
-          "processor": "Intel Core i5-8400 / AMD Ryzen 5 2600X",
+          "processor": "Intel Core i5-8400",
+          "memory": "8 GB RAM",
+          "graphics": "NVIDIA GTX 1050 Ti",
+          "storage": "10 GB"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "name": "DOOM: Dark Ages",
+      "price": 44990,
+      "originalPrice": 59990,
+      "image": "assets/img/doom-dark-ages.avif",
+      "description": "DOOM: Dark Ages te transporta a un mundo medieval infernal donde la tecnología se encuentra con la magia oscura. Como el Slayer Medieval, deberás enfrentarte a hordas de demonios usando una combinación única de armas medievales potenciadas con tecnología antigua y hechicería prohibida.",
+      "categories": ["Acción", "RPG"],
+      "developer": "id Software",
+      "releaseDate": "15/06/2024",
+      "tags": ["FPS", "Horror", "Demonios", "Mundo abierto"],
+      "rating": 4.8,
+      "discount": 25,
+      "requirements": {
+        "minimum": {
+          "os": "Windows 10 64-bit",
+          "processor": "Intel Core i5-8400 / AMD Ryzen 5 2600",
+          "memory": "8 GB RAM",
+          "graphics": "NVIDIA GTX 1060 6GB / AMD RX 5600 XT",
+          "storage": "80 GB"
+        },
+        "recommended": {
+          "os": "Windows 10/11 64-bit",
+          "processor": "Intel Core i7-10700K / AMD Ryzen 7 3700X",
           "memory": "16 GB RAM",
-          "graphics": "NVIDIA GTX 1060 / AMD RX 580",
-          "storage": "20 GB SSD"
+          "graphics": "NVIDIA RTX 3060 / AMD RX 6700 XT",
+          "storage": "80 GB SSD"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "name": "Elden Ring",
+      "price": 35990,
+      "originalPrice": 59990,
+      "image": "assets/img/elden-ring.avif",
+      "description": "Un vasto mundo lleno de emoción y aventura te espera en Elden Ring, la nueva fantasía de acción y rol creada por FromSoftware Inc. y BANDAI NAMCO Entertainment Inc. En las Tierras Intermedias gobernadas por la Reina Márika la Eterna, el Círculo de Elden, origen del Árbol Áureo, ha sido destruido.",
+      "categories": ["RPG", "Acción", "Aventura"],
+      "developer": "FromSoftware",
+      "releaseDate": "25/02/2022",
+      "tags": ["Mundo abierto", "Souls-like", "Fantasía", "Difícil"],
+      "rating": 4.9,
+      "discount": 40,
+      "requirements": {
+        "minimum": {
+          "os": "Windows 10",
+          "processor": "Intel Core i5-8400 / AMD Ryzen 3 3300X",
+          "memory": "12 GB RAM",
+          "graphics": "NVIDIA GeForce GTX 1060 3GB / AMD Radeon RX 580 4GB",
+          "storage": "60 GB"
+        },
+        "recommended": {
+          "os": "Windows 10/11",
+          "processor": "Intel Core i7-8700K / AMD Ryzen 5 3600X",
+          "memory": "16 GB RAM",
+          "graphics": "NVIDIA GeForce GTX 1070 8GB / AMD Radeon RX 5700 XT",
+          "storage": "60 GB SSD"
+        }
+      }
+    },
+    {
+      "id": 10,
+      "name": "Metal Gear Solid",
+      "price": 38990,
+      "originalPrice": 49990,
+      "image": "assets/img/metal-gear.webp",
+      "description": "Experimenta la saga legendaria que redefinió el género de sigilo táctico. Como Solid Snake, te infiltrarás en instalaciones enemigas, evitarás la detección y descubrirás una trama de conspiración global. Con gráficos remasterizados y jugabilidad modernizada, esta versión definitiva incluye contenido adicional y mejoras de calidad de vida.",
+      "categories": ["Acción", "Aventura", "Estrategia"],
+      "developer": "Konami",
+      "releaseDate": "12/10/2023",
+      "tags": ["Sigilo", "Historia", "Táctico", "Remasterizado"],
+      "rating": 4.8,
+      "discount": 22,
+      "requirements": {
+        "minimum": {
+          "os": "Windows 7 64-bit",
+          "processor": "Intel Core i5-4460 / AMD Ryzen 3 1200",
+          "memory": "8 GB RAM",
+          "graphics": "NVIDIA GeForce GTX 960 / AMD Radeon R9 280",
+          "storage": "30 GB"
+        },
+        "recommended": {
+          "os": "Windows 10 64-bit",
+          "processor": "Intel Core i7-4790 / AMD Ryzen 5 1600",
+          "memory": "16 GB RAM",
+          "graphics": "NVIDIA GeForce GTX 1070 / AMD Radeon RX 5600 XT",
+          "storage": "30 GB SSD"
+        }
+      }
+    },
+    {
+      "id": 11,
+      "name": "Super Meat Boy",
+      "price": 4990,
+      "originalPrice": 9990,
+      "image": "assets/img/SuperMeatBoy_cover.png",
+      "description": "Super Meat Boy es un juego de plataformas brutalmente difícil donde juegas como un cubo de carne animado que intenta salvar a su novia (que está hecha de vendajes) de un feto malvado con traje espacial. Salta de pared en pared, sobre sierras, a través de cuevas y charcos de agujas antigravedad.",
+      "categories": ["Indie", "Acción"],
+      "developer": "Team Meat",
+      "releaseDate": "20/10/2010",
+      "tags": ["Plataformas", "Difícil", "Indie", "2D"],
+      "rating": 4.7,
+      "discount": 50,
+      "requirements": {
+        "minimum": {
+          "os": "Windows XP",
+          "processor": "1.4 GHz",
+          "memory": "1 GB RAM",
+          "graphics": "DirectX 9.0c compatible",
+          "storage": "300 MB"
+        },
+        "recommended": {
+          "os": "Windows 7",
+          "processor": "2.0 GHz",
+          "memory": "2 GB RAM",
+          "graphics": "DirectX 9.0c compatible",
+          "storage": "300 MB"
+        }
+      }
+    },
+    {
+      "id": 13,
+      "name": "Arma 3",
+      "price": 22990,
+      "originalPrice": 39990,
+      "image": "assets/img/arma-3.jpg",
+      "description": "Experimenta la guerra moderna en toda su complejidad en Arma 3, el simulador militar más realista. Con un vasto mundo abierto, física realista, combate táctico profundo y un potente editor de misiones, Arma 3 ofrece infinitas posibilidades para la guerra moderna.",
+      "categories": ["Simulación", "Acción", "Estrategia"],
+      "developer": "Bohemia Interactive",
+      "releaseDate": "12/09/2013",
+      "tags": ["Militar", "Simulación", "Táctico", "Mundo abierto"],
+      "rating": 4.6,
+      "discount": 42,
+      "requirements": {
+        "minimum": {
+          "os": "Windows 7 SP1 64-bit",
+          "processor": "Intel Core i3-4160 / AMD FX-4100",
+          "memory": "8 GB RAM",
+          "graphics": "NVIDIA GeForce GTX 660 / AMD Radeon HD 7800",
+          "storage": "40 GB"
+        },
+        "recommended": {
+          "os": "Windows 10 64-bit",
+          "processor": "Intel Core i5-6600K / AMD Ryzen 5 1600X",
+          "memory": "16 GB RAM",
+          "graphics": "NVIDIA GeForce GTX 1060 / AMD Radeon RX 580",
+          "storage": "40 GB SSD"
         }
       }
     }

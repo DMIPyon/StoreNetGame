@@ -76,11 +76,11 @@
       <div class="features-section">
         <h2>Características</h2>
         <ion-list lines="none">
-          <ion-item *ngIf="product.category">
+          <ion-item *ngIf="product.categories?.length">
             <ion-icon name="pricetag-outline" slot="start"></ion-icon>
             <ion-label>
-              <span class="feature-title">Género</span>
-              <span class="feature-value">{{ product.category }}</span>
+              <span class="feature-title">Géneros</span>
+              <span class="feature-value">{{ product.categories?.join(', ') || 'Sin categoría' }}</span>
             </ion-label>
           </ion-item>
           

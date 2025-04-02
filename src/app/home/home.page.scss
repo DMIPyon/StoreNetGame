@@ -131,11 +131,12 @@ ion-toolbar {
   background: #16202d;
   border-radius: 7px;
   overflow: hidden;
-  height: 460px; // Altura ajustada para la imagen más grande
+  height: 460px;
   width: 100%;
   transition: all 0.3s ease;
   cursor: pointer;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+  margin-bottom: 20px;
   
   // Efecto hover
   &:hover {
@@ -437,5 +438,17 @@ ion-content {
   .game-info {
     padding: 10px;
     height: 180px;
+  }
+}
+
+ion-grid {
+  padding: 20px;
+  
+  ion-row {
+    margin: -10px;  // Compensar el padding de las columnas
+    
+    ion-col {
+      padding: 15px;  // Aumentar el espaciado entre tarjetas
+    }
   }
 }

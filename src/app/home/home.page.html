@@ -56,15 +56,16 @@
       </div>
 
       <!-- Si no hay resultados -->
-      <div class="no-results" *ngIf="!isLoading && products.length === 0">
+      <div class="no-results" *ngIf="!isLoading && filteredProducts.length === 0">
         <ion-icon name="search"></ion-icon>
         <h3>No se encontraron juegos</h3>
         <p>Intenta con otra búsqueda o categoría</p>
       </div>
 
       <!-- Juegos Destacados -->
-      <ng-container *ngIf="!isLoading && products.length > 0">
-        <h2>Juegos Destacados</h2>
+      <ng-container *ngIf="!isLoading && filteredProducts.length > 0">
+        <h2 *ngIf="selectedCategory === 0">Juegos Destacados</h2>
+        <h2 *ngIf="selectedCategory !== 0">{{ getCategoryName() }}</h2>
         <ion-grid>
           <ion-row>
             <ion-col *ngFor="let product of filteredProducts" size="6" size-md="4" size-lg="3">

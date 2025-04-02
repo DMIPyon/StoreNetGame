@@ -10,7 +10,7 @@ export interface Product {
   originalPrice?: number;
   image: string;
   description?: string;
-  category?: string;
+  categories?: string[];
   developer?: string;
   releaseDate?: string;
   tags?: string[];
@@ -113,7 +113,9 @@ export class ProductService {
             { id: 2, name: 'Aventura', icon: 'map-outline' },
             { id: 3, name: 'RPG', icon: 'game-controller-outline' },
             { id: 4, name: 'Estrategia', icon: 'bulb-outline' },
-            { id: 5, name: 'Deportes', icon: 'football-outline' }
+            { id: 5, name: 'Deportes', icon: 'football-outline' },
+            { id: 6, name: 'Indie', icon: 'star-outline' },
+            { id: 7, name: 'Simulación', icon: 'desktop-outline' }
           ];
           return of(defaultCategories);
         })
@@ -138,8 +140,14 @@ export class ProductService {
       return;
     }
 
+    const categoryName = this.categories.find(c => c.id === categoryId)?.name || '';
+    if (!categoryName) {
+      this.productsSubject.next([]);
+      return;
+    }
+
     const filtered = this.products.filter(product => 
-      product.category === this.categories.find(c => c.id === categoryId)?.name
+      product.categories?.includes(categoryName)
     );
     this.productsSubject.next(filtered);
   }
@@ -156,6 +164,7 @@ export class ProductService {
       product.name.toLowerCase().includes(searchTerm) ||
       product.description?.toLowerCase().includes(searchTerm) ||
       product.developer?.toLowerCase().includes(searchTerm) ||
+      product.categories?.some(cat => cat.toLowerCase().includes(searchTerm)) ||
       product.tags?.some(tag => tag.toLowerCase().includes(searchTerm))
     );
     this.productsSubject.next(filtered);

@@ -60,8 +60,13 @@ export class HomePage implements OnInit {
     if (categoryId === 0) {
       this.filteredProducts = this.products;
     } else {
+      const categoryName = this.categories.find(c => c.id === categoryId)?.name;
+      if (!categoryName) {
+        this.filteredProducts = [];
+        return;
+      }
       this.filteredProducts = this.products.filter(product => 
-        product.category === this.categories.find(c => c.id === categoryId)?.name
+        product.categories?.includes(categoryName)
       );
     }
   }
@@ -78,8 +83,10 @@ export class HomePage implements OnInit {
       const nameMatch = product.name.toLowerCase().includes(searchTermLower);
       const descMatch = product.description?.toLowerCase().includes(searchTermLower);
       const devMatch = product.developer?.toLowerCase().includes(searchTermLower);
+      const categoryMatch = product.categories?.some(cat => cat.toLowerCase().includes(searchTermLower)) || false;
+      const tagMatch = product.tags?.some(tag => tag.toLowerCase().includes(searchTermLower)) || false;
       
-      return nameMatch || descMatch || devMatch;
+      return nameMatch || descMatch || devMatch || categoryMatch || tagMatch;
     });
   }
   
@@ -160,5 +167,11 @@ export class HomePage implements OnInit {
     
     // Agregar separadores de miles
     return formattedValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
+  
+  // Obtener el nombre de la categoría seleccionada
+  getCategoryName(): string {
+    const category = this.categories.find(c => c.id === this.selectedCategory);
+    return category ? category.name : 'Categoría';
   }
 }
