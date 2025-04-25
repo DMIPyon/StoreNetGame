@@ -3,9 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-/**
- * Interfaz que define la estructura de un producto
- */
 export interface Product {
   id: number;
   name: string;
@@ -37,9 +34,6 @@ export interface Product {
   };
 }
 
-/**
- * Interfaz que define la estructura de una categoría
- */
 export interface Category {
   id: number;
   name: string;
@@ -61,30 +55,22 @@ export class ProductService {
     this.loadCategories();
   }
 
-  /**
-   * Obtiene los productos como Observable
-   */
+  // Obtener productos como Observable
   getProducts(): Observable<Product[]> {
     return this.productsSubject.asObservable();
   }
 
-  /**
-   * Obtiene las categorías como Observable
-   */
+  // Obtener categorías como Observable
   getCategories(): Observable<Category[]> {
     return this.categoriesSubject.asObservable();
   }
 
-  /**
-   * Obtiene el estado de carga
-   */
+  // Estado de carga
   getLoadingState(): Observable<boolean> {
     return this.isLoading.asObservable();
   }
 
-  /**
-   * Carga todos los productos desde el archivo JSON
-   */
+  // Cargar todos los productos
   loadProducts(): void {
     this.isLoading.next(true);
     
@@ -93,6 +79,7 @@ export class ProductService {
         tap((data) => {
           // Enriquecer datos si es necesario (calcular descuentos, etc.)
           this.products = data.map(product => {
+            // Transformar el precio para que se muestre correctamente
             const processedProduct = {...product};
             
             // Si tiene precio original, calcular descuento
@@ -114,9 +101,7 @@ export class ProductService {
       .subscribe();
   }
 
-  /**
-   * Carga las categorías desde el archivo JSON o usa predeterminadas
-   */
+  // Cargar categorías
   loadCategories(): void {
     this.http.get<Category[]>('assets/categories.json')
       .pipe(
@@ -124,7 +109,6 @@ export class ProductService {
           console.error('Error cargando categorías:', error);
           // Categorías predeterminadas si no se puede cargar el archivo
           const defaultCategories: Category[] = [
-            { id: 0, name: 'Todos', icon: 'apps-outline' },
             { id: 1, name: 'Acción', icon: 'flame-outline' },
             { id: 2, name: 'Aventura', icon: 'map-outline' },
             { id: 3, name: 'RPG', icon: 'game-controller-outline' },
@@ -142,20 +126,14 @@ export class ProductService {
       });
   }
 
-  /**
-   * Obtiene un producto por su ID
-   * @param id ID del producto a buscar
-   */
+  // Obtener un producto por ID
   getProductById(id: number): Observable<Product | undefined> {
     return this.getProducts().pipe(
       map(products => products.find(product => product.id === id))
     );
   }
 
-  /**
-   * Filtra productos por categoría
-   * @param categoryId ID de la categoría para filtrar
-   */
+  // Filtrar productos por categoría
   filterByCategory(categoryId: number): void {
     if (categoryId === 0) { // 0 significa "Todos"
       this.productsSubject.next(this.products);
@@ -174,10 +152,7 @@ export class ProductService {
     this.productsSubject.next(filtered);
   }
 
-  /**
-   * Busca productos por término
-   * @param term Término de búsqueda
-   */
+  // Buscar productos por término
   searchProducts(term: string): void {
     if (!term.trim()) {
       this.productsSubject.next(this.products);
@@ -195,9 +170,7 @@ export class ProductService {
     this.productsSubject.next(filtered);
   }
 
-  /**
-   * Obtiene productos en oferta
-   */
+  // Obtener productos en oferta
   getDiscountedProducts(): Observable<Product[]> {
     return this.getProducts().pipe(
       map(products => products.filter(product => product.discount && product.discount > 0))
