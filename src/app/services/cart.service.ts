@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Product } from './product.service';
+import { ToastService } from './toast.service';
 
 export interface CartItem {
   id: number;
@@ -18,49 +20,57 @@ export class CartService {
   private cartItemsSubject = new BehaviorSubject<CartItem[]>([]);
   private readonly CART_STORAGE_KEY = 'netgames_cart';
   
-  constructor() {
-    // Recuperar carrito del localStorage al iniciar
+  constructor(private toastService: ToastService) {
     this.loadCartFromStorage();
   }
 
-  // Cargar carrito desde localStorage
+  /**
+   * Carga el carrito desde el almacenamiento local
+   */
   private loadCartFromStorage(): void {
     try {
       const savedCart = localStorage.getItem(this.CART_STORAGE_KEY);
       if (savedCart) {
         this.cartItems = JSON.parse(savedCart);
         this.cartItemsSubject.next(this.cartItems);
-        console.log('Carrito cargado desde localStorage:', this.cartItems);
       }
     } catch (error) {
       console.error('Error al cargar el carrito desde localStorage:', error);
-      // Si hay un error, inicializar con un carrito vacío
       this.cartItems = [];
       this.cartItemsSubject.next(this.cartItems);
     }
   }
 
-  // Obtener todos los items del carrito como Observable
+  /**
+   * Obtiene todos los items del carrito como Observable
+   */
   getCartItems(): Observable<CartItem[]> {
     return this.cartItemsSubject.asObservable();
   }
 
-  // Obtener número total de items en el carrito
+  /**
+   * Obtiene el número total de items en el carrito
+   */
   getCartItemCount(): Observable<number> {
     return this.cartItemsSubject.pipe(
       map(items => items.reduce((total, item) => total + item.quantity, 0))
     );
   }
 
-  // Obtener el subtotal del carrito
+  /**
+   * Obtiene el subtotal del carrito
+   */
   getSubtotal(): Observable<number> {
     return this.cartItemsSubject.pipe(
       map(items => items.reduce((total, item) => total + (item.price * item.quantity), 0))
     );
   }
 
-  // Agregar un producto al carrito
-  addToCart(product: any): void {
+  /**
+   * Agrega un producto al carrito
+   * @param product El producto a agregar
+   */
+  addToCart(product: Product): void {
     const existingItem = this.cartItems.find(item => item.id === product.id);
     
     if (existingItem) {
@@ -76,9 +86,14 @@ export class CartService {
     }
     
     this.saveCart();
+    this.toastService.showCustomNotification(product.name, 'Añadido al carrito');
   }
 
-  // Actualizar cantidad de un item
+  /**
+   * Actualiza la cantidad de un item
+   * @param item El item a actualizar
+   * @param quantity La nueva cantidad
+   */
   updateQuantity(item: CartItem, quantity: number): void {
     const existingItem = this.cartItems.find(i => i.id === item.id);
     
@@ -88,38 +103,51 @@ export class CartService {
         this.removeItem(item);
         return;
       }
+      this.toastService.showCustomNotification(item.name, 'Cantidad actualizada');
     }
     
     this.saveCart();
   }
 
-  // Eliminar un item del carrito
+  /**
+   * Elimina un item del carrito
+   * @param item El item a eliminar
+   */
   removeItem(item: CartItem): void {
     this.cartItems = this.cartItems.filter(i => i.id !== item.id);
     this.saveCart();
+    this.toastService.showCustomNotification(item.name, 'Eliminado del carrito');
   }
 
-  // Vaciar el carrito
+  /**
+   * Vacía el carrito
+   */
   clearCart(): void {
     this.cartItems = [];
     this.saveCart();
+    this.toastService.showCustomNotification('Carrito', 'Carrito vacío');
   }
 
-  // Guardar carrito en localStorage
+  /**
+   * Guarda el carrito en el almacenamiento local
+   */
   private saveCart(): void {
     localStorage.setItem(this.CART_STORAGE_KEY, JSON.stringify(this.cartItems));
     this.cartItemsSubject.next([...this.cartItems]);
-    console.log('Carrito guardado en localStorage:', this.cartItems);
   }
 
-  // Calcular impuestos (IVA 21%)
+  /**
+   * Calcula los impuestos (IVA 21%)
+   */
   calculateTax(): Observable<number> {
     return this.getSubtotal().pipe(
       map(subtotal => subtotal * 0.21)
     );
   }
 
-  // Calcular total (subtotal + impuestos)
+  /**
+   * Calcula el total (subtotal + impuestos)
+   */
   calculateTotal(): Observable<number> {
     return this.getSubtotal().pipe(
       map(subtotal => subtotal + (subtotal * 0.21))

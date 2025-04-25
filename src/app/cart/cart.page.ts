@@ -44,7 +44,7 @@ export class CartPage implements OnInit {
     if (newQuantity < 1) return;
     
     this.cartService.updateQuantity(item, newQuantity);
-    this.presentToast(`Cantidad actualizada: ${item.name} (${newQuantity})`);
+    // No mostrar notificación al actualizar la cantidad
   }
 
   removeItem(item: CartItem) {
@@ -95,27 +95,15 @@ export class CartPage implements OnInit {
   }
 
   async presentToast(message: string) {
-    let cssClass = 'cart-toast';
-    let header = '';
-    let content = message;
-    
-    // Verificar si es un mensaje de actualización de cantidad
+    // Si es un mensaje de actualización de cantidad, no mostrar nada
     if (message.includes('Cantidad actualizada:')) {
-      cssClass = 'cart-toast quantity-updated-toast';
-      
-      // Extraer el nombre del producto y la cantidad
-      const match = message.match(/Cantidad actualizada: (.*) \((\d+)\)/);
-      if (match) {
-        const productName = match[1];
-        const quantity = match[2];
-        header = productName;
-        content = `Cantidad: ${quantity}`;
-      }
+      return;
     }
     
+    let cssClass = 'cart-toast';
+    
     const toast = await this.toastController.create({
-      header: header,
-      message: content,
+      message: message,
       duration: 2000,
       position: 'bottom',
       color: message.includes('eliminado') ? 'danger' : undefined,
