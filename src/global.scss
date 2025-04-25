@@ -16,7 +16,7 @@
 @import "@ionic/angular/css/normalize.css";
 @import "@ionic/angular/css/structure.css";
 @import "@ionic/angular/css/typography.css";
-@import "@ionic/angular/css/display.css";
+@import '@ionic/angular/css/display.css';
 
 /* Optional CSS utils that can be commented out */
 @import "@ionic/angular/css/padding.css";
@@ -25,250 +25,537 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
-
-// Estilos para el toast de confirmación del carrito
-.cart-toast {
-  --background: #2a475e;
-  --color: white;
-  --border-radius: 8px;
-  --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-  font-weight: 500;
-  text-align: center;
-  width: 90%;
-  max-width: 360px;
-  margin: 0 auto;
+:root {
+  /* Paleta de colores principal */
+  --app-primary: #171a21;
+  --app-secondary: #1b2838;
+  --app-tertiary: #1a3749;
+  --app-accent: #66c0f4;
+  --app-accent-hover: #1a9fff;
   
-  .toast-wrapper {
-    border-radius: 8px;
-    padding: 12px 16px;
-    border-left: 4px solid #66c0f4;
+  /* Colores de texto */
+  --app-text-primary: #ffffff;
+  --app-text-secondary: #b8b6b4;
+  --app-text-tertiary: #8f98a0;
+  
+  /* Colores para elementos */
+  --app-discount-badge: #4c6b22;
+  --app-discount-text: #a4d007;
+  --app-card-bg: #16202d;
+  --app-card-hover-transform: translateY(-5px);
+  --app-cart-btn: #ff9f1c;
+  --app-cart-btn-hover: #ffb347;
+  
+  /* Espaciado y dimensiones */
+  --app-card-height: 460px;
+  --app-card-radius: 7px;
+  --app-spacing-sm: 8px;
+  --app-spacing-md: 16px;
+  --app-spacing-lg: 24px;
+  --app-spacing-xl: 32px;
+  
+  /* Sombras */
+  --app-shadow-sm: 0 3px 10px rgba(0, 0, 0, 0.4);
+  --app-shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Estilos generales */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--app-text-primary);
+  background-color: var(--app-secondary);
+}
+
+ion-content { 
+  --background: var(--app-secondary); 
+}
+
+/* Estilos de encabezado */
+ion-toolbar {
+  --background: var(--app-primary);
+  --color: var(--app-text-primary);
+  padding: 0 var(--app-spacing-md);
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  
+  .header-logo { 
+    height: 40px; 
   }
   
-  .toast-message {
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.4;
+  .title-text {
+    color: var(--app-text-primary);
+    font-size: 1.5rem;
+    transform: translateY(-10px);
+    display: inline-block;
+    line-height: 1;
+    padding: 0 0 0 5px;
+  }
+}
+
+.nav-links {
+  margin-left: var(--app-spacing-md);
+  
+  ion-button {
+    --color: var(--app-text-secondary);
+    
+    &:hover {
+      --color: var(--app-text-primary);
+    }
+  }
+}
+
+.cart-button, .user-button {
+  --color: var(--app-text-secondary);
+  
+  &:hover {
+    --color: var(--app-text-primary);
   }
   
   ion-icon {
-    font-size: 18px;
-    margin-right: 8px;
-    color: #66c0f4;
-  }
-}
-
-// Estilo específico para toast de actualización de cantidad
-.quantity-updated-toast {
-  --background: #1a3749;
-  
-  .toast-wrapper {
-    border-left-color: #ff9f1c;
-  }
-  
-  .toast-message {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    
-    .product-name {
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 4px;
-    }
-    
-    .quantity-label {
-      font-size: 14px;
-      color: #ff9f1c;
-      font-weight: 600;
-    }
-  }
-}
-
-// Estilo para toast de producto añadido al carrito
-.product-added-toast {
-  --background: rgba(26, 55, 73, 0.95);
-  --box-shadow: 0 6px 25px rgba(0, 0, 0, 0.7);
-  --min-width: 280px;
-  --max-width: 400px;
-  --min-height: 100px;
-  position: fixed !important;
-  top: unset !important;
-  bottom: 20px !important;
-  left: unset !important;
-  right: 20px !important;
-  transform: none !important;
-  z-index: 9999 !important;
-  animation: toastPop 0.5s ease-out forwards;
-  
-  .toast-wrapper {
-    border-left: 5px solid #66c0f4;
-    padding: 18px;
-    border-radius: 12px;
-    backdrop-filter: blur(8px);
-    margin: 0;
-    position: relative;
-    box-shadow: 0 0 20px rgba(102, 192, 244, 0.4), inset 0 0 10px rgba(102, 192, 244, 0.1);
-    overflow: hidden;
-    
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, rgba(102, 192, 244, 0.1), transparent 80%);
-      z-index: -1;
-    }
-  }
-  
-  .toast-header {
     font-size: 20px;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 10px;
-    text-align: center;
-    padding: 0;
+    margin-right: 5px;
+  }
+}
+
+.cart-button {
+  position: relative;
+  
+  .cart-badge {
+    margin-left: 5px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+    font-size: 11px;
+    --padding-start: 5px;
+    --padding-end: 5px;
+    --padding-top: 3px;
+    --padding-bottom: 3px;
+    height: auto;
+    border-radius: 10px;
+  }
+}
+
+/* Grid y layout */
+ion-grid {
+  padding: var(--app-spacing-md);
+  
+  ion-row {
+    margin: -10px;
+    
+    ion-col {
+      padding: 15px;
+    }
+  }
+}
+
+.content-container {
+  display: flex;
+  background: var(--app-secondary);
+  min-height: calc(100% - 60px);
+}
+
+.sidebar {
+  width: 220px;
+  background: var(--app-tertiary);
+  padding: var(--app-spacing-md) 0;
+  
+  ion-list {
     background: transparent;
-    border: none;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    
+    ion-item {
+      --background: transparent;
+      --color: var(--app-text-secondary);
+      --border-color: transparent;
+      
+      &:hover, &.active { 
+        --color: var(--app-text-primary);
+        --background: rgba(255, 255, 255, 0.1);
+      }
+      
+      ion-icon {
+        margin-right: var(--app-spacing-sm);
+        color: var(--app-accent);
+      }
+    }
+  }
+}
+
+.main-content {
+  flex: 1;
+  padding: var(--app-spacing-md);
+  
+  h2 {
+    color: var(--app-text-primary);
+    font-size: 1.4rem;
+    margin-bottom: var(--app-spacing-md);
+  }
+}
+
+.search-container {
+  background: var(--app-secondary);
+  padding: 10px var(--app-spacing-md);
+  
+  .custom-searchbar {
+    --background: #2a475e;
+    --color: var(--app-text-primary);
+    --placeholder-color: var(--app-text-tertiary);
+    --border-radius: 4px;
+    --box-shadow: none;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}
+
+/* Tarjetas de juegos */
+.game-card {
+  background: var(--app-card-bg);
+  border-radius: var(--app-card-radius);
+  overflow: hidden;
+  height: var(--app-card-height);
+  width: 100%;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: var(--app-shadow-sm);
+  margin-bottom: var(--app-spacing-md);
+  
+  &:hover {
+    transform: var(--app-card-hover-transform);
+    box-shadow: var(--app-shadow-lg);
+    
+    .image-container img { 
+      transform: scale(1.08); 
+    }
   }
   
-  .toast-message {
+  .image-container {
+    height: 240px;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--app-card-radius) var(--app-card-radius) 0 0;
+    background-color: #000;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
-    color: #75ccff;
-    font-weight: 600;
-    text-align: center;
-    padding: 0;
-    letter-spacing: 0.5px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 40px;
+      background: linear-gradient(to top, rgba(22, 32, 45, 0.9), transparent);
+      z-index: 1;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+    
+    .discount-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--app-discount-badge);
+      color: var(--app-discount-text);
+      font-weight: bold;
+      padding: 4px 7px;
+      border-radius: 3px;
+      font-size: 14px;
+      z-index: 2;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
   }
   
-  ion-button {
-    margin-top: 10px;
+  .game-info {
+    padding: 15px;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(to bottom, var(--app-card-bg), var(--app-secondary));
+    
+    h3 {
+      color: var(--app-text-primary);
+      font-size: 1.1rem;
+      margin: 0 0 var(--app-spacing-sm) 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    
+    .developer {
+      color: var(--app-text-tertiary);
+      font-size: 0.85rem;
+      margin: 0 0 10px 0;
+    }
+    
+    .price-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      
+      .price-tag {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .discount-badge {
+        background-color: #ff4c4c;
+        color: white;
+        border-radius: 4px;
+        padding: 2px 6px;
+        font-size: 12px;
+        font-weight: bold;
+        margin-bottom: 4px;
+      }
+
+      .original-price {
+        font-size: 14px;
+        color: #8a8a8a;
+        text-decoration: line-through;
+        margin-right: 5px;
+      }
+
+      .final-price {
+        font-size: 18px;
+        font-weight: bold;
+        color: var(--app-text-primary);
+      }
+
+      .add-cart-btn {
+        background-color: var(--app-cart-btn);
+        color: var(--app-secondary);
+        border: none;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        
+        &:hover, &:focus {
+          background-color: var(--app-cart-btn-hover);
+          transform: scale(1.05);
+        }
+
+        ion-icon {
+          font-size: 18px;
+        }
+      }
+    }
   }
+}
+
+/* Estados de la aplicación */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--app-spacing-xl);
+  
+  ion-spinner {
+    color: var(--app-accent);
+    width: 50px;
+    height: 50px;
+    margin-bottom: 15px;
+  }
+  
+  p {
+    color: var(--app-text-tertiary);
+    font-size: 1rem;
+    margin: 0;
+  }
+}
+
+.no-results {
+  background: var(--app-tertiary);
+  border-radius: var(--app-spacing-sm);
+  padding: var(--app-spacing-xl);
+  text-align: center;
   
   ion-icon {
-    font-size: 22px;
-    margin-bottom: 4px;
-    color: #4caf50;
-    filter: drop-shadow(0 0 3px rgba(76, 175, 80, 0.5));
+    font-size: 48px;
+    color: var(--app-accent);
+    margin-bottom: 15px;
+  }
+  
+  h3 {
+    color: var(--app-text-primary);
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    color: var(--app-text-tertiary);
+    margin: 0;
+  }
+}
+
+/* Notificaciones personalizadas */
+.custom-notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 1000;
+  animation: toastPop 0.5s forwards;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  
+  .notification-content {
+    display: flex;
+    align-items: center;
+    background: var(--app-primary);
+    padding: var(--app-spacing-sm) var(--app-spacing-md);
+    color: var(--app-text-primary);
+    border-left: 4px solid var(--app-accent);
+    min-width: 280px;
+  }
+  
+  .notification-header {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 2px;
+    padding-right: 30px;
+  }
+  
+  .notification-message {
+    font-size: 14px;
+    color: var(--app-text-secondary);
+  }
+  
+  .notification-icon {
+    margin-left: auto;
+    
+    ion-icon {
+      font-size: 24px;
+      color: var(--app-accent);
+    }
+  }
+  
+  &.hide {
+    animation: toastHide 0.5s forwards;
   }
 }
 
 @keyframes toastPop {
   0% {
     opacity: 0;
-    transform: translateX(50px) scale(0.8) !important;
-  }
-  50% {
-    opacity: 1;
-    transform: translateX(0) scale(1.05) !important;
-  }
-  70% {
-    transform: translateX(0) scale(0.95) !important;
+    transform: translateY(20px);
   }
   100% {
-    transform: translateX(0) scale(1) !important;
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-// Estilo para la notificación personalizada
-.custom-notification {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: rgba(26, 55, 73, 0.95);
-  border-radius: 12px;
-  padding: 0;
-  width: 300px;
-  z-index: 9999;
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.7),
-              0 0 20px rgba(102, 192, 244, 0.4);
-  animation: notificationSlideIn 0.5s ease-out forwards;
-  transition: all 0.3s ease;
-  border-left: 5px solid #66c0f4;
-  overflow: hidden;
-  backdrop-filter: blur(8px);
-  
-  &.hide {
-    transform: translateX(120%);
+@keyframes toastHide {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
     opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+/* Toast de Ionic personalizado */
+.cart-toast {
+  --background: var(--app-primary);
+  --color: var(--app-text-primary);
+  --border-radius: 8px;
+  --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  
+  ion-icon {
+    color: var(--app-accent);
+  }
+}
+
+.product-added-toast {
+  --height: auto;
+  --width: auto;
+  --min-width: 250px;
+  --max-width: 320px;
+  
+  /* Centrado en la parte inferior */
+  --bottom: 20px !important;
+  --start: 50% !important;
+  --end: unset !important;
+  transform: translateX(-50%) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .content-container {
+    flex-direction: column;
   }
   
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
+  .sidebar {
     width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(102, 192, 244, 0.15), transparent 80%);
-    z-index: 0;
-  }
-  
-  .notification-content {
-    position: relative;
-    padding: 18px;
-    z-index: 1;
-  }
-  
-  .notification-header {
-    font-size: 18px;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 10px;
-    text-align: center;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-  }
-  
-  .notification-message {
-    font-size: 15px;
-    color: #75ccff;
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 10px;
-    letter-spacing: 0.5px;
-  }
-  
-  .notification-icon {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
+    padding: 10px;
     
-    ion-icon {
-      font-size: 28px;
-      color: #4caf50;
-      filter: drop-shadow(0 0 4px rgba(76, 175, 80, 0.6));
+    ion-list {
+      display: flex;
+      overflow-x: auto;
+      
+      ion-item {
+        min-width: 120px;
+        --padding-start: 10px;
+        --padding-end: 10px;
+      }
+    }
+  }
+  
+  .main-content {
+    padding: 15px;
+  }
+  
+  .custom-notification {
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+    
+    .notification-content {
+      min-width: unset;
     }
   }
 }
 
-@keyframes notificationSlideIn {
-  0% {
-    opacity: 0;
-    transform: translateX(80px) scale(0.9);
+@media (max-width: 576px) {
+  .nav-links {
+    display: none;
   }
-  60% {
-    opacity: 1;
-    transform: translateX(-10px) scale(1.02);
+  
+  .title-container {
+    .title-text {
+      font-size: 1.2rem;
+    }
+    
+    .header-logo {
+      height: 30px;
+    }
   }
-  80% {
-    transform: translateX(5px) scale(0.98);
+  
+  .game-card {
+    height: 380px;
   }
-  100% {
-    transform: translateX(0) scale(1);
+  
+  .game-info {
+    padding: 10px;
+    height: 180px;
   }
 }
