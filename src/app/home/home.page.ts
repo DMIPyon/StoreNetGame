@@ -1,177 +1,347 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { RouterModule, Router } from '@angular/router';
-import { Product, Category, ProductService } from '../services/product.service';
-import { CartService } from '../services/cart.service';
+import { GameService } from '../services/game.service';
+import { Game } from '../interfaces/game.interface';
 import { FormatClpPipe } from '../pipes/format-clp.pipe';
+import { HttpClientModule } from '@angular/common/http';
+import { NotificationService } from '../services/notification.service';
+import { debounceTime, Subject, forkJoin } from 'rxjs';
+import { CartService } from '../services/cart.service';
+import { StarRatingComponent } from '../components/star-rating/star-rating.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [CommonModule, IonicModule, RouterModule, FormsModule, FormatClpPipe],
+  imports: [
+    CommonModule, 
+    IonicModule, 
+    RouterModule, 
+    FormsModule, 
+    HttpClientModule,
+    StarRatingComponent
+  ],
 })
 export class HomePage implements OnInit {
-  products: Product[] = [];
-  filteredProducts: Product[] = [];
-  categories: Category[] = [];
-  selectedCategory: number = 0;
+  // Vista de juegos
+  games: Game[] = [];
+  filteredGames: Game[] = [];
+  popularGames: Game[] = [];
+  discountedGames: Game[] = [];
+  
+  // Estado de carga
   isLoading: boolean = true;
+  
+  // Búsqueda
   searchTerm: string = '';
+  private searchSubject = new Subject<string>();
+  
+  // Carrito
   cartItemCount: number = 0;
   
+  // Carrusel de ofertas
+  @ViewChild('offersContainer') offersContainer!: ElementRef;
+  
+  // Filtros
+  showFilters: boolean = false;
+  selectedSortOption: string = 'discount';
+  selectedCategory: string[] = [];
+  priceRange = { lower: 0, upper: 100000 };
+  availableCategories: string[] = [];
+  
   constructor(
-    private productService: ProductService,
-    private cartService: CartService,
+    private gameService: GameService,
     private router: Router,
-    private toastController: ToastController
-  ) {}
+    private toastController: ToastController,
+    private notificationService: NotificationService,
+    private cartService: CartService
+  ) {
+    this.searchSubject.pipe(debounceTime(300)).subscribe(term => {
+      this.searchGames(term);
+    });
+  }
   
+  // Cargar todos los juegos al iniciar
   ngOnInit() {
-    // Suscribirse a los productos
-    this.productService.getProducts().subscribe(products => {
-      this.products = products;
-      this.filteredProducts = products;
-    });
+    this.loadAllData();
     
-    // Suscribirse a las categorías
-    this.productService.getCategories().subscribe(categories => {
-      this.categories = categories;
-    });
-    
-    // Suscribirse al estado de carga
-    this.productService.getLoadingState().subscribe(isLoading => {
-      this.isLoading = isLoading;
-    });
-    
-    // Suscribirse al contador de elementos del carrito
+    // Suscribirse al contador del carrito
     this.cartService.getCartItemCount().subscribe(count => {
-      this.cartItemCount = count;
+      this.cartItemCount = count as number;
     });
   }
   
-  // Filtrar productos por categoría
-  selectCategory(categoryId: number) {
-    this.selectedCategory = categoryId;
+  // Cargar todos los datos necesarios
+  loadAllData() {
+    this.isLoading = true;
     
-    if (categoryId === 0) {
-      this.filteredProducts = this.products;
-    } else {
-      const categoryName = this.categories.find(c => c.id === categoryId)?.name;
-      if (!categoryName) {
-        this.filteredProducts = [];
-        return;
+    // Obtener juegos populares y juegos en oferta al mismo tiempo
+    forkJoin({
+      allGames: this.gameService.getGames(),
+      popularGames: this.gameService.getPopularGames(8),
+      discountedGames: this.gameService.getDiscountedGames()
+    }).subscribe({
+      next: (result) => {
+        this.games = this.ensureValidImages(result.allGames);
+        this.filteredGames = this.games;
+        this.popularGames = this.ensureValidImages(result.popularGames);
+        this.discountedGames = this.ensureValidImages(result.discountedGames);
+        
+        // Asegurar que tenemos al menos 8 juegos en oferta
+        this.loadMoreDiscountedGames(8);
+        
+        // Extraer categorías únicas de todos los juegos
+        this.extractCategories();
+        
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar los datos:', error);
+        this.isLoading = false;
+        this.notificationService.showNotification('Error', 'No se pudieron cargar los juegos');
+        
+        // Intentar cargar al menos los juegos básicos como fallback
+        this.loadGamesAsFallback();
       }
-      this.filteredProducts = this.products.filter(product => 
-        product.categories?.includes(categoryName)
-      );
-    }
+    });
   }
   
-  // Buscar productos
-  searchProducts() {
-    if (!this.searchTerm.trim()) {
-      this.selectCategory(this.selectedCategory);
+  // Extraer categorías únicas de los juegos
+  private extractCategories() {
+    const categories = new Set<string>();
+    
+    this.games.forEach(game => {
+      if (game.categories && game.categories.length > 0) {
+        game.categories.forEach(category => {
+          categories.add(category);
+        });
+      }
+    });
+    
+    this.availableCategories = Array.from(categories).sort();
+  }
+  
+  // Mostrar/ocultar panel de filtros
+  toggleFilters() {
+    this.showFilters = !this.showFilters;
+  }
+  
+  // Restablecer filtros a valores por defecto
+  resetFilters() {
+    this.selectedSortOption = 'discount';
+    this.selectedCategory = [];
+    this.priceRange = { lower: 0, upper: 100000 };
+    this.applyFilters();
+  }
+  
+  // Aplicar filtros seleccionados
+  applyFilters() {
+    // Primero filtrar por precio y categoría
+    let filtered = this.games.filter(game => {
+      const priceMatch = game.price >= this.priceRange.lower && game.price <= this.priceRange.upper;
+      
+      // Si no hay categorías seleccionadas, mostrar todos
+      const categoryMatch = this.selectedCategory.length === 0 || 
+        (game.categories && game.categories.some(cat => this.selectedCategory.includes(cat)));
+      
+      return priceMatch && categoryMatch;
+    });
+    
+    // Luego ordenar según la opción seleccionada
+    switch(this.selectedSortOption) {
+      case 'name':
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case 'nameDesc':
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      case 'priceAsc':
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case 'priceDesc':
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case 'discount':
+        filtered.sort((a, b) => {
+          const discountA = a.discount || 0;
+          const discountB = b.discount || 0;
+          return discountB - discountA;
+        });
+        break;
+    }
+    
+    // Actualizar la lista de juegos filtrados y juegos populares
+    this.filteredGames = filtered;
+    this.popularGames = filtered.slice(0, 8);
+    
+    // Si el panel de filtros está abierto, cerrarlo
+    this.showFilters = false;
+  }
+  
+  // Cargar juegos como método de respaldo si falla el método principal
+  private loadGamesAsFallback() {
+    this.gameService.getGames().subscribe({
+      next: (games) => {
+        this.games = this.ensureValidImages(games);
+        this.filteredGames = this.games;
+        this.popularGames = this.shuffleArray(this.games).slice(0, 8);
+        this.discountedGames = this.games
+          .filter(game => game.discount && game.discount > 0)
+          .slice(0, 10);
+        
+        // Extraer categorías
+        this.extractCategories();
+      },
+      error: (error) => {
+        console.error('Error en el fallback:', error);
+      }
+    });
+  }
+  
+  // Mezclar array para selección aleatoria
+  private shuffleArray<T>(array: T[]): T[] {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+  }
+  
+  // Asegurar que todas las imágenes tengan valores válidos
+  private ensureValidImages(games: Game[]): Game[] {
+    return games.map(game => {
+      if (!game.image || game.image === 'undefined') {
+        game.image = 'assets/img/minecraft.jpg';
+      }
+      
+      // Calcular precio original si hay descuento pero no hay precio original
+      if (game.discount && game.discount > 0 && !game.originalPrice) {
+        // Calcular el precio original basado en el descuento
+        const discountMultiplier = (100 - game.discount) / 100;
+        game.originalPrice = Math.round(game.price / discountMultiplier);
+      }
+      
+      return game;
+    });
+  }
+  
+  // Actualizar término de búsqueda
+  updateSearchTerm(term: string) {
+    this.searchSubject.next(term);
+  }
+  
+  // Buscar juegos por término
+  searchGames(term: string) {
+    if (!term || !term.trim()) {
+      this.filteredGames = this.games;
+      this.applyFilters(); // Aplicar los filtros actuales
       return;
     }
     
-    const searchTermLower = this.searchTerm.toLowerCase();
-    this.filteredProducts = this.products.filter(product => {
-      const nameMatch = product.name.toLowerCase().includes(searchTermLower);
-      const descMatch = product.description?.toLowerCase().includes(searchTermLower);
-      const devMatch = product.developer?.toLowerCase().includes(searchTermLower);
-      const categoryMatch = product.categories?.some(cat => cat.toLowerCase().includes(searchTermLower)) || false;
-      const tagMatch = product.tags?.some(tag => tag.toLowerCase().includes(searchTermLower)) || false;
+    this.isLoading = true;
+    this.gameService.searchGames(term).subscribe({
+      next: (games) => {
+        this.filteredGames = this.ensureValidImages(games);
+        this.popularGames = this.filteredGames.slice(0, 8);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error al buscar juegos:', error);
+        // Fallback a búsqueda local en caso de error
+        this.performLocalSearch(term);
+        this.isLoading = false;
+      }
+    });
+  }
+  
+  // Realizar búsqueda local (como fallback)
+  private performLocalSearch(term: string) {
+    const searchTermLower = term.toLowerCase();
+    this.filteredGames = this.games.filter(game => {
+      const titleMatch = game.name.toLowerCase().includes(searchTermLower);
+      const descMatch = game.description?.toLowerCase().includes(searchTermLower);
+      const devMatch = game.developer?.toLowerCase().includes(searchTermLower);
+      const catMatch = game.categories?.some(cat => cat.toLowerCase().includes(searchTermLower));
+      const tagMatch = game.tags?.some(tag => tag.toLowerCase().includes(searchTermLower));
       
-      return nameMatch || descMatch || devMatch || categoryMatch || tagMatch;
-    });
-  }
-  
-  // Agregar al carrito
-  addToCart(product: Product) {
-    this.cartService.addToCart(product);
-    this.showCustomNotification(product.name);
-  }
-  
-  // Mostrar notificación personalizada
-  private showCustomNotification(productName: string) {
-    // Eliminar notificación anterior si existe
-    const existingNotification = document.querySelector('.custom-notification');
-    if (existingNotification) {
-      existingNotification.remove();
-    }
-    
-    // Crear elemento de notificación
-    const notification = document.createElement('div');
-    notification.className = 'custom-notification';
-    notification.innerHTML = `
-      <div class="notification-content">
-        <div class="notification-header">${productName}</div>
-        <div class="notification-message">Añadido al carrito</div>
-        <div class="notification-icon">
-          <ion-icon name="checkmark-circle"></ion-icon>
-        </div>
-      </div>
-    `;
-    
-    // Añadir al body
-    document.body.appendChild(notification);
-    
-    // Eliminar después de 2.5 segundos
-    setTimeout(() => {
-      notification.classList.add('hide');
-      setTimeout(() => {
-        notification.remove();
-      }, 500);
-    }, 2500);
-  }
-  
-  // Ver detalles del producto
-  viewProductDetails(productId: number) {
-    this.router.navigate(['/game-details', productId]);
-  }
-  
-  // Método original de toast (mantenido como respaldo)
-  private async showToast(message: string) {
-    // Extraer el nombre del producto del mensaje
-    const productName = message.replace(' añadido al carrito correctamente', '');
-    
-    const toast = await this.toastController.create({
-      header: productName,
-      message: 'Añadido al carrito',
-      duration: 2500,
-      position: 'bottom',
-      cssClass: 'cart-toast product-added-toast',
-      buttons: [
-        {
-          icon: 'checkmark-circle',
-          role: 'cancel'
-        }
-      ]
+      return titleMatch || descMatch || devMatch || catMatch || tagMatch;
     });
     
-    await toast.present();
+    this.popularGames = this.filteredGames.slice(0, 8);
   }
   
-  // Formatear precio para mostrar con 2 decimales y separador de miles
-  formatPrice(price: number): string {
-    if (price == null) {
-      return '0,00';
+  // Ver detalles del juego
+  viewGameDetails(gameId: number) {
+    this.router.navigate(['/game-details', gameId]);
+  }
+  
+  // Añadir al carrito
+  addToCart(game: Game, event: Event) {
+    event.stopPropagation(); // Evitar navegación a detalles
+    
+    this.cartService.addToCart(game.id);
+    this.notificationService.showNotification('Éxito', `${game.name} añadido al carrito`);
+  }
+  
+  // Desplazar a la sección de ofertas
+  scrollToOffers() {
+    const offersSection = document.getElementById('offersSection');
+    if (offersSection) {
+      offersSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+  
+  // Desplazar el carrusel de ofertas
+  scrollOffers(direction: 'left' | 'right') {
+    if (this.offersContainer && this.offersContainer.nativeElement) {
+      const container = this.offersContainer.nativeElement;
+      const scrollAmount = direction === 'left' ? -600 : 600;
+      
+      container.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  }
+  
+  // Cargar más juegos en oferta si no hay suficientes
+  loadMoreDiscountedGames(minCount: number = 8) {
+    if (this.discountedGames.length >= minCount) {
+      return; // Ya tenemos suficientes juegos en oferta
     }
     
-    // Dividir por 100 y formatear con comas para miles y punto para decimales
-    const formattedValue = (price/100).toFixed(2).replace('.', ',');
+    // Calcular cuántos juegos necesitamos añadir
+    const addCount = minCount - this.discountedGames.length;
     
-    // Agregar separadores de miles
-    return formattedValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  }
-  
-  // Obtener el nombre de la categoría seleccionada
-  getCategoryName(): string {
-    const category = this.categories.find(c => c.id === this.selectedCategory);
-    return category ? category.name : 'Categoría';
+    // Obtener juegos que no estén ya en ofertas
+    const availableGames = this.games.filter(
+      game => !this.discountedGames.some(dGame => dGame.id === game.id)
+    );
+    
+    if (availableGames.length === 0) {
+      return; // No hay más juegos disponibles
+    }
+    
+    // Mezclar y tomar los primeros N juegos
+    const gamesForDiscount = this.shuffleArray(availableGames).slice(0, addCount);
+    
+    // Añadir descuentos simulados a estos juegos
+    const additionalDiscounts = gamesForDiscount.map(game => {
+      const discountedGame = { ...game };
+      // Generar descuento aleatorio entre 15% y 50%
+      discountedGame.discount = Math.floor(Math.random() * 35) + 15;
+      // Guardar precio original y calcular el precio con descuento
+      discountedGame.originalPrice = discountedGame.price;
+      discountedGame.price = Math.round(discountedGame.price * (1 - discountedGame.discount / 100));
+      return discountedGame;
+    });
+    
+    // Añadir a la lista de juegos en oferta
+    this.discountedGames = [...this.discountedGames, ...additionalDiscounts];
   }
 }
