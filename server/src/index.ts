@@ -12,6 +12,11 @@ import logger from './utils/logger';
 import path from 'path';
 import expressLayouts from 'express-ejs-layouts';
 import { pool } from './config/database';
+import helmet from 'helmet';
+import xssClean from 'xss-clean';
+import rateLimit from 'express-rate-limit';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './config/swagger';
 
 // Configurar variables de entorno
 dotenv.config();
@@ -24,6 +29,12 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Seguridad HTTP
+app.use(helmet());
+app.use(xssClean());
+const apiLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+app.use('/api/', apiLimiter);
 
 // Configuración de vistas EJS y layouts
 app.set('views', path.join(__dirname, 'views'));
@@ -42,6 +53,9 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
+
+// Documentación de la API
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Home renderizado con plantillas EJS
 app.get('/', async (req, res, next) => {
