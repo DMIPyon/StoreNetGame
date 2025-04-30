@@ -9,6 +9,9 @@ import orderRoutes from './routes/orders.routes';
 import { initDatabase } from './db/init';
 import expressPino from 'express-pino-logger';
 import logger from './utils/logger';
+import path from 'path';
+import expressLayouts from 'express-ejs-layouts';
+import { pool } from './config/database';
 
 // Configurar variables de entorno
 dotenv.config();
@@ -21,6 +24,16 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Configuración de vistas EJS y layouts
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+app.use(expressLayouts);
+app.set('layout', 'layout');
+
+// Servir archivos estáticos (CSS, imágenes, JS cliente)
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(expressPino({ logger }));
 
 // Rutas
@@ -30,19 +43,20 @@ app.use('/api/auth', authRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 
-// Ruta de bienvenida
-app.get('/', (req, res) => {
-  res.json({
-    message: '¡Bienvenido a la API de StoreNetGames!',
-    version: '1.0.0',
-    endpoints: [
-      '/api/games',
-      '/api/categories',
-      '/api/auth',
-      '/api/cart',
-      '/api/orders'
-    ]
-  });
+// Home renderizado con plantillas EJS
+app.get('/', async (req, res, next) => {
+  try {
+    // Obtener categorías y juegos populares de la base de datos
+    const categoriesResult = await pool.query('SELECT * FROM categories ORDER BY name ASC');
+    const popularResult = await pool.query('SELECT * FROM games ORDER BY rating DESC LIMIT 12');
+    res.render('index', {
+      title: 'Inicio',
+      categories: categoriesResult.rows,
+      popularGames: popularResult.rows
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // Manejador de errores global
