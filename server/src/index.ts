@@ -1,12 +1,14 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import gameRoutes from './routes/games';
+import gameRoutes from './routes/games.routes';
 import categoryRoutes from './routes/categories.routes';
 import authRoutes from './routes/auth.routes';
 import cartRoutes from './routes/cart.routes';
 import orderRoutes from './routes/orders.routes';
 import { initDatabase } from './db/init';
+import expressPino from 'express-pino-logger';
+import logger from './utils/logger';
 
 // Configurar variables de entorno
 dotenv.config();
@@ -19,12 +21,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Middleware para logging simple
-app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
-  next();
-});
+app.use(expressPino({ logger }));
 
 // Rutas
 app.use('/api/games', gameRoutes);
@@ -50,7 +47,7 @@ app.get('/', (req, res) => {
 
 // Manejador de errores global
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error('Error no controlado:', err);
+  logger.error({ err }, 'Error no controlado');
   res.status(500).json({
     success: false,
     message: 'Error interno del servidor',
