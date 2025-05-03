@@ -1,10 +1,16 @@
 import { Request, Response } from 'express';
 import { pool } from '../config/database';
-import * as rawgApi from '../services/rawgApi';
 
 export const getGames = async (req: Request, res: Response) => {
   try {
-    const result = await pool.query('SELECT * FROM games ORDER BY id ASC');
+    const result = await pool.query(`
+      SELECT g.*, d.name as developer, ARRAY_REMOVE(ARRAY_AGG(gc.category_id), NULL) as category_ids
+      FROM games g
+      LEFT JOIN developers d ON g.developer_id = d.id
+      LEFT JOIN game_categories gc ON g.id = gc.game_id
+      GROUP BY g.id, d.name
+      ORDER BY g.id ASC
+    `);
     res.json(result.rows);
   } catch (error) {
     console.error('Error al obtener juegos:', error);
@@ -12,10 +18,59 @@ export const getGames = async (req: Request, res: Response) => {
   }
 };
 
+// Obtener juegos en oferta (con descuento mayor a 0)
+export const getDiscountedGames = async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(
+      `SELECT g.*, d.name as developer, ARRAY_REMOVE(ARRAY_AGG(gc.category_id), NULL) as category_ids FROM games g
+       LEFT JOIN developers d ON g.developer_id = d.id
+       LEFT JOIN game_categories gc ON g.id = gc.game_id
+       WHERE g.discount IS NOT NULL AND g.discount > 0
+       GROUP BY g.id, d.name
+       ORDER BY g.discount DESC`
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error al obtener juegos en oferta:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+// Obtener juegos populares (ordenados por rating)
+export const getPopularGames = async (req: Request, res: Response) => {
+  try {
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 8;
+    const result = await pool.query(
+      `SELECT g.*, d.name as developer, ARRAY_REMOVE(ARRAY_AGG(gc.category_id), NULL) as category_ids FROM games g
+       LEFT JOIN developers d ON g.developer_id = d.id
+       LEFT JOIN game_categories gc ON g.id = gc.game_id
+       WHERE g.rating IS NOT NULL
+       GROUP BY g.id, d.name
+       ORDER BY g.rating DESC
+       LIMIT $1`,
+      [limit]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error al obtener juegos populares:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
 export const getGameById = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
-    const result = await pool.query('SELECT * FROM games WHERE id = $1', [id]);
+    const result = await pool.query(`
+      SELECT g.*, d.name as developer,
+        ARRAY_AGG(c.name) as categories,
+        ARRAY_AGG(c.icon) as category_icons
+      FROM games g
+      LEFT JOIN developers d ON g.developer_id = d.id
+      LEFT JOIN game_categories gc ON g.id = gc.game_id
+      LEFT JOIN categories c ON gc.category_id = c.id
+      WHERE g.id = $1
+      GROUP BY g.id, d.name
+    `, [id]);
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Juego no encontrado' });
     }
@@ -30,7 +85,7 @@ export const searchGames = async (req: Request, res: Response) => {
   const { q } = req.query;
   try {
     const result = await pool.query(
-      'SELECT * FROM games WHERE title ILIKE $1 OR description ILIKE $1 OR category ILIKE $1',
+      'SELECT * FROM games WHERE title ILIKE $1 OR description ILIKE $1',
       [`%${q}%`]
     );
     res.json(result.rows);
@@ -44,25 +99,20 @@ export const searchGames = async (req: Request, res: Response) => {
 export const getGamesByCategory = async (req: Request, res: Response) => {
   const { categoryId } = req.params;
   try {
-    // Si tenemos un category_id, usamos esa relación
+    // Si tenemos un categoryId, usamos la relación muchos a muchos
     if (categoryId) {
       const result = await pool.query(
-        'SELECT g.* FROM games g WHERE g.category_id = $1 ORDER BY g.title ASC',
+        `SELECT g.*, d.name as developer, c.name as category, c.icon as category_icon
+         FROM games g
+         JOIN game_categories gc ON g.id = gc.game_id
+         JOIN categories c ON gc.category_id = c.id
+         LEFT JOIN developers d ON g.developer_id = d.id
+         WHERE gc.category_id = $1
+         ORDER BY g.title ASC`,
         [categoryId]
       );
       return res.json(result.rows);
     }
-    
-    // Si no tenemos relaciones establecidas, podemos buscar por el nombre de categoría
-    const categoryName = req.query.name;
-    if (categoryName) {
-      const result = await pool.query(
-        'SELECT * FROM games WHERE category ILIKE $1 ORDER BY title ASC',
-        [categoryName]
-      );
-      return res.json(result.rows);
-    }
-    
     // Si no hay parámetros, devolvemos todos los juegos
     const result = await pool.query('SELECT * FROM games ORDER BY title ASC');
     res.json(result.rows);
@@ -75,7 +125,7 @@ export const getGamesByCategory = async (req: Request, res: Response) => {
 // Crear un nuevo juego
 export const createGame = async (req: Request, res: Response) => {
   try {
-    const { title, description, price, image_url, category, category_id } = req.body;
+    const { title, description, price, category, category_id, cover_url, banner_url } = req.body;
     
     // Validar que todos los campos necesarios estén presentes
     if (!title || !price) {
@@ -84,8 +134,8 @@ export const createGame = async (req: Request, res: Response) => {
     
     // Insertar el juego en la base de datos
     const result = await pool.query(
-      'INSERT INTO games (title, description, price, image_url, category, category_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [title, description, price, image_url, category, category_id]
+      'INSERT INTO games (title, description, price, category, category_id, cover_url, banner_url) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [title, description, price, category, category_id, cover_url, banner_url]
     );
     
     res.status(201).json({ 
@@ -95,104 +145,5 @@ export const createGame = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error al crear juego:', error);
     res.status(500).json({ error: 'Error al crear juego' });
-  }
-};
-
-// Importar juegos desde RAWG
-export const importFromRawg = async (req: Request, res: Response) => {
-  try {
-    const { count = 20 } = req.query;
-    const numCount = Number(count);
-    
-    // Validar que count sea un número válido
-    if (isNaN(numCount) || numCount <= 0 || numCount > 100) {
-      return res.status(400).json({ 
-        error: 'El parámetro count debe ser un número entre 1 y 100' 
-      });
-    }
-    
-    // Obtener juegos de RAWG
-    const games = await rawgApi.importGamesFromRawg(numCount);
-    
-    // Obtener categorías de la base de datos para hacer matching
-    const categoriesResult = await pool.query('SELECT id, name FROM categories');
-    const categories = categoriesResult.rows;
-    
-    // Insertar juegos en la base de datos
-    let insertedCount = 0;
-    for (const game of games) {
-      try {
-        // Intentar hacer match de la categoría con las categorías predefinidas
-        const matchedCategory = categories.find(cat => 
-          cat.name.toLowerCase() === game.category.toLowerCase() ||
-          game.category.toLowerCase().includes(cat.name.toLowerCase()) ||
-          cat.name.toLowerCase().includes(game.category.toLowerCase())
-        );
-        
-        await pool.query(
-          'INSERT INTO games (title, description, price, image_url, category, category_id) VALUES ($1, $2, $3, $4, $5, $6)',
-          [
-            game.title, 
-            game.description, 
-            game.price, 
-            game.image_url, 
-            game.category,
-            matchedCategory ? matchedCategory.id : null
-          ]
-        );
-        insertedCount++;
-      } catch (error) {
-        console.error(`Error al insertar juego ${game.title}:`, error);
-        // Continúa con el siguiente juego si hay error
-      }
-    }
-    
-    res.json({ 
-      message: `${insertedCount} juegos importados correctamente desde RAWG`,
-      totalRequested: numCount,
-      totalInserted: insertedCount 
-    });
-  } catch (error) {
-    console.error('Error al importar juegos desde RAWG:', error);
-    res.status(500).json({ error: 'Error al importar juegos desde RAWG' });
-  }
-};
-
-// Buscar en RAWG y mostrar resultados sin insertar
-export const searchRawg = async (req: Request, res: Response) => {
-  try {
-    const { q, page = 1, pageSize = 20 } = req.query;
-    
-    if (!q) {
-      return res.status(400).json({ error: 'Se requiere un término de búsqueda' });
-    }
-    
-    const numPage = Number(page);
-    const numPageSize = Number(pageSize);
-    
-    // Validar parámetros
-    if (isNaN(numPage) || numPage <= 0) {
-      return res.status(400).json({ error: 'El parámetro page debe ser un número positivo' });
-    }
-    
-    if (isNaN(numPageSize) || numPageSize <= 0 || numPageSize > 40) {
-      return res.status(400).json({ 
-        error: 'El parámetro pageSize debe ser un número entre 1 y 40' 
-      });
-    }
-    
-    // Buscar en RAWG
-    const rawgGames = await rawgApi.searchGames(q.toString(), numPage, numPageSize);
-    
-    // Convertir a nuestro formato
-    const games = rawgGames.map(rawgApi.convertRawgGameToOurFormat);
-    
-    res.json({ 
-      count: games.length,
-      results: games
-    });
-  } catch (error) {
-    console.error('Error al buscar juegos en RAWG:', error);
-    res.status(500).json({ error: 'Error al buscar juegos en RAWG' });
   }
 }; 

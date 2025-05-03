@@ -1,0 +1,291 @@
+// Estilos para la página de lista de deseos
+.header-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  ion-icon {
+    margin-right: 8px;
+    font-size: 20px;
+  }
+}
+
+// Badge del carrito
+.cart-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(30%, -30%);
+  border-radius: 50%;
+  font-size: 12px;
+  padding: 4px;
+  min-width: 18px;
+  min-height: 18px;
+  line-height: 1;
+  text-align: center;
+}
+
+.cart-badge-animation {
+  animation: bounce 0.5s ease-out;
+}
+
+@keyframes bounce {
+  0% { transform: translate(30%, -30%) scale(1); }
+  50% { transform: translate(30%, -30%) scale(1.3); }
+  100% { transform: translate(30%, -30%) scale(1); }
+}
+
+// Estilos para el contenedor de botones con iconos
+ion-buttons ion-button {
+  position: relative;
+}
+
+// Asegurar que el icono del carrito sea visible
+ion-button ion-icon {
+  font-size: 24px;
+}
+
+// Contenedor principal
+.wishlist-container {
+  padding: 16px;
+  background-color: var(--ion-background-color);
+}
+
+// Indicador de carga
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  
+  ion-spinner {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+  }
+  
+  p {
+    color: var(--ion-color-medium);
+    font-size: 16px;
+  }
+}
+
+// Estado vacío
+.empty-wishlist {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  height: 70vh;
+  
+  .empty-icon {
+    font-size: 80px;
+    color: var(--ion-color-medium);
+    margin-bottom: 20px;
+    opacity: 0.5;
+  }
+  
+  h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: var(--ion-color-dark);
+  }
+  
+  p {
+    font-size: 16px;
+    color: var(--ion-color-medium);
+    margin-bottom: 24px;
+    max-width: 300px;
+  }
+  
+  ion-button {
+    --border-radius: 8px;
+    font-weight: 600;
+    max-width: 300px;
+    width: 100%;
+  }
+}
+
+// Lista de deseos con elementos
+.wishlist-items {
+  .wishlist-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    
+    @media (min-width: 768px) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    h2 {
+      font-size: 22px;
+      font-weight: 600;
+      margin: 0 0 16px;
+      color: var(--ion-color-dark);
+      
+      @media (min-width: 768px) {
+        margin: 0;
+      }
+    }
+    
+    .wishlist-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      
+      ion-button {
+        margin: 0;
+        font-size: 14px;
+        
+        ion-icon {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+  
+  // Información de ordenación
+  .sort-info {
+    margin-bottom: 16px;
+    
+    ion-chip {
+      --background: transparent;
+      font-size: 14px;
+    }
+  }
+  
+  // Tarjeta de juego
+  .wishlist-card {
+    margin: 0 0 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--ion-card-background);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    &:active {
+      transform: scale(0.98);
+    }
+    
+    .card-content {
+      display: flex;
+      flex-direction: column;
+      
+      @media (min-width: 576px) {
+        flex-direction: row;
+      }
+      
+      .image-container {
+        position: relative;
+        height: 180px;
+        overflow: hidden;
+        
+        @media (min-width: 576px) {
+          width: 150px;
+          min-width: 150px;
+          height: 100%;
+        }
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        
+        .discount-badge {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          background-color: var(--ion-color-success);
+          color: white;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-size: 14px;
+          font-weight: 600;
+        }
+      }
+      
+      .item-details {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        
+        h3 {
+          font-size: 18px;
+          font-weight: 600;
+          margin: 0 0 12px;
+          color: var(--ion-color-dark);
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        
+        .rating-container {
+          margin-bottom: 12px;
+        }
+        
+        .price-info {
+          display: flex;
+          align-items: baseline;
+          margin-bottom: 16px;
+          
+          .original-price {
+            color: var(--ion-color-medium);
+            text-decoration: line-through;
+            margin-right: 8px;
+            font-size: 14px;
+          }
+          
+          .current-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--ion-color-dark);
+          }
+        }
+        
+        .action-buttons {
+          display: flex;
+          align-items: center;
+          margin-top: auto;
+          
+          ion-button {
+            margin: 0;
+            font-size: 14px;
+            
+            &:first-child {
+              flex: 1;
+              --border-radius: 8px;
+            }
+            
+            &:last-child {
+              --padding-start: 4px;
+              --padding-end: 4px;
+              margin-left: 8px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 576px) {
+  .wishlist-card .card-content {
+    flex-direction: column;
+    
+    .image-container {
+      width: 100%;
+      height: 180px;
+    }
+  }
+} 

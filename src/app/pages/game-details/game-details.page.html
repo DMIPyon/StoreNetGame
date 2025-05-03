@@ -1,0 +1,165 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" text="Regresar"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detalles del Juego</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/cart">
+        <ion-icon name="cart-outline" style="font-size: 24px;"></ion-icon>
+        <ion-badge *ngIf="cartItemCount > 0" color="danger" class="cart-badge cart-badge-animation">{{ cartItemCount }}</ion-badge>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="loading-container" *ngIf="isLoading">
+    <ion-spinner></ion-spinner>
+    <p>Cargando detalles...</p>
+  </div>
+
+  <div class="game-details" *ngIf="!isLoading && game">
+    <!-- Hero Section -->
+    <div class="hero-section" [style.background-image]="'url(' + (game.banner_url || 'https://via.placeholder.com/1200x600?text=No+Imagen+Disponible') + ')'">
+      <div class="hero-content">
+        <h1>{{ game.name }}</h1>
+        <span class="category-badge" *ngFor="let category of game.categories">{{ category }}</span>
+      </div>
+      <div class="wishlist-button" (click)="toggleWishlist()">
+        <ion-icon [name]="isInWishlist ? 'heart' : 'heart-outline'" 
+                 [color]="isInWishlist ? 'danger' : 'light'"
+                 class="wishlist-icon"></ion-icon>
+      </div>
+    </div>
+
+    <!-- Game Info -->
+    <div class="game-info-container">
+      <div class="main-info">
+        <div class="price-section">
+          <div class="price-container">
+            <h2 class="original-price" *ngIf="game.discount">{{ game.originalPrice | currency:'CLP':'symbol-narrow':'1.0-0' }}</h2>
+            <h2 class="price">{{ game.price | currency:'CLP':'symbol-narrow':'1.0-0' }}</h2>
+            <span class="discount-badge" *ngIf="game.discount">-{{ game.discount }}%</span>
+          </div>
+          <div class="action-buttons">
+            <ion-button expand="block" (click)="addToCart()" color="primary" class="add-to-cart-btn">
+              <ion-icon name="cart-outline" slot="start"></ion-icon>
+              Añadir al Carrito
+            </ion-button>
+            <ion-button expand="block" (click)="toggleWishlist()" [color]="isInWishlist ? 'danger' : 'medium'" class="wishlist-btn" fill="outline">
+              <ion-icon [name]="isInWishlist ? 'heart' : 'heart-outline'" slot="start"></ion-icon>
+              {{ isInWishlist ? 'Quitar de favoritos' : 'Añadir a favoritos' }}
+            </ion-button>
+          </div>
+        </div>
+
+        <div class="rating-section">
+          <h3>Calificación</h3>
+          <div class="rating-container">
+            <app-star-rating [rating]="game.rating || 0" size="large"></app-star-rating>
+          </div>
+        </div>
+
+        <div class="description-section">
+          <h3>Descripción</h3>
+          <p>{{ game.description || 'Un emocionante juego que ofrece una experiencia única para los jugadores. Con gráficos impresionantes y una jugabilidad cautivadora, este título promete horas de entretenimiento para todo tipo de gamers.' }}</p>
+        </div>
+
+        <!-- Características del juego -->
+        <div class="features-section">
+          <h3>Características</h3>
+          <ion-list>
+            <ion-item lines="none">
+              <ion-icon name="game-controller-outline" slot="start"></ion-icon>
+              <ion-label>
+                <h4>Género</h4>
+                <p>{{ (game.categories && game.categories.length) ? game.categories.join(', ') : 'No disponible' }}</p>
+              </ion-label>
+            </ion-item>
+            <ion-item lines="none">
+              <ion-icon name="business-outline" slot="start"></ion-icon>
+              <ion-label>
+                <h4>Desarrollador</h4>
+                <p>{{ game.developer || 'No disponible' }}</p>
+              </ion-label>
+            </ion-item>
+            <ion-item lines="none">
+              <ion-icon name="calendar-outline" slot="start"></ion-icon>
+              <ion-label>
+                <h4>Fecha de Lanzamiento</h4>
+                <p>{{ game.releaseDate || 'No disponible' }}</p>
+              </ion-label>
+            </ion-item>
+            <ion-item lines="none">
+              <ion-icon name="star-outline" slot="start"></ion-icon>
+              <ion-label>
+                <h4>Calificación</h4>
+                <p>{{ game.rating ? (game.rating + '/5') : 'No disponible' }}</p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </div>
+
+        <!-- Requisitos si existen -->
+        <div class="requirements-section" *ngIf="game.requirements">
+          <h3>Requisitos del Sistema</h3>
+          
+          <div class="requirements-columns">
+            <div class="minimum-requirements" *ngIf="game.requirements.minimum">
+              <h4>Mínimos</h4>
+              <ion-list>
+                <ion-item *ngIf="game.requirements.minimum.os">
+                  <ion-label>Sistema Operativo: {{ game.requirements.minimum.os }}</ion-label>
+                </ion-item>
+                <ion-item *ngIf="game.requirements.minimum.processor">
+                  <ion-label>Procesador: {{ game.requirements.minimum.processor }}</ion-label>
+                </ion-item>
+                <ion-item *ngIf="game.requirements.minimum.memory">
+                  <ion-label>Memoria: {{ game.requirements.minimum.memory }}</ion-label>
+                </ion-item>
+                <ion-item *ngIf="game.requirements.minimum.graphics">
+                  <ion-label>Gráficos: {{ game.requirements.minimum.graphics }}</ion-label>
+                </ion-item>
+                <ion-item *ngIf="game.requirements.minimum.storage">
+                  <ion-label>Almacenamiento: {{ game.requirements.minimum.storage }}</ion-label>
+                </ion-item>
+              </ion-list>
+            </div>
+            
+            <div class="recommended-requirements" *ngIf="game.requirements.recommended">
+              <h4>Recomendados</h4>
+              <ion-list>
+                <ion-item *ngIf="game.requirements.recommended.os">
+                  <ion-label>Sistema Operativo: {{ game.requirements.recommended.os }}</ion-label>
+                </ion-item>
+                <ion-item *ngIf="game.requirements.recommended.processor">
+                  <ion-label>Procesador: {{ game.requirements.recommended.processor }}</ion-label>
+                </ion-item>
+                <ion-item *ngIf="game.requirements.recommended.memory">
+                  <ion-label>Memoria: {{ game.requirements.recommended.memory }}</ion-label>
+                </ion-item>
+                <ion-item *ngIf="game.requirements.recommended.graphics">
+                  <ion-label>Gráficos: {{ game.requirements.recommended.graphics }}</ion-label>
+                </ion-item>
+                <ion-item *ngIf="game.requirements.recommended.storage">
+                  <ion-label>Almacenamiento: {{ game.requirements.recommended.storage }}</ion-label>
+                </ion-item>
+              </ion-list>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje de error si no se encuentra el juego -->
+  <div class="error-container" *ngIf="!isLoading && !game">
+    <ion-icon name="alert-circle-outline" size="large"></ion-icon>
+    <h2>Juego no encontrado</h2>
+    <p>Lo sentimos, no pudimos encontrar el juego que buscas.</p>
+    <ion-button routerLink="/home" fill="clear">
+      Volver al inicio
+    </ion-button>
+  </div>
+</ion-content> 

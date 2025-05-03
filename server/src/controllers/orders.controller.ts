@@ -7,7 +7,8 @@ import { v4 as uuidv4 } from 'uuid';
  */
 export const getUserOrders = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user.id;
+    // Obtener el ID del usuario desde el token JWT
+    const userId = req.user.id;
 
     const orders = await pool.query(
       `SELECT id, order_number, total_amount, status, payment_method, created_at 
@@ -36,7 +37,8 @@ export const getUserOrders = async (req: Request, res: Response) => {
  */
 export const getOrderDetails = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user.id;
+    // Obtener el ID del usuario desde el token JWT
+    const userId = req.user.id;
     const orderId = req.params.id;
 
     // Obtener información de la orden
@@ -89,7 +91,8 @@ export const createOrder = async (req: Request, res: Response) => {
   try {
     await client.query('BEGIN');
     
-    const userId = (req as any).user.id;
+    // Obtener el ID del usuario desde el token JWT
+    const userId = req.user.id;
     const { paymentMethod, shippingAddress } = req.body;
     
     // Obtener el carrito del usuario
@@ -194,7 +197,8 @@ export const createOrder = async (req: Request, res: Response) => {
  */
 export const cancelOrder = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user.id;
+    // Obtener el ID del usuario desde el token JWT
+    const userId = req.user.id;
     const orderId = req.params.id;
     
     // Verificar que la orden existe y pertenece al usuario

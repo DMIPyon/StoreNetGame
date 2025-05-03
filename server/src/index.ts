@@ -6,15 +6,14 @@ import categoryRoutes from './routes/categories.routes';
 import authRoutes from './routes/auth.routes';
 import cartRoutes from './routes/cart.routes';
 import orderRoutes from './routes/orders.routes';
+import adminRoutes from './routes/admin.routes';
 import { initDatabase } from './db/init';
+import { initializeCategories } from './controllers/category.controller';
 import expressPino from 'express-pino-logger';
 import logger from './utils/logger';
 import path from 'path';
 import expressLayouts from 'express-ejs-layouts';
 import { pool } from './config/database';
-import helmet from 'helmet';
-import xssClean from 'xss-clean';
-import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
 
@@ -29,12 +28,6 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Seguridad HTTP
-app.use(helmet());
-app.use(xssClean());
-const apiLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
-app.use('/api/', apiLimiter);
 
 // Configuración de vistas EJS y layouts
 app.set('views', path.join(__dirname, 'views'));
@@ -53,6 +46,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Documentación de la API
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -94,7 +88,10 @@ app.listen(PORT, async () => {
       await initDatabase();
       console.log('Base de datos inicializada correctamente');
     }
+    
+    // Inicializar categorías predefinidas
+    await initializeCategories();
   } catch (error) {
-    console.error('Error al inicializar la base de datos:', error);
+    console.error('Error durante la inicialización:', error);
   }
 }); 

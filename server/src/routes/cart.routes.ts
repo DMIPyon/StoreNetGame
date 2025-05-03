@@ -4,17 +4,17 @@ import {
   addItemToCart, 
   updateCartItem, 
   removeFromCart, 
-  clearCart 
+  clearCart,
+  checkAuthStatus
 } from '../controllers/cart.controller';
-import { authenticateToken } from '../middlewares/auth.middleware';
 
 const router = express.Router();
 
-// Todas las rutas de carrito requieren autenticación
-router.use(authenticateToken);
-
 // Obtener carrito del usuario actual
 router.get('/', getCart);
+
+// Verificar el estado de autenticación del usuario
+router.get('/check-auth', checkAuthStatus);
 
 // Añadir item al carrito
 router.post('/items', addItemToCart);

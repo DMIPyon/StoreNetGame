@@ -30,7 +30,7 @@ log.txt
 /bazel-out
 
 # Node
-/node_modules
+node_modules/
 npm-debug.log
 yarn-error.log
 
@@ -60,7 +60,6 @@ yarn-error.log
 /.nx
 /.nx/cache
 /connect.lock
-/coverage
 /libpeerconnection.log
 testem.log
 /typings
@@ -68,3 +67,7 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# New additions
+.env
+yarn-debug.log*

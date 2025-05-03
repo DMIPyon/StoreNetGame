@@ -1,6 +1,6 @@
 import express from 'express';
 import { register, login, getProfile, updateProfile, changePassword } from '../controllers/auth.controller';
-import { authenticateToken } from '../middlewares/auth.middleware';
+import { authenticateJWT, isAdmin } from '../middlewares/auth.middleware';
 
 const router = express.Router();
 
@@ -8,9 +8,9 @@ const router = express.Router();
 router.post('/register', register);
 router.post('/login', login);
 
-// Rutas protegidas (requieren autenticación)
-router.get('/profile', authenticateToken, getProfile);
-router.put('/profile', authenticateToken, updateProfile);
-router.post('/change-password', authenticateToken, changePassword);
+// Rutas de perfil con autenticación
+router.get('/profile', authenticateJWT, getProfile);
+router.put('/profile', authenticateJWT, updateProfile);
+router.post('/change-password', authenticateJWT, changePassword);
 
 export default router; 

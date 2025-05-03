@@ -1,57 +1,85 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import { pool } from '../db/database';
 
-dotenv.config();
+interface UserPayload {
+  userId: number;
+  username: string;
+  role?: string;
+}
 
-// Clave secreta para JWT
-const JWT_SECRET = process.env.JWT_SECRET || 'netgames_secret_key_2024';
-
-/**
- * Interfaz para incluir el usuario descifrado en la request
- */
 declare global {
   namespace Express {
     interface Request {
-      user?: any;
+      user?: UserPayload;
     }
   }
 }
 
-/**
- * Middleware para verificar el token JWT y establecer el usuario en la request
- */
-export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
+// Middleware para verificar el token JWT
+export const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader) {
+    return res.status(401).json({
+      success: false,
+      message: 'No se ha proporcionado un token de autenticación'
+    });
+  }
+  
+  const token = authHeader.split(' ')[1];
+  
   try {
-    // Obtener el header de autorización
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Formato: "Bearer TOKEN"
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secretkey') as UserPayload;
+    req.user = decoded;
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: 'Token inválido o expirado'
+    });
+  }
+};
+
+// Middleware para verificar si el usuario es administrador
+export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: 'Usuario no autenticado'
+    });
+  }
+  
+  try {
+    // Verificar si el usuario tiene rol de administrador
+    const result = await pool.query(
+      'SELECT role FROM users WHERE id = $1',
+      [req.user.userId]
+    );
     
-    if (!token) {
-      return res.status(401).json({ 
-        success: false, 
-        message: 'Acceso denegado. Token no proporcionado.' 
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Usuario no encontrado'
       });
     }
     
-    // Verificar token
-    jwt.verify(token, JWT_SECRET, (err: any, decoded: any) => {
-      if (err) {
-        return res.status(403).json({ 
-          success: false, 
-          message: 'Token inválido o expirado' 
-        });
-      }
-      
-      // Token válido, establecer usuario en la request
-      req.user = decoded;
-      next();
-    });
+    const userRole = result.rows[0].role;
+    
+    if (userRole !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Acceso denegado. Se requieren permisos de administrador'
+      });
+    }
+    
+    next();
   } catch (error) {
-    console.error('Error de autenticación:', error);
-    return res.status(500).json({ 
-      success: false, 
-      message: 'Error interno de autenticación' 
+    console.error('Error al verificar permisos de administrador:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al verificar permisos',
+      error: (error as Error).message
     });
   }
 }; 

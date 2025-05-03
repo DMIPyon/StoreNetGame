@@ -4,9 +4,13 @@ import { Pool } from 'pg';
 // Cargar variables de entorno
 dotenv.config();
 
-export const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production'
-    ? { rejectUnauthorized: false }
-    : false,
-}); 
+// Configuración de prueba explícita
+const dbConfig = {
+  host: 'localhost',
+  port: 5433,
+  user: 'postgres',
+  password: 'doma1128',
+  database: 'netgames'
+};
+
+export const pool = new Pool(dbConfig); 

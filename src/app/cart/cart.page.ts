@@ -7,6 +7,7 @@ import { CartItem } from '../interfaces/cart-item';
 import { Router } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
 import { FormatClpPipe } from '../pipes/format-clp.pipe';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-cart',
@@ -17,25 +18,38 @@ import { FormatClpPipe } from '../pipes/format-clp.pipe';
 })
 export class CartPage implements OnInit {
   cartItems: CartItem[] = [];
+  isAuthenticated = false;
+  isProcessing = false;
   
   constructor(
     private cartService: CartService,
     private router: Router,
     private alertController: AlertController,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
     this.loadCart();
     // Escuchar cambios en el carrito
-    this.cartService.getCartItems().subscribe((items: CartItem[]) => {
-      this.cartItems = items;
+    this.cartService.cart$.subscribe(cart => {
+      if (cart) {
+        this.cartItems = cart.items;
+      }
+    });
+    
+    // Verificar si el usuario está autenticado
+    this.isAuthenticated = this.authService.isAuthenticated;
+    this.authService.currentUser$.subscribe(user => {
+      this.isAuthenticated = !!user;
     });
   }
 
   loadCart() {
-    this.cartService.getCartItems().subscribe((items: CartItem[]) => {
-      this.cartItems = items;
+    this.cartService.loadCart().subscribe(cart => {
+      if (cart) {
+        this.cartItems = cart.items;
+      }
     });
   }
 
@@ -43,13 +57,13 @@ export class CartPage implements OnInit {
     const newQuantity = item.quantity + change;
     if (newQuantity < 1) return;
     
-    this.cartService.updateQuantity(item, newQuantity);
-    this.presentToast(`Cantidad actualizada: ${item.name} (${newQuantity})`);
+    this.cartService.updateCartItem(item.id, newQuantity).subscribe();
+    this.presentToast(`Cantidad actualizada: ${item.title} (${newQuantity})`);
   }
 
   removeItem(item: CartItem) {
-    this.cartService.removeItem(item);
-    this.presentToast(`${item.name} eliminado del carrito`);
+    this.cartService.removeFromCart(item.id).subscribe();
+    this.presentToast(`${item.title} eliminado del carrito`);
   }
 
   clearCart() {
@@ -64,7 +78,7 @@ export class CartPage implements OnInit {
         {
           text: 'Vaciar',
           handler: () => {
-            this.cartService.clearCart();
+            this.cartService.clearCart().subscribe();
             this.presentToast('Carrito vaciado');
           }
         }
@@ -128,5 +142,57 @@ export class CartPage implements OnInit {
       ]
     });
     await toast.present();
+  }
+
+  async checkoutCart() {
+    if (this.isProcessing) return;
+    
+    // Verificar si el usuario está autenticado
+    if (!this.isAuthenticated) {
+      this.presentAuthAlert();
+      return;
+    }
+    
+    // Procesar la compra
+    this.isProcessing = true;
+    
+    // Mostrar indicador de proceso
+    const loadingToast = await this.toastController.create({
+      message: 'Procesando tu compra...',
+      duration: 0,
+      position: 'middle',
+      cssClass: 'processing-toast'
+    });
+    await loadingToast.present();
+    
+    // Aquí iría la lógica para procesar la compra
+    setTimeout(async () => {
+      this.isProcessing = false;
+      await loadingToast.dismiss();
+      this.router.navigate(['/checkout-success']);
+    }, 2000);
+  }
+  
+  async presentAuthAlert() {
+    const alert = await this.alertController.create({
+      header: 'Iniciar sesión requerido',
+      message: 'Debes iniciar sesión para completar la compra',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Iniciar sesión',
+          handler: () => {
+            this.router.navigate(['/login'], { 
+              queryParams: { returnUrl: '/cart' } 
+            });
+          }
+        }
+      ],
+      cssClass: 'auth-alert'
+    });
+    await alert.present();
   }
 } 

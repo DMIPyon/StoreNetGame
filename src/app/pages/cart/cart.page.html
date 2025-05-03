@@ -1,0 +1,114 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <div class="header-title">
+        <ion-icon name="cart"></ion-icon>
+        Carrito
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Estado vacío del carrito -->
+  <div class="empty-cart" *ngIf="cartItems.length === 0">
+    <ion-icon name="cart-outline" class="empty-cart-icon"></ion-icon>
+    <h3>Tu carrito está vacío</h3>
+    <p>Agrega juegos a tu carrito para comenzar tu compra</p>
+    <ion-button expand="block" routerLink="/home" class="continue-shopping-btn">
+      <ion-icon name="game-controller-outline" slot="start"></ion-icon>
+      Explorar juegos
+    </ion-button>
+  </div>
+
+  <!-- Contenido del carrito con items -->
+  <div class="cart-content" *ngIf="cartItems.length > 0">
+    <div class="cart-header">
+      <h2>Productos en tu carrito ({{ cartItems.length }})</h2>
+      <ion-button fill="clear" (click)="confirmClearCart()" color="medium" size="small">
+        <ion-icon name="trash-outline" slot="start"></ion-icon>
+        Vaciar carrito
+      </ion-button>
+    </div>
+    
+    <div class="cart-items">
+      <ion-card class="cart-item" *ngFor="let item of cartItems" [attr.data-id]="item.id">
+        <div class="item-content">
+          <div class="item-image">
+            <img [src]="item.cover_url || 'assets/img/placeholder.png'" [alt]="item.title" />
+            <div class="discount-badge" *ngIf="item.discount">-{{ item.discount }}%</div>
+          </div>
+          
+          <div class="item-details">
+            <div class="item-header">
+              <h3 (click)="viewGameDetails(item.game_id)">{{ item.title }}</h3>
+              <ion-button fill="clear" color="danger" (click)="confirmRemoveItem(item)" class="remove-button">
+                <ion-icon name="close-circle-outline"></ion-icon>
+              </ion-button>
+            </div>
+            
+            <div class="price-container">
+              <div class="price-info">
+                <span class="original-price" *ngIf="item.discount && item.original_price">{{ item.original_price | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
+                <span class="actual-price">{{ item.price | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+              
+              <div class="quantity-selector">
+                <ion-button fill="clear" color="medium" (click)="decreaseQuantity(item)" [disabled]="item.quantity <= 1">
+                  <ion-icon name="remove-circle-outline"></ion-icon>
+                </ion-button>
+                <span class="quantity">{{ item.quantity }}</span>
+                <ion-button fill="clear" color="medium" (click)="increaseQuantity(item)">
+                  <ion-icon name="add-circle-outline"></ion-icon>
+                </ion-button>
+              </div>
+            </div>
+            
+            <div class="item-total">
+              <small>Subtotal:</small>
+              <span>{{ item.price * item.quantity | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
+            </div>
+          </div>
+        </div>
+      </ion-card>
+    </div>
+
+    <ion-card class="cart-summary">
+      <ion-card-header>
+        <ion-card-title>Resumen de compra</ion-card-title>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <div class="summary-item">
+          <span>Subtotal</span>
+          <span>{{ getSubtotal() | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
+        </div>
+        
+        <div class="summary-item">
+          <span>IVA (19%)</span>
+          <span>{{ getIVA() | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
+        </div>
+        
+        <div class="summary-divider"></div>
+        
+        <div class="summary-total">
+          <span>Total</span>
+          <span>{{ getTotal() | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
+        </div>
+        
+        <ion-button expand="block" color="success" (click)="checkout()" class="checkout-button">
+          <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+          Completar compra
+        </ion-button>
+        
+        <ion-button expand="block" fill="outline" routerLink="/home" class="continue-shopping">
+          <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+          Seguir comprando
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content> 

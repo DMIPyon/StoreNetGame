@@ -1,8 +1,11 @@
 export interface CartItem {
   id: number;
-  name: string;
-  price: number;
-  image: string;
+  game_id: number;
   quantity: number;
-  originalPrice?: number;
+  title: string;
+  price: number;
+  cover_url: string;
+  discount?: number;
+  original_price?: number;
+  itemTotal: number;
 } 

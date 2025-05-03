@@ -9,19 +9,16 @@ import { authenticateToken } from '../middlewares/auth.middleware';
 
 const router = express.Router();
 
-// Todas las rutas de órdenes requieren autenticación
-router.use(authenticateToken);
-
 // Obtener todas las órdenes del usuario
-router.get('/', getUserOrders);
+router.get('/', authenticateToken, getUserOrders);
 
 // Obtener detalles de una orden específica
-router.get('/:id', getOrderDetails);
+router.get('/:id', authenticateToken, getOrderDetails);
 
 // Crear una nueva orden
-router.post('/', createOrder);
+router.post('/', authenticateToken, createOrder);
 
 // Cancelar una orden
-router.put('/:id/cancel', cancelOrder);
+router.put('/:id/cancel', authenticateToken, cancelOrder);
 
 export default router; 

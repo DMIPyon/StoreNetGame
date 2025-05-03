@@ -68,9 +68,10 @@
         <span>Total</span>
         <span>{{getTotal() | formatClp}}</span>
       </div>
-      <ion-button expand="block" class="checkout-button">
-        Finalizar Compra
-        <ion-icon name="arrow-forward" slot="end"></ion-icon>
+      <ion-button expand="block" class="checkout-button" (click)="checkoutCart()" [disabled]="isProcessing">
+        {{ isProcessing ? 'Procesando...' : 'Finalizar Compra' }}
+        <ion-icon name="arrow-forward" slot="end" *ngIf="!isProcessing"></ion-icon>
+        <ion-spinner name="dots" *ngIf="isProcessing"></ion-spinner>
       </ion-button>
     </div>
   </div>

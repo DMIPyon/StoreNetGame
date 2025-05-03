@@ -1,0 +1,390 @@
+// Estilos para el header
+ion-toolbar {
+  --background: #171a21;
+  --color: white;
+}
+
+// Estilos para el contador del carrito
+.cart-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(30%, -30%);
+  border-radius: 50%;
+  font-size: 12px;
+  padding: 4px;
+  min-width: 18px;
+  min-height: 18px;
+  line-height: 1;
+  text-align: center;
+}
+
+// Animación del contador
+.cart-badge-animation {
+  animation: bounce 0.5s ease-out;
+}
+
+@keyframes bounce {
+  0% { transform: translate(30%, -30%) scale(1); }
+  50% { transform: translate(30%, -30%) scale(1.3); }
+  100% { transform: translate(30%, -30%) scale(1); }
+}
+
+// Estilos para el contenedor de botones con iconos
+ion-buttons ion-button {
+  position: relative;
+}
+
+// Hero Section
+.hero-section {
+  position: relative;
+  height: 40vh;
+  max-height: 400px;
+  min-height: 200px;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%);
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+    width: 100%;
+    
+    h1 {
+      color: white;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    .category-badge {
+      display: inline-block;
+      background-color: rgba(255,255,255,0.2);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 16px;
+      font-size: 12px;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+  }
+  
+  .wishlist-button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    
+    &:active {
+      transform: scale(0.9);
+    }
+    
+    .wishlist-icon {
+      font-size: 24px;
+      transition: transform 0.3s ease;
+      
+      &.ion-color-danger {
+        animation: pulse 1s ease-out;
+      }
+    }
+  }
+}
+
+// Animación para el corazón
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+// Game Info Container
+.game-info-container {
+  padding: 16px;
+  
+  .main-info {
+    background-color: var(--ion-card-background);
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  
+  // Sección de precio y botones
+  .price-section {
+    padding: 20px;
+    border-bottom: 1px solid var(--ion-border-color);
+    
+    .price-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      
+      .price {
+        color: var(--ion-color-dark);
+        font-size: 24px;
+        font-weight: 700;
+        margin: 0;
+      }
+      
+      .original-price {
+        color: var(--ion-color-medium);
+        font-size: 18px;
+        text-decoration: line-through;
+        margin: 0 12px 0 0;
+        opacity: 0.8;
+      }
+      
+      .discount-badge {
+        background-color: var(--ion-color-success);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 600;
+        margin-left: 12px;
+      }
+    }
+    
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      
+      .add-to-cart-btn {
+        --border-radius: 8px;
+        margin: 0;
+        font-weight: 600;
+      }
+      
+      .wishlist-btn {
+        --border-radius: 8px;
+        margin: 0;
+      }
+    }
+  }
+  
+  // Sección de calificación
+  .rating-section {
+    padding: 20px;
+    border-bottom: 1px solid var(--ion-border-color);
+    
+    h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .rating-container {
+      display: flex;
+      align-items: center;
+    }
+  }
+  
+  // Sección de descripción
+  .description-section {
+    padding: 20px;
+    border-bottom: 1px solid var(--ion-border-color);
+    
+    h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    p {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ion-color-medium-shade);
+    }
+  }
+  
+  // Sección de características
+  .features-section {
+    padding: 20px;
+    border-bottom: 1px solid var(--ion-border-color);
+    
+    h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    ion-list {
+      padding: 0;
+      background: transparent;
+    }
+    
+    ion-item {
+      --padding-start: 0;
+      --inner-padding-end: 0;
+      
+      h4 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+      }
+      
+      p {
+        margin-top: 4px;
+        font-size: 15px;
+        color: var(--ion-color-medium);
+      }
+      
+      ion-icon {
+        margin-right: 16px;
+        color: var(--ion-color-primary);
+      }
+    }
+  }
+  
+  // Sección de requisitos
+  .requirements-section {
+    padding: 20px;
+    
+    h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    h4 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ion-color-dark);
+    }
+    
+    .requirements-columns {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      
+      @media (min-width: 768px) {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    ion-list {
+      padding: 0;
+      background: transparent;
+    }
+    
+    ion-item {
+      --padding-start: 0;
+      --inner-padding-end: 0;
+      --min-height: 40px;
+      
+      ion-label {
+        white-space: normal;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+// Contenedor de mensaje de error
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  padding: 20px;
+  
+  ion-icon {
+    font-size: 64px;
+    color: var(--ion-color-danger);
+    margin-bottom: 16px;
+  }
+  
+  h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: var(--ion-color-dark);
+  }
+  
+  p {
+    font-size: 16px;
+    color: var(--ion-color-medium);
+    margin-bottom: 20px;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .hero-section {
+    height: 40vh;
+    
+    .hero-content {
+      left: 1rem;
+      bottom: 1rem;
+      
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  }
+  
+  .game-info-container {
+    padding: 1rem;
+  }
+}
+
+// Contenedor principal de detalles
+.game-details {
+  width: 100%;
+  background-color: var(--ion-background-color);
+}
+
+// Media queries para responsividad
+@media (min-width: 768px) {
+  .hero-section {
+    height: 50vh;
+    
+    .hero-content h1 {
+      font-size: 36px;
+    }
+  }
+  
+  .game-info-container .price-section .action-buttons {
+    flex-direction: row;
+    
+    .add-to-cart-btn {
+      flex: 2;
+    }
+    
+    .wishlist-btn {
+      flex: 1;
+    }
+  }
+} 

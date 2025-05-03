@@ -1,0 +1,63 @@
+/* Estilos para la página de registro */
+
+.register-container {
+  padding: 20px;
+  height: 100%;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+  margin-top: 20px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.subtitle {
+  color: var(--ion-color-medium);
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 30px;
+}
+
+.register-form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+ion-item {
+  --padding-start: 0;
+  margin-bottom: 15px;
+  --border-color: var(--ion-color-light);
+  --highlight-color-focused: var(--ion-color-primary);
+}
+
+.terms-item {
+  margin-top: 20px;
+}
+
+.terms-text {
+  font-size: 14px;
+  color: var(--ion-color-medium);
+}
+
+.register-button {
+  margin: 30px 0 20px;
+}
+
+.login-link {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.login-link p {
+  color: var(--ion-color-medium);
+  font-size: 14px;
+}
+
+.login-link a {
+  color: var(--ion-color-primary);
+  font-weight: 500;
+  text-decoration: none;
+} 

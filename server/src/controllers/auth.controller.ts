@@ -170,7 +170,8 @@ export const login = async (req: Request, res: Response) => {
  */
 export const getProfile = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user.id;
+    // Usar un ID de usuario temporal (1) ya que no hay autenticación
+    const userId = 1;
 
     const result = await pool.query(
       `SELECT id, username, email, first_name, last_name, profile_image, created_at
@@ -215,7 +216,8 @@ export const getProfile = async (req: Request, res: Response) => {
  */
 export const updateProfile = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user.id;
+    // Usar un ID de usuario temporal (1) ya que no hay autenticación
+    const userId = 1;
     const { firstName, lastName, profileImage } = req.body;
 
     // Actualizar solo los campos proporcionados
@@ -251,7 +253,7 @@ export const updateProfile = async (req: Request, res: Response) => {
     updateQuery += ` WHERE id = $${updateValues.length + 1} RETURNING id, username, email, first_name, last_name, profile_image`;
     updateValues.push(userId);
 
-    // Ejecutar actualización
+    // Ejecutar la actualización
     const result = await pool.query(updateQuery, updateValues);
 
     if (result.rows.length === 0) {
@@ -291,10 +293,10 @@ export const updateProfile = async (req: Request, res: Response) => {
  */
 export const changePassword = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user.id;
+    // Usar un ID de usuario temporal (1) ya que no hay autenticación
+    const userId = 1;
     const { currentPassword, newPassword } = req.body;
 
-    // Validaciones básicas
     if (!currentPassword || !newPassword) {
       return res.status(400).json({
         success: false,
@@ -302,7 +304,7 @@ export const changePassword = async (req: Request, res: Response) => {
       });
     }
 
-    // Obtener información del usuario
+    // Obtener datos del usuario
     const userResult = await pool.query(
       'SELECT password_hash FROM users WHERE id = $1',
       [userId]
@@ -323,7 +325,7 @@ export const changePassword = async (req: Request, res: Response) => {
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
-        message: 'La contraseña actual es incorrecta'
+        message: 'Contraseña actual incorrecta'
       });
     }
 

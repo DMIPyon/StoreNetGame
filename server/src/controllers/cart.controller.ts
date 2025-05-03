@@ -1,12 +1,16 @@
 import { Request, Response } from 'express';
 import { pool } from '../config/database';
 
+// ID de sesión temporal para carrito anónimo
+const ANONYMOUS_USER_ID = 999;
+
 /**
  * Obtener el carrito del usuario actual
  */
 export const getCart = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user.id;
+    // Usar un ID fijo para usuario anónimo
+    const userId = ANONYMOUS_USER_ID;
 
     // Obtener el carrito del usuario
     const cartResult = await pool.query(
@@ -28,7 +32,7 @@ export const getCart = async (req: Request, res: Response) => {
 
     // Obtener los items del carrito con información del juego
     const cartItemsResult = await pool.query(
-      `SELECT ci.id, ci.game_id, ci.quantity, g.title, g.price, g.image_url, g.discount, g.original_price
+      `SELECT ci.id, ci.game_id, ci.quantity, g.title, g.price, g.cover_url, g.discount, g.original_price
        FROM cart_items ci
        JOIN games g ON ci.game_id = g.id
        WHERE ci.cart_id = $1`,
@@ -70,8 +74,11 @@ export const getCart = async (req: Request, res: Response) => {
  */
 export const addItemToCart = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user.id;
+    // Usar un ID fijo para usuario anónimo
+    const userId = ANONYMOUS_USER_ID;
     const { gameId, quantity = 1 } = req.body;
+
+    console.log('Añadiendo al carrito:', { gameId, quantity, userId });
 
     if (!gameId) {
       return res.status(400).json({
@@ -102,6 +109,7 @@ export const addItemToCart = async (req: Request, res: Response) => {
     let cartId;
     if (cartResult.rows.length === 0) {
       // Crear nuevo carrito
+      console.log('Creando nuevo carrito para usuario:', userId);
       const newCartResult = await pool.query(
         'INSERT INTO carts (user_id) VALUES ($1) RETURNING id',
         [userId]
@@ -109,6 +117,7 @@ export const addItemToCart = async (req: Request, res: Response) => {
       cartId = newCartResult.rows[0].id;
     } else {
       cartId = cartResult.rows[0].id;
+      console.log('Usando carrito existente:', cartId);
     }
 
     // Verificar si el juego ya está en el carrito
@@ -120,12 +129,20 @@ export const addItemToCart = async (req: Request, res: Response) => {
     if (existingItemResult.rows.length > 0) {
       // Actualizar cantidad si ya existe
       const newQuantity = existingItemResult.rows[0].quantity + quantity;
+      console.log('Actualizando cantidad de item existente:', {
+        itemId: existingItemResult.rows[0].id,
+        oldQuantity: existingItemResult.rows[0].quantity,
+        newQuantity
+      });
+      
       await pool.query(
         'UPDATE cart_items SET quantity = $1 WHERE id = $2',
         [newQuantity, existingItemResult.rows[0].id]
       );
     } else {
       // Agregar nuevo item al carrito
+      console.log('Agregando nuevo item al carrito:', { cartId, gameId, quantity });
+      
       await pool.query(
         'INSERT INTO cart_items (cart_id, game_id, quantity) VALUES ($1, $2, $3)',
         [cartId, gameId, quantity]
@@ -162,7 +179,8 @@ export const addItemToCart = async (req: Request, res: Response) => {
  */
 export const updateCartItem = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user.id;
+    // Usar un ID fijo para usuario anónimo
+    const userId = ANONYMOUS_USER_ID;
     const { itemId } = req.params;
     const { quantity } = req.body;
 
@@ -227,7 +245,8 @@ export const updateCartItem = async (req: Request, res: Response) => {
  */
 export const removeFromCart = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user.id;
+    // Usar un ID fijo para usuario anónimo
+    const userId = ANONYMOUS_USER_ID;
     const { itemId } = req.params;
 
     // Verificar que el item pertenece al carrito del usuario
@@ -261,11 +280,7 @@ export const removeFromCart = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'Producto eliminado del carrito',
-      data: {
-        itemId,
-        gameTitle: itemResult.rows[0].title
-      }
+      message: 'Producto eliminado del carrito'
     });
   } catch (error) {
     console.error('Error al eliminar item del carrito:', error);
@@ -278,11 +293,12 @@ export const removeFromCart = async (req: Request, res: Response) => {
 };
 
 /**
- * Vaciar el carrito
+ * Vaciar todo el carrito
  */
 export const clearCart = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user.id;
+    // Usar un ID fijo para usuario anónimo
+    const userId = ANONYMOUS_USER_ID;
 
     // Obtener el carrito del usuario
     const cartResult = await pool.query(
@@ -313,13 +329,45 @@ export const clearCart = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'Carrito vaciado exitosamente'
+      message: 'Carrito vaciado correctamente'
     });
   } catch (error) {
     console.error('Error al vaciar el carrito:', error);
     res.status(500).json({
       success: false,
       message: 'Error al vaciar el carrito',
+      error: (error as Error).message
+    });
+  }
+};
+
+/**
+ * Verificar el estado de autenticación del usuario
+ */
+export const checkAuthStatus = async (req: Request, res: Response) => {
+  try {
+    // Comprobar si hay un token de autenticación
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; // Formato: "Bearer TOKEN"
+    
+    if (!token) {
+      return res.status(200).json({
+        success: true,
+        isAuthenticated: false,
+        message: 'Debes iniciar sesión para completar la compra'
+      });
+    }
+    
+    // Si hay token, el usuario está autenticado
+    return res.status(200).json({
+      success: true,
+      isAuthenticated: true
+    });
+  } catch (error) {
+    console.error('Error al verificar estado de autenticación:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al verificar estado de autenticación',
       error: (error as Error).message
     });
   }

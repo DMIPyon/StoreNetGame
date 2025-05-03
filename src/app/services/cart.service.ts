@@ -12,14 +12,14 @@ export interface CartItem {
   quantity: number;
   title: string;
   price: number;
-  image_url: string;
-  itemTotal: number;
+  cover_url: string;
   discount?: number;
   original_price?: number;
+  itemTotal: number;
 }
 
 export interface Cart {
-  cartId: number;
+  cartId?: number;
   items: CartItem[];
   totalAmount: number;
   itemCount: number;
@@ -30,6 +30,7 @@ export interface Cart {
 })
 export class CartService {
   private apiUrl = `${environment.apiUrl}/cart`;
+  private localStorageKey = 'cart_anonymous';
   
   // BehaviorSubject para mantener el estado del carrito
   private cartSubject = new BehaviorSubject<Cart | null>(null);
@@ -44,17 +45,19 @@ export class CartService {
     private toastService: ToastService,
     private authService: AuthService
   ) {
-    // Si el usuario está autenticado, cargar el carrito al iniciar
+    // Inicializar carrito según autenticación
     if (this.authService.isAuthenticated) {
       this.loadCart();
+    } else {
+      this.loadLocalCart();
     }
-    
+
     // Suscribirse a cambios en la autenticación
     this.authService.currentUser$.subscribe(user => {
       if (user) {
-        this.loadCart();
+        this.mergeLocalCartWithBackend();
       } else {
-        this.cartSubject.next(null);
+        this.loadLocalCart();
       }
     });
   }
@@ -82,12 +85,59 @@ export class CartService {
     );
   }
 
+  // --- Carrito anónimo (localStorage) ---
+  private loadLocalCart() {
+    const localCart = localStorage.getItem(this.localStorageKey);
+    let cart: Cart = { items: [], totalAmount: 0, itemCount: 0 };
+    if (localCart) {
+      try {
+        cart = JSON.parse(localCart);
+      } catch (e) { cart = { items: [], totalAmount: 0, itemCount: 0 }; }
+    }
+    this.cartSubject.next(cart);
+  }
+
+  private saveLocalCart(cart: Cart) {
+    localStorage.setItem(this.localStorageKey, JSON.stringify(cart));
+    this.cartSubject.next(cart);
+  }
+
+  private clearLocalCart() {
+    localStorage.removeItem(this.localStorageKey);
+    this.cartSubject.next({ items: [], totalAmount: 0, itemCount: 0 });
+  }
+
+  // --- Fusión de carritos al login ---
+  private mergeLocalCartWithBackend() {
+    const localCart = localStorage.getItem(this.localStorageKey);
+    if (!localCart) {
+      this.loadCart().subscribe();
+      return;
+    }
+    const cart: Cart = JSON.parse(localCart);
+    if (cart.items.length === 0) {
+      this.loadCart().subscribe();
+      return;
+    }
+    // Añadir todos los items del carrito local al backend
+    const addAll = cart.items.map(item =>
+      this.http.post<any>(`${this.apiUrl}/items`, { gameId: item.game_id, quantity: item.quantity })
+    );
+    Promise.all(addAll.map(obs => obs.toPromise())).then(() => {
+      this.clearLocalCart();
+      this.loadCart().subscribe();
+    });
+  }
+
   /**
    * Cargar el carrito del usuario desde el servidor
    */
   loadCart(): Observable<Cart> {
+    if (!this.authService.isAuthenticated) {
+      this.loadLocalCart();
+      return new BehaviorSubject(this.cartSubject.value as Cart).asObservable();
+    }
     this.loadingSubject.next(true);
-    
     return this.http.get<any>(this.apiUrl)
       .pipe(
         map(response => {
@@ -110,13 +160,35 @@ export class CartService {
    * Añadir un item al carrito
    */
   addToCart(gameId: number, quantity: number = 1): Observable<any> {
+    if (!this.authService.isAuthenticated) {
+      // Carrito anónimo
+      let cart = this.cartSubject.value || { items: [], totalAmount: 0, itemCount: 0 };
+      const idx = cart.items.findIndex(i => i.game_id === gameId);
+      if (idx > -1) {
+        cart.items[idx].quantity += quantity;
+        cart.items[idx].itemTotal = cart.items[idx].price * cart.items[idx].quantity;
+      } else {
+        cart.items.push({
+          id: Date.now(),
+          game_id: gameId,
+          quantity,
+          title: 'Juego',
+          price: 0,
+          cover_url: '',
+          itemTotal: 0
+        });
+      }
+      cart.itemCount = cart.items.reduce((sum, i) => sum + i.quantity, 0);
+      cart.totalAmount = cart.items.reduce((sum, i) => sum + i.itemTotal, 0);
+      this.saveLocalCart(cart);
+      return new BehaviorSubject({ success: true }).asObservable();
+    }
+    // Carrito autenticado
     this.loadingSubject.next(true);
-    
     return this.http.post<any>(`${this.apiUrl}/items`, { gameId, quantity })
       .pipe(
         tap(response => {
           if (response.success) {
-            this.toastService.showSuccess('Juego agregado al carrito');
             this.loadCart().subscribe();
           }
         }),
@@ -159,8 +231,16 @@ export class CartService {
    * Eliminar un item del carrito
    */
   removeFromCart(itemId: number): Observable<any> {
+    if (!this.authService.isAuthenticated) {
+      let cart = this.cartSubject.value || { items: [], totalAmount: 0, itemCount: 0 };
+      cart.items = cart.items.filter(i => i.id !== itemId);
+      cart.itemCount = cart.items.reduce((sum, i) => sum + i.quantity, 0);
+      cart.totalAmount = cart.items.reduce((sum, i) => sum + i.itemTotal, 0);
+      this.saveLocalCart(cart);
+      this.toastService.showSuccess('Producto eliminado del carrito');
+      return new BehaviorSubject({ success: true }).asObservable();
+    }
     this.loadingSubject.next(true);
-    
     return this.http.delete<any>(`${this.apiUrl}/items/${itemId}`)
       .pipe(
         tap(response => {
@@ -184,14 +264,18 @@ export class CartService {
    * Vaciar el carrito
    */
   clearCart(): Observable<any> {
+    if (!this.authService.isAuthenticated) {
+      this.clearLocalCart();
+      this.toastService.showSuccess('Carrito vaciado');
+      return new BehaviorSubject({ success: true }).asObservable();
+    }
     this.loadingSubject.next(true);
-    
     return this.http.delete<any>(this.apiUrl)
       .pipe(
         tap(response => {
           if (response.success) {
             this.toastService.showSuccess('Carrito vaciado');
-            this.cartSubject.next(null);
+            this.cartSubject.next({ items: [], totalAmount: 0, itemCount: 0 });
           }
         }),
         catchError(error => {
