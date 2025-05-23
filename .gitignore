@@ -72,6 +72,10 @@ Thumbs.db
 .env
 yarn-debug.log*
 
+# New additions
+.env
+yarn-debug.log*
+
 # Ignorar posibles archivos de base de datos y configuraciones sensibles
 *.db
 *.sqlite
