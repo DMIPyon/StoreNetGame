@@ -104,12 +104,12 @@ export class GameDetailsPage implements OnInit {
   // Método para obtener una imagen de mejor calidad
   getHighQualityImage(imageUrl: string): string {
     if (!imageUrl) {
-      return 'https://via.placeholder.com/1200x600?text=Imagen+No+Disponible';
+      return 'https://placehold.co/1200x600?text=Imagen+No+Disponible';
     }
     
     // Si la URL no comienza con http, probablemente sea una ruta relativa o inválida
     if (!imageUrl.startsWith('http')) {
-      return 'https://via.placeholder.com/1200x600?text=Imagen+No+Disponible';
+      return 'https://placehold.co/1200x600?text=Imagen+No+Disponible';
     }
     
     // Mejorar calidad para imágenes de PlayStation
@@ -184,13 +184,13 @@ export class GameDetailsPage implements OnInit {
     
     if (isBanner) {
       // Para imagen de banner/hero, usar una imagen de alta calidad
-      event.target.src = 'https://via.placeholder.com/1200x600?text=Imagen+De+Alta+Calidad';
+      event.target.src = 'https://placehold.co/1200x600?text=Imagen+De+Alta+Calidad';
     } else if (isCover) {
       // Para imagen de portada/cover, usar una imagen cuadrada
-      event.target.src = 'https://via.placeholder.com/600x900?text=Portada+Del+Juego';
+      event.target.src = 'https://placehold.co/600x900?text=Portada+Del+Juego';
     } else {
       // Para otras imágenes, usar una genérica
-      event.target.src = 'https://via.placeholder.com/400x400?text=Juego+No+Disponible';
+      event.target.src = 'https://placehold.co/400x400?text=Juego+No+Disponible';
     }
     
     // Añadir clase para estilos específicos en imágenes de fallback

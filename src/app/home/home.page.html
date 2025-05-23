@@ -2,9 +2,9 @@
   <ion-toolbar color="primary" class="main-header">
     <div class="header-flex-row">
       <div class="header-center-group">
-        <div class="logo-title-group">
-          <ion-icon name="game-controller-outline" class="header-logo"></ion-icon>
-          <span class="header-title">NetGames</span>
+        <div class="logo-title-group" style="display: flex; align-items: center; gap: 16px;">
+          <img src="assets/img/netgames-logo.png" alt="NetGames Logo" class="header-logo-img" style="height: 56px; width: 56px; object-fit: contain;">
+          <span class="header-title" style="font-size: 2.5rem; font-weight: bold;">NetGames</span>
         </div>
         <ion-searchbar class="header-searchbar" [(ngModel)]="searchTerm" (ionInput)="updateSearchTerm(searchTerm)" placeholder="Buscar juegos..." animated="true"></ion-searchbar>
       </div>
@@ -27,8 +27,11 @@
           <ion-button *ngIf="!isAuthenticated" routerLink="/main-login">
             <ion-icon name="person-outline"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="isAuthenticated" (click)="presentUserMenu($event)">
-            <ion-icon name="person"></ion-icon>
+          <ion-button *ngIf="isAuthenticated" (click)="toggleUserCardDropdown($event)">
+            <img *ngIf="currentUser?.profileImage; else defaultAvatar" [src]="currentUser.profileImage" alt="Avatar" class="header-avatar-img" />
+            <ng-template #defaultAvatar>
+              <img src="assets/img/netgames-logo.png" alt="Avatar NetGames" class="header-avatar-img" />
+            </ng-template>
           </ion-button>
           <div class="header-icon-label">
             {{ isAuthenticated ? currentUser?.username || 'Perfil' : 'Iniciar sesión' }}
@@ -42,20 +45,22 @@
 <ion-content>
   <div class="home-layout">
     <div class="main-content">
-      <!-- Banner principal grande -->
+      <!-- Banner principal grande tipo carrusel -->
       <div class="main-banner-visual" *ngIf="featuredGames.length > 0"
-           [ngStyle]="{'background-image': 'url(' + (featuredGames[0].banner_url || 'https://via.placeholder.com/1200x600?text=No+Banner') + ')'}">
+           [ngStyle]="{'background-image': 'url(' + (featuredGames[currentBannerIndex].banner_url || 'https://placehold.co/1200x600?text=No+Banner') + ')'}"
+           [ngClass]="{'animate-banner': true}" [style.animation-delay]="currentBannerIndex * 0.1 + 's'"
+           [class.fade-out]="isBannerFading">
         <div class="main-banner-gradient"></div>
         <div class="main-banner-content">
-          <h2 class="main-banner-title">{{ featuredGames[0].name }}</h2>
-          <p class="main-banner-desc">{{ featuredGames[0].description }}</p>
+          <h2 class="main-banner-title">{{ featuredGames[currentBannerIndex].name }}</h2>
+          <p class="main-banner-desc">{{ featuredGames[currentBannerIndex].description }}</p>
           <ion-button class="main-banner-btn" size="large" color="secondary"
-                      (click)="viewGameDetails(featuredGames[0].id)">Ver detalles</ion-button>
+                      (click)="viewGameDetails(featuredGames[currentBannerIndex].id)">Ver detalles</ion-button>
         </div>
       </div>
       <!-- Si no hay featuredGames, muestra un banner por defecto -->
       <div class="main-banner-visual" *ngIf="featuredGames.length === 0"
-           [ngStyle]="{'background-image': 'url(https://via.placeholder.com/1200x600?text=No+Banner)'}">
+           [ngStyle]="{'background-image': 'url(https://placehold.co/1200x600?text=No+Banner)'}">
         <div class="main-banner-gradient"></div>
         <div class="main-banner-content">
           <h2 class="main-banner-title">¡Bienvenido a NetGames!</h2>
@@ -185,7 +190,7 @@
         <ion-card class="rating-card" *ngFor="let game of topRatedGames.slice(0,6)">
           <div class="rating-card-inner">
             <div class="rating-image">
-              <img [src]="game.cover_url || 'https://via.placeholder.com/400x200?text=No+Imagen+Disponible'" [alt]="game.title">
+              <img [src]="game.cover_url || 'https://placehold.co/400x200?text=No+Imagen+Disponible'" [alt]="game.title">
             </div>
             <div class="rating-content">
               <h3>{{ game.title }}</h3>
@@ -239,6 +244,23 @@
           </ion-content>
         </ng-template>
       </ion-modal>
+    </div>
+  </div>
+
+  <div class="user-menu-float" *ngIf="showUserCardDropdown">
+    <div class="user-menu-arrow"></div>
+    <div class="user-menu-list">
+      <div class="user-menu-header">
+        <img *ngIf="currentUser?.profileImage" [src]="currentUser.profileImage" alt="Avatar" class="user-menu-avatar" />
+        <div class="user-menu-username">{{ currentUser?.username }}</div>
+      </div>
+      <button class="menu-item animate-menu" (click)="goToProfile(); closeUserCardDropdown()">Mi Perfil</button>
+      <button class="menu-item animate-menu" (click)="goToOrders(); closeUserCardDropdown()">Mis Compras</button>
+      <button class="menu-item animate-menu" (click)="goToWallet(); closeUserCardDropdown()">Mi Cartera</button>
+      <div class="menu-separator"></div>
+      <button class="logout-btn animate-menu" (click)="logout(); closeUserCardDropdown()">
+        <span class="logout-icon">&#x2716;</span> Cerrar sesión
+      </button>
     </div>
   </div>
 </ion-content>

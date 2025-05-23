@@ -16,9 +16,20 @@ import expressLayouts from 'express-ejs-layouts';
 import { pool } from './config/database';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
+import { errorHandler } from './middlewares/error.middleware';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 
 // Configurar variables de entorno
 dotenv.config();
+
+// Validar variables de entorno críticas
+const requiredEnv = ['JWT_SECRET', 'RAWG_API_KEY', 'DATABASE_URL'];
+const missingEnv = requiredEnv.filter((key) => !process.env[key]);
+if (missingEnv.length > 0) {
+  console.error('Faltan variables de entorno críticas:', missingEnv.join(', '));
+  process.exit(1);
+}
 
 // Inicializar app Express
 const app = express();
@@ -39,6 +50,14 @@ app.set('layout', 'layout');
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(expressPino({ logger }));
+
+app.use(helmet());
+app.use(rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // máximo 100 peticiones por IP
+  standardHeaders: true,
+  legacyHeaders: false,
+}));
 
 // Rutas
 app.use('/api/games', gameRoutes);
@@ -68,14 +87,7 @@ app.get('/', async (req, res, next) => {
 });
 
 // Manejador de errores global
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  logger.error({ err }, 'Error no controlado');
-  res.status(500).json({
-    success: false,
-    message: 'Error interno del servidor',
-    error: process.env.NODE_ENV === 'production' ? {} : err
-  });
-});
+app.use(errorHandler);
 
 // Iniciar servidor
 app.listen(PORT, async () => {
@@ -94,4 +106,8 @@ app.listen(PORT, async () => {
   } catch (error) {
     console.error('Error durante la inicialización:', error);
   }
+
+  console.log('JWT_SECRET:', process.env.JWT_SECRET);
+  console.log('RAWG_API_KEY:', process.env.RAWG_API_KEY);
+  console.log('DATABASE_URL:', process.env.DATABASE_URL);
 }); 

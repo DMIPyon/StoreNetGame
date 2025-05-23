@@ -41,7 +41,6 @@ export class ProfilePage implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error al cargar el perfil:', error);
         this.isLoading = false;
         this.presentToast('Error al cargar el perfil. Intente nuevamente.', 'danger');
       }
@@ -58,9 +57,19 @@ export class ProfilePage implements OnInit {
     });
   }
 
+  isValidImageUrl(url: string): boolean {
+    return /\.(jpeg|jpg|gif|png|webp|svg)(\?.*)?$/i.test(url);
+  }
+
   updateProfile() {
     if (this.profileForm.invalid) {
       this.presentToast('Por favor, complete correctamente todos los campos obligatorios', 'warning');
+      return;
+    }
+
+    const profileImageUrl = this.profileForm.value.profileImage;
+    if (profileImageUrl && !this.isValidImageUrl(profileImageUrl)) {
+      this.presentToast('La URL de la imagen debe ser directa y terminar en .jpg, .png, .gif, etc.', 'danger');
       return;
     }
 
@@ -86,7 +95,6 @@ export class ProfilePage implements OnInit {
       },
       error: (error) => {
         this.isLoading = false;
-        console.error('Error al actualizar perfil:', error);
         this.presentToast('Error al actualizar el perfil. Intente nuevamente.', 'danger');
       }
     });

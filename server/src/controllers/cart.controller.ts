@@ -9,8 +9,8 @@ const ANONYMOUS_USER_ID = 999;
  */
 export const getCart = async (req: Request, res: Response) => {
   try {
-    // Usar un ID fijo para usuario anónimo
-    const userId = ANONYMOUS_USER_ID;
+    // Usar el userId del token si está autenticado, si no, usar anónimo
+    const userId = req.user?.userId || ANONYMOUS_USER_ID;
 
     // Obtener el carrito del usuario
     const cartResult = await pool.query(
@@ -74,11 +74,9 @@ export const getCart = async (req: Request, res: Response) => {
  */
 export const addItemToCart = async (req: Request, res: Response) => {
   try {
-    // Usar un ID fijo para usuario anónimo
-    const userId = ANONYMOUS_USER_ID;
+    // Usar el userId del token si está autenticado, si no, usar anónimo
+    const userId = req.user?.userId || ANONYMOUS_USER_ID;
     const { gameId, quantity = 1 } = req.body;
-
-    console.log('Añadiendo al carrito:', { gameId, quantity, userId });
 
     if (!gameId) {
       return res.status(400).json({
@@ -109,7 +107,6 @@ export const addItemToCart = async (req: Request, res: Response) => {
     let cartId;
     if (cartResult.rows.length === 0) {
       // Crear nuevo carrito
-      console.log('Creando nuevo carrito para usuario:', userId);
       const newCartResult = await pool.query(
         'INSERT INTO carts (user_id) VALUES ($1) RETURNING id',
         [userId]
@@ -117,7 +114,6 @@ export const addItemToCart = async (req: Request, res: Response) => {
       cartId = newCartResult.rows[0].id;
     } else {
       cartId = cartResult.rows[0].id;
-      console.log('Usando carrito existente:', cartId);
     }
 
     // Verificar si el juego ya está en el carrito
@@ -129,11 +125,6 @@ export const addItemToCart = async (req: Request, res: Response) => {
     if (existingItemResult.rows.length > 0) {
       // Actualizar cantidad si ya existe
       const newQuantity = existingItemResult.rows[0].quantity + quantity;
-      console.log('Actualizando cantidad de item existente:', {
-        itemId: existingItemResult.rows[0].id,
-        oldQuantity: existingItemResult.rows[0].quantity,
-        newQuantity
-      });
       
       await pool.query(
         'UPDATE cart_items SET quantity = $1 WHERE id = $2',
@@ -141,7 +132,6 @@ export const addItemToCart = async (req: Request, res: Response) => {
       );
     } else {
       // Agregar nuevo item al carrito
-      console.log('Agregando nuevo item al carrito:', { cartId, gameId, quantity });
       
       await pool.query(
         'INSERT INTO cart_items (cart_id, game_id, quantity) VALUES ($1, $2, $3)',
@@ -179,8 +169,8 @@ export const addItemToCart = async (req: Request, res: Response) => {
  */
 export const updateCartItem = async (req: Request, res: Response) => {
   try {
-    // Usar un ID fijo para usuario anónimo
-    const userId = ANONYMOUS_USER_ID;
+    // Usar el userId del token si está autenticado, si no, usar anónimo
+    const userId = req.user?.userId || ANONYMOUS_USER_ID;
     const { itemId } = req.params;
     const { quantity } = req.body;
 
@@ -245,8 +235,8 @@ export const updateCartItem = async (req: Request, res: Response) => {
  */
 export const removeFromCart = async (req: Request, res: Response) => {
   try {
-    // Usar un ID fijo para usuario anónimo
-    const userId = ANONYMOUS_USER_ID;
+    // Usar el userId del token si está autenticado, si no, usar anónimo
+    const userId = req.user?.userId || ANONYMOUS_USER_ID;
     const { itemId } = req.params;
 
     // Verificar que el item pertenece al carrito del usuario
@@ -297,8 +287,8 @@ export const removeFromCart = async (req: Request, res: Response) => {
  */
 export const clearCart = async (req: Request, res: Response) => {
   try {
-    // Usar un ID fijo para usuario anónimo
-    const userId = ANONYMOUS_USER_ID;
+    // Usar el userId del token si está autenticado, si no, usar anónimo
+    const userId = req.user?.userId || ANONYMOUS_USER_ID;
 
     // Obtener el carrito del usuario
     const cartResult = await pool.query(

@@ -14,9 +14,8 @@ async function createAnonymousUser() {
         VALUES (999, 'anonymous', 'anonymous@netgames.com', 'no-password', 'Usuario', 'Anónimo', 'guest')
         ON CONFLICT (id) DO NOTHING;
       `);
-      console.log('✅ Usuario anónimo creado correctamente');
     } else {
-      console.log('✅ Usuario anónimo ya existe');
+      // console.log('✅ Usuario anónimo ya existe');
     }
   } catch (error) {
     console.error('❌ Error al crear usuario anónimo:', error);

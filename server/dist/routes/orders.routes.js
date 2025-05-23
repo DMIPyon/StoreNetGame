@@ -8,11 +8,11 @@ const orders_controller_1 = require("../controllers/orders.controller");
 const auth_middleware_1 = require("../middlewares/auth.middleware");
 const router = express_1.default.Router();
 // Obtener todas las órdenes del usuario
-router.get('/', auth_middleware_1.authenticateToken, orders_controller_1.getUserOrders);
+router.get('/', auth_middleware_1.authenticateJWT, orders_controller_1.getUserOrders);
 // Obtener detalles de una orden específica
-router.get('/:id', auth_middleware_1.authenticateToken, orders_controller_1.getOrderDetails);
+router.get('/:id', auth_middleware_1.authenticateJWT, orders_controller_1.getOrderDetails);
 // Crear una nueva orden
-router.post('/', auth_middleware_1.authenticateToken, orders_controller_1.createOrder);
+router.post('/', auth_middleware_1.authenticateJWT, orders_controller_1.createOrder);
 // Cancelar una orden
-router.put('/:id/cancel', auth_middleware_1.authenticateToken, orders_controller_1.cancelOrder);
+router.put('/:id/cancel', auth_middleware_1.authenticateJWT, orders_controller_1.cancelOrder);
 exports.default = router;

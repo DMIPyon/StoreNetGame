@@ -58,7 +58,7 @@ export class OrderService {
           }
         }),
         catchError(error => {
-          console.error('Error cargando órdenes:', error);
+          // console.error('Error cargando órdenes:', error);
           return throwError(() => error);
         }),
         tap(() => this.loadingSubject.next(false))
@@ -81,7 +81,7 @@ export class OrderService {
           }
         }),
         catchError(error => {
-          console.error('Error cargando detalles de orden:', error);
+          // console.error('Error cargando detalles de orden:', error);
           return throwError(() => error);
         }),
         tap(() => this.loadingSubject.next(false))
@@ -105,7 +105,7 @@ export class OrderService {
           }
         }),
         catchError(error => {
-          console.error('Error al crear orden:', error);
+          // console.error('Error al crear orden:', error);
           this.toastService.showError(
             error.error?.message || 'Error al procesar la orden'
           );
@@ -131,7 +131,7 @@ export class OrderService {
           }
         }),
         catchError(error => {
-          console.error('Error al cancelar orden:', error);
+          // console.error('Error al cancelar orden:', error);
           this.toastService.showError(
             error.error?.message || 'Error al cancelar la orden'
           );
@@ -175,5 +175,9 @@ export class OrderService {
       default:
         return '';
     }
+  }
+
+  getOrderHistory(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/history`);
   }
 } 

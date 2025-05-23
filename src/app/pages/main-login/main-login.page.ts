@@ -84,7 +84,6 @@ export class MainLoginPage implements OnInit {
           this.isLoading = false;
           this.loginError = 'Error en el servidor. Intente más tarde.';
           this.presentToast('Error en el servidor. Intente más tarde.', 'danger');
-          console.error('Login error:', error);
         }
       });
   }

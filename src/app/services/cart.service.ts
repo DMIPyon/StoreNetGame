@@ -45,17 +45,11 @@ export class CartService {
     private toastService: ToastService,
     private authService: AuthService
   ) {
-    // Inicializar carrito según autenticación
-    if (this.authService.isAuthenticated) {
-      this.loadCart();
-    } else {
-      this.loadLocalCart();
-    }
-
     // Suscribirse a cambios en la autenticación
     this.authService.currentUser$.subscribe(user => {
       if (user) {
         this.mergeLocalCartWithBackend();
+        this.loadCart().subscribe();
       } else {
         this.loadLocalCart();
       }
@@ -149,7 +143,6 @@ export class CartService {
           }
         }),
         catchError(error => {
-          console.error('Error cargando carrito:', error);
           return throwError(() => error);
         }),
         tap(() => this.loadingSubject.next(false))
@@ -193,7 +186,6 @@ export class CartService {
           }
         }),
         catchError(error => {
-          console.error('Error al añadir al carrito:', error);
           this.toastService.showError(
             error.error?.message || 'Error al agregar al carrito'
           );
@@ -217,7 +209,6 @@ export class CartService {
           }
         }),
         catchError(error => {
-          console.error('Error al actualizar item:', error);
           this.toastService.showError(
             error.error?.message || 'Error al actualizar cantidad'
           );
@@ -250,10 +241,6 @@ export class CartService {
           }
         }),
         catchError(error => {
-          console.error('Error al eliminar del carrito:', error);
-          this.toastService.showError(
-            error.error?.message || 'Error al eliminar del carrito'
-          );
           return throwError(() => error);
         }),
         tap(() => this.loadingSubject.next(false))
@@ -279,10 +266,6 @@ export class CartService {
           }
         }),
         catchError(error => {
-          console.error('Error al vaciar carrito:', error);
-          this.toastService.showError(
-            error.error?.message || 'Error al vaciar el carrito'
-          );
           return throwError(() => error);
         }),
         tap(() => this.loadingSubject.next(false))

@@ -3,7 +3,7 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { RouterModule } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { 
-  cartOutline, personOutline, searchOutline, homeOutline, 
+  cartOutline, personOutline, person, searchOutline, homeOutline, 
   heartOutline, heartSharp, calendarOutline, cloudDownloadOutline,
   codeSlashOutline, desktopOutline, gameControllerOutline, 
   hardwareChipOutline, layersOutline, saveOutline, tvOutline, 
@@ -71,7 +71,8 @@ export class AppComponent {
       'filter-outline': filterOutline,
       'radio-button-off-outline': radioButtonOffOutline,
       'radio-button-on-outline': radioButtonOnOutline,
-      'refresh-outline': refreshOutline
+      'refresh-outline': refreshOutline,
+      'person': person
     });
   }
 }

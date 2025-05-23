@@ -13,6 +13,7 @@ const cart_routes_1 = __importDefault(require("./routes/cart.routes"));
 const orders_routes_1 = __importDefault(require("./routes/orders.routes"));
 const admin_routes_1 = __importDefault(require("./routes/admin.routes"));
 const init_1 = require("./db/init");
+const category_controller_1 = require("./controllers/category.controller");
 const express_pino_logger_1 = __importDefault(require("express-pino-logger"));
 const logger_1 = __importDefault(require("./utils/logger"));
 const path_1 = __importDefault(require("path"));
@@ -81,8 +82,10 @@ app.listen(PORT, async () => {
             await (0, init_1.initDatabase)();
             console.log('Base de datos inicializada correctamente');
         }
+        // Inicializar categorías predefinidas
+        await (0, category_controller_1.initializeCategories)();
     }
     catch (error) {
-        console.error('Error al inicializar la base de datos:', error);
+        console.error('Error durante la inicialización:', error);
     }
 });

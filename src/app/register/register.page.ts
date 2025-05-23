@@ -105,6 +105,7 @@ export class RegisterPage implements OnInit {
       username: this.registerForm.value.username,
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
+      confirmPassword: this.registerForm.value.confirmPassword,
       firstName: this.registerForm.value.firstName,
       lastName: this.registerForm.value.lastName
     };

@@ -9,8 +9,7 @@ describe('StarRatingComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ StarRatingComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [StarRatingComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(StarRatingComponent);
@@ -20,5 +19,14 @@ describe('StarRatingComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('debería renderizar la cantidad correcta de estrellas llenas según el rating', () => {
+    component.rating = 3;
+    component.maxRating = 5;
+    component.ngOnChanges({ rating: { currentValue: 3, previousValue: 0, firstChange: true, isFirstChange: () => true } });
+    fixture.detectChanges();
+    expect(component.stars.filter(s => s.filled).length).toBe(3);
+    expect(component.stars.length).toBe(5);
   });
 });

@@ -80,7 +80,6 @@ export class GameDetailsPage implements OnInit {
         this.checkWishlistStatus(id);
       },
       error: (error) => {
-        console.error('Error al cargar los detalles del juego:', error);
         this.isLoading = false;
       }
     });
@@ -106,7 +105,6 @@ export class GameDetailsPage implements OnInit {
             });
           },
           error: (error) => {
-            console.error('Error al agregar al carrito:', error);
             this.ngZone.run(() => {
               this.toastService.showError('Error al agregar el juego al carrito');
             });

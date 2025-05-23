@@ -6,10 +6,12 @@ import { v4 as uuidv4 } from 'uuid';
  * Obtener todas las órdenes de un usuario
  */
 export const getUserOrders = async (req: Request, res: Response) => {
-  try {
-    // Obtener el ID del usuario desde el token JWT
-    const userId = req.user.id;
+  if (!req.user || !(req.user as any).id) {
+    return res.status(401).json({ message: 'Usuario no autenticado' });
+  }
+  const userId = (req.user as any).id;
 
+  try {
     const orders = await pool.query(
       `SELECT id, order_number, total_amount, status, payment_method, created_at 
        FROM orders 
@@ -36,11 +38,13 @@ export const getUserOrders = async (req: Request, res: Response) => {
  * Obtener detalles de una orden específica
  */
 export const getOrderDetails = async (req: Request, res: Response) => {
-  try {
-    // Obtener el ID del usuario desde el token JWT
-    const userId = req.user.id;
-    const orderId = req.params.id;
+  if (!req.user || !(req.user as any).id) {
+    return res.status(401).json({ message: 'Usuario no autenticado' });
+  }
+  const userId = (req.user as any).id;
+  const orderId = req.params.id;
 
+  try {
     // Obtener información de la orden
     const orderResult = await pool.query(
       `SELECT * FROM orders WHERE id = $1 AND user_id = $2`,
@@ -88,11 +92,14 @@ export const getOrderDetails = async (req: Request, res: Response) => {
 export const createOrder = async (req: Request, res: Response) => {
   const client = await pool.connect();
   
+  if (!req.user || !(req.user as any).id) {
+    return res.status(401).json({ message: 'Usuario no autenticado' });
+  }
+  const userId = (req.user as any).id;
+  
   try {
     await client.query('BEGIN');
     
-    // Obtener el ID del usuario desde el token JWT
-    const userId = req.user.id;
     const { paymentMethod, shippingAddress } = req.body;
     
     // Obtener el carrito del usuario
@@ -196,11 +203,13 @@ export const createOrder = async (req: Request, res: Response) => {
  * Cancelar una orden (si está en estado pendiente)
  */
 export const cancelOrder = async (req: Request, res: Response) => {
+  if (!req.user || !(req.user as any).id) {
+    return res.status(401).json({ message: 'Usuario no autenticado' });
+  }
+  const userId = (req.user as any).id;
+  const orderId = req.params.id;
+  
   try {
-    // Obtener el ID del usuario desde el token JWT
-    const userId = req.user.id;
-    const orderId = req.params.id;
-    
     // Verificar que la orden existe y pertenece al usuario
     const orderResult = await pool.query(
       'SELECT * FROM orders WHERE id = $1 AND user_id = $2',
@@ -242,5 +251,21 @@ export const cancelOrder = async (req: Request, res: Response) => {
       message: 'Error al cancelar la orden',
       error: (error as Error).message
     });
+  }
+};
+
+export const getOrderHistory = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.userId || (req.user as any).id;
+    if (!userId) {
+      return res.status(401).json({ success: false, message: 'No autenticado' });
+    }
+    const result = await pool.query(
+      'SELECT id, order_number, total_amount, status, payment_method, created_at FROM orders WHERE user_id = $1 ORDER BY created_at DESC',
+      [userId]
+    );
+    res.status(200).json({ success: true, data: result.rows });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error al obtener historial', error });
   }
 }; 

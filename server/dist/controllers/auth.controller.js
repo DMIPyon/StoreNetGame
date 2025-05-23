@@ -8,6 +8,7 @@ const database_1 = require("../config/database");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const validator_1 = __importDefault(require("validator"));
 dotenv_1.default.config();
 // Clave secreta para JWT
 const JWT_SECRET = process.env.JWT_SECRET || 'netgames_secret_key_2024';
@@ -19,10 +20,16 @@ const register = async (req, res) => {
         const { username, email, password, firstName, lastName } = req.body;
         // Validaciones básicas
         if (!username || !email || !password) {
-            return res.status(400).json({
-                success: false,
-                message: 'Se requieren nombre de usuario, correo y contraseña'
-            });
+            return res.status(400).json({ success: false, message: 'Se requieren nombre de usuario, correo y contraseña' });
+        }
+        if (!validator_1.default.isEmail(email)) {
+            return res.status(400).json({ success: false, message: 'Correo inválido' });
+        }
+        if (username.length > 30 || email.length > 30) {
+            return res.status(400).json({ success: false, message: 'El nombre de usuario y el correo deben tener máximo 30 caracteres' });
+        }
+        if (password.length < 8) {
+            return res.status(400).json({ success: false, message: 'La contraseña debe tener al menos 8 caracteres' });
         }
         // Verificar si el usuario ya existe
         const existingUser = await database_1.pool.query('SELECT * FROM users WHERE username = $1 OR email = $2', [username, email]);
@@ -78,28 +85,17 @@ const login = async (req, res) => {
         const { email, password } = req.body;
         // Validaciones básicas
         if (!email || !password) {
-            return res.status(400).json({
-                success: false,
-                message: 'Se requieren correo y contraseña'
-            });
+            return res.status(400).json({ success: false, message: 'Se requieren correo y contraseña' });
+        }
+        if (!validator_1.default.isEmail(email)) {
+            return res.status(400).json({ success: false, message: 'Correo inválido' });
         }
         // Buscar usuario por email
         const result = await database_1.pool.query('SELECT * FROM users WHERE email = $1', [email]);
         const user = result.rows[0];
         // Verificar si el usuario existe
-        if (!user) {
-            return res.status(401).json({
-                success: false,
-                message: 'Credenciales inválidas'
-            });
-        }
-        // Verificar contraseña
-        const isPasswordValid = await bcrypt_1.default.compare(password, user.password_hash);
-        if (!isPasswordValid) {
-            return res.status(401).json({
-                success: false,
-                message: 'Credenciales inválidas'
-            });
+        if (!user || !(await bcrypt_1.default.compare(password, user.password_hash))) {
+            return res.status(401).json({ success: false, message: 'Credenciales inválidas' });
         }
         // Generar token JWT
         const token = jsonwebtoken_1.default.sign({ id: user.id, username: user.username, email: user.email }, JWT_SECRET, { expiresIn: '7d' });

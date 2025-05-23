@@ -69,7 +69,7 @@ export class AuthService {
         const user = JSON.parse(userStr);
         this.currentUserSubject.next(user);
       } catch (error) {
-        console.error('Error parsing stored user:', error);
+        // console.error('Error parsing stored user:', error);
         this.logout();
       }
     }
@@ -110,10 +110,16 @@ export class AuthService {
     username: string;
     email: string;
     password: string;
+    confirmPassword: string;
     firstName?: string;
     lastName?: string;
   }): Observable<AuthResponse> {
     this.loadingSubject.next(true);
+    if (userData.password !== userData.confirmPassword) {
+      this.toastService.showError('Las contraseñas no coinciden');
+      this.loadingSubject.next(false);
+      return of({ success: false, message: 'Las contraseñas no coinciden' });
+    }
     
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, userData)
       .pipe(
@@ -262,18 +268,22 @@ export class AuthService {
   /**
    * Manejar respuesta exitosa de autenticación
    */
-  private handleAuthSuccess(data: { user: User; token: string }): void {
-    // Guardar token y datos de usuario
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('user', JSON.stringify(data.user));
-    this.currentUserSubject.next(data.user);
+  private handleAuthSuccess(data: { user: any, token: string }) {
+    if (data.token) {
+      localStorage.setItem('token', data.token);
+    }
+    // Si tienes lógica para guardar el usuario actual, mantenla aquí
+    if (data.user) {
+      this.currentUserSubject.next(data.user);
+      localStorage.setItem('user', JSON.stringify(data.user));
+    }
   }
 
   /**
    * Manejar error de autenticación
    */
   private handleAuthError(error: any): void {
-    console.error('Auth error:', error);
+    // console.error('Auth error:', error);
     this.toastService.showError(
       error.error?.message || 'Ha ocurrido un error de autenticación'
     );

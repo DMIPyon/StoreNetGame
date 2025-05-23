@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getDashboardStats = exports.deleteUser = exports.updateUser = exports.getUserById = exports.getAllUsers = void 0;
-const database_1 = require("../db/database");
+const database_1 = require("../config/database");
 /**
  * Obtener todos los usuarios
  */
@@ -197,15 +197,16 @@ const getDashboardStats = async (req, res) => {
         const categoriesCount = await database_1.pool.query('SELECT COUNT(*) as count FROM categories');
         // Consulta para obtener los ingresos totales
         const totalRevenue = await database_1.pool.query('SELECT SUM(total) as revenue FROM orders WHERE status = $1', ['completed']);
+        // Consulta para obtener ventas recientes (últimos 30 días)
+        const recentSales = await database_1.pool.query('SELECT COUNT(*) as count FROM orders WHERE created_at > NOW() - INTERVAL \'30 days\'');
         res.status(200).json({
             success: true,
-            data: {
-                users: parseInt(usersCount.rows[0].count),
-                games: parseInt(gamesCount.rows[0].count),
-                orders: parseInt(ordersCount.rows[0].count),
-                categories: parseInt(categoriesCount.rows[0].count),
-                revenue: totalRevenue.rows[0].revenue || 0
-            }
+            totalUsers: parseInt(usersCount.rows[0].count),
+            totalGames: parseInt(gamesCount.rows[0].count),
+            totalOrders: parseInt(ordersCount.rows[0].count),
+            totalCategories: parseInt(categoriesCount.rows[0].count),
+            recentSales: parseInt(recentSales.rows[0].count),
+            totalRevenue: totalRevenue.rows[0].revenue || 0
         });
     }
     catch (error) {

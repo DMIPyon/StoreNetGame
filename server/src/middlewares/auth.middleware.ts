@@ -30,6 +30,7 @@ export const authenticateJWT = (req: Request, res: Response, next: NextFunction)
   const token = authHeader.split(' ')[1];
   
   try {
+    // console.log('JWT_SECRET:', process.env.JWT_SECRET); // DEPURACIÓN
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secretkey') as UserPayload;
     req.user = decoded;
     next();

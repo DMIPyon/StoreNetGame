@@ -3,6 +3,7 @@ import { pool } from '../config/database';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import validator from 'validator';
 
 dotenv.config();
 
@@ -18,10 +19,19 @@ export const register = async (req: Request, res: Response) => {
 
     // Validaciones básicas
     if (!username || !email || !password) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Se requieren nombre de usuario, correo y contraseña' 
-      });
+      return res.status(400).json({ success: false, message: 'Se requieren nombre de usuario, correo y contraseña', error: 'Campos obligatorios faltantes' });
+    }
+    if (!validator.isEmail(email)) {
+      return res.status(400).json({ success: false, message: 'Correo inválido', error: 'Formato de correo inválido' });
+    }
+    if (!validator.isAlphanumeric(username)) {
+      return res.status(400).json({ success: false, message: 'El nombre de usuario solo puede contener letras y números', error: 'Username inválido' });
+    }
+    if (username.length > 30 || email.length > 30) {
+      return res.status(400).json({ success: false, message: 'El nombre de usuario y el correo deben tener máximo 30 caracteres', error: 'Longitud excedida' });
+    }
+    if (password.length < 8) {
+      return res.status(400).json({ success: false, message: 'La contraseña debe tener al menos 8 caracteres', error: 'Contraseña muy corta' });
     }
 
     // Verificar si el usuario ya existe
@@ -59,7 +69,7 @@ export const register = async (req: Request, res: Response) => {
 
     // Generar token JWT
     const token = jwt.sign(
-      { id: newUser.id, username: newUser.username, email: newUser.email },
+      { userId: newUser.id, username: newUser.username, email: newUser.email },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -99,10 +109,10 @@ export const login = async (req: Request, res: Response) => {
 
     // Validaciones básicas
     if (!email || !password) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Se requieren correo y contraseña' 
-      });
+      return res.status(400).json({ success: false, message: 'Se requieren correo y contraseña' });
+    }
+    if (!validator.isEmail(email)) {
+      return res.status(400).json({ success: false, message: 'Correo inválido' });
     }
 
     // Buscar usuario por email
@@ -114,26 +124,13 @@ export const login = async (req: Request, res: Response) => {
     const user = result.rows[0];
 
     // Verificar si el usuario existe
-    if (!user) {
-      return res.status(401).json({ 
-        success: false, 
-        message: 'Credenciales inválidas' 
-      });
-    }
-
-    // Verificar contraseña
-    const isPasswordValid = await bcrypt.compare(password, user.password_hash);
-
-    if (!isPasswordValid) {
-      return res.status(401).json({ 
-        success: false, 
-        message: 'Credenciales inválidas' 
-      });
+    if (!user || !(await bcrypt.compare(password, user.password_hash))) {
+      return res.status(401).json({ success: false, message: 'Credenciales inválidas' });
     }
 
     // Generar token JWT
     const token = jwt.sign(
-      { id: user.id, username: user.username, email: user.email },
+      { userId: user.id, username: user.username, email: user.email },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -170,8 +167,12 @@ export const login = async (req: Request, res: Response) => {
  */
 export const getProfile = async (req: Request, res: Response) => {
   try {
-    // Usar un ID de usuario temporal (1) ya que no hay autenticación
-    const userId = 1;
+    // Obtener el ID del usuario autenticado desde el token JWT
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      return res.status(401).json({ success: false, message: 'No autenticado' });
+    }
 
     const result = await pool.query(
       `SELECT id, username, email, first_name, last_name, profile_image, created_at
@@ -216,9 +217,13 @@ export const getProfile = async (req: Request, res: Response) => {
  */
 export const updateProfile = async (req: Request, res: Response) => {
   try {
-    // Usar un ID de usuario temporal (1) ya que no hay autenticación
-    const userId = 1;
+    // Obtener el ID del usuario autenticado desde el token JWT
+    const userId = req.user?.userId;
     const { firstName, lastName, profileImage } = req.body;
+
+    if (!userId) {
+      return res.status(401).json({ success: false, message: 'No autenticado' });
+    }
 
     // Actualizar solo los campos proporcionados
     let updateQuery = 'UPDATE users SET ';
@@ -293,9 +298,13 @@ export const updateProfile = async (req: Request, res: Response) => {
  */
 export const changePassword = async (req: Request, res: Response) => {
   try {
-    // Usar un ID de usuario temporal (1) ya que no hay autenticación
-    const userId = 1;
+    // Obtener el ID del usuario autenticado desde el token JWT
+    const userId = req.user?.userId;
     const { currentPassword, newPassword } = req.body;
+
+    if (!userId) {
+      return res.status(401).json({ success: false, message: 'No autenticado' });
+    }
 
     if (!currentPassword || !newPassword) {
       return res.status(400).json({

@@ -3,22 +3,26 @@ import {
   getUserOrders, 
   getOrderDetails, 
   createOrder, 
-  cancelOrder 
+  cancelOrder, 
+  getOrderHistory 
 } from '../controllers/orders.controller';
-import { authenticateToken } from '../middlewares/auth.middleware';
+import { authenticateJWT } from '../middlewares/auth.middleware';
 
 const router = express.Router();
 
 // Obtener todas las órdenes del usuario
-router.get('/', authenticateToken, getUserOrders);
+router.get('/', authenticateJWT, getUserOrders);
 
 // Obtener detalles de una orden específica
-router.get('/:id', authenticateToken, getOrderDetails);
+router.get('/:id', authenticateJWT, getOrderDetails);
 
 // Crear una nueva orden
-router.post('/', authenticateToken, createOrder);
+router.post('/', authenticateJWT, createOrder);
 
 // Cancelar una orden
-router.put('/:id/cancel', authenticateToken, cancelOrder);
+router.put('/:id/cancel', authenticateJWT, cancelOrder);
+
+// Historial de compras del usuario
+router.get('/history', authenticateJWT, getOrderHistory);
 
 export default router; 

@@ -7,9 +7,11 @@ const uuid_1 = require("uuid");
  * Obtener todas las órdenes de un usuario
  */
 const getUserOrders = async (req, res) => {
+    if (!req.user || !req.user.id) {
+        return res.status(401).json({ message: 'Usuario no autenticado' });
+    }
+    const userId = req.user.id;
     try {
-        // Obtener el ID del usuario desde el token JWT
-        const userId = req.user.id;
         const orders = await database_1.pool.query(`SELECT id, order_number, total_amount, status, payment_method, created_at 
        FROM orders 
        WHERE user_id = $1
@@ -33,10 +35,12 @@ exports.getUserOrders = getUserOrders;
  * Obtener detalles de una orden específica
  */
 const getOrderDetails = async (req, res) => {
+    if (!req.user || !req.user.id) {
+        return res.status(401).json({ message: 'Usuario no autenticado' });
+    }
+    const userId = req.user.id;
+    const orderId = req.params.id;
     try {
-        // Obtener el ID del usuario desde el token JWT
-        const userId = req.user.id;
-        const orderId = req.params.id;
         // Obtener información de la orden
         const orderResult = await database_1.pool.query(`SELECT * FROM orders WHERE id = $1 AND user_id = $2`, [orderId, userId]);
         if (orderResult.rows.length === 0) {
@@ -74,10 +78,12 @@ exports.getOrderDetails = getOrderDetails;
  */
 const createOrder = async (req, res) => {
     const client = await database_1.pool.connect();
+    if (!req.user || !req.user.id) {
+        return res.status(401).json({ message: 'Usuario no autenticado' });
+    }
+    const userId = req.user.id;
     try {
         await client.query('BEGIN');
-        // Obtener el ID del usuario desde el token JWT
-        const userId = req.user.id;
         const { paymentMethod, shippingAddress } = req.body;
         // Obtener el carrito del usuario
         const cartResult = await client.query('SELECT id FROM carts WHERE user_id = $1', [userId]);
@@ -150,10 +156,12 @@ exports.createOrder = createOrder;
  * Cancelar una orden (si está en estado pendiente)
  */
 const cancelOrder = async (req, res) => {
+    if (!req.user || !req.user.id) {
+        return res.status(401).json({ message: 'Usuario no autenticado' });
+    }
+    const userId = req.user.id;
+    const orderId = req.params.id;
     try {
-        // Obtener el ID del usuario desde el token JWT
-        const userId = req.user.id;
-        const orderId = req.params.id;
         // Verificar que la orden existe y pertenece al usuario
         const orderResult = await database_1.pool.query('SELECT * FROM orders WHERE id = $1 AND user_id = $2', [orderId, userId]);
         if (orderResult.rows.length === 0) {

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initializeCategories = exports.deleteCategory = exports.updateCategory = exports.createCategory = exports.getCategoryById = exports.getCategories = void 0;
-const database_1 = require("../config/database");
+const database_1 = require("../db/database");
 // Categorías predefinidas
 const defaultCategories = [
     { name: 'Acción', icon: 'flame-outline' },
@@ -50,46 +50,105 @@ const getCategoryById = async (req, res) => {
 exports.getCategoryById = getCategoryById;
 // Crear una nueva categoría
 const createCategory = async (req, res) => {
+    const { name, icon = null, color = null } = req.body;
+    if (!name) {
+        return res.status(400).json({
+            success: false,
+            message: 'El nombre de la categoría es obligatorio'
+        });
+    }
     try {
-        const { name, icon } = req.body;
-        // Validar que el nombre esté presente
-        if (!name) {
-            return res.status(400).json({ error: 'El nombre de la categoría es obligatorio' });
+        // Verificar si ya existe una categoría con el mismo nombre
+        const existingCategory = await database_1.pool.query('SELECT * FROM categories WHERE LOWER(name) = LOWER($1)', [name]);
+        if (existingCategory.rows.length > 0) {
+            return res.status(400).json({
+                success: false,
+                message: `Ya existe una categoría con el nombre ${name}`
+            });
         }
-        // Insertar la categoría en la base de datos
-        const result = await database_1.pool.query('INSERT INTO categories (name, icon) VALUES ($1, $2) RETURNING *', [name, icon]);
-        res.status(201).json({
-            message: 'Categoría creada correctamente',
-            category: result.rows[0]
+        // Insertar la nueva categoría
+        const result = await database_1.pool.query('INSERT INTO categories (name, icon, color) VALUES ($1, $2, $3) RETURNING *', [name, icon, color]);
+        return res.status(201).json({
+            success: true,
+            message: 'Categoría creada con éxito',
+            data: result.rows[0]
         });
     }
     catch (error) {
         console.error('Error al crear categoría:', error);
-        res.status(500).json({ error: 'Error al crear categoría' });
+        return res.status(500).json({
+            success: false,
+            message: 'Error al crear la categoría',
+            error: error.message
+        });
     }
 };
 exports.createCategory = createCategory;
-// Actualizar una categoría
+// Actualizar una categoría existente
 const updateCategory = async (req, res) => {
     const { id } = req.params;
-    const { name, icon } = req.body;
+    const { name, icon, color } = req.body;
+    // Validar que se proporcione al menos un campo para actualizar
+    if (!name && icon === undefined && color === undefined) {
+        return res.status(400).json({
+            success: false,
+            message: 'Debe proporcionar al menos un campo para actualizar'
+        });
+    }
     try {
-        // Validar que el nombre esté presente
-        if (!name) {
-            return res.status(400).json({ error: 'El nombre de la categoría es obligatorio' });
+        // Verificar si la categoría existe
+        const category = await database_1.pool.query('SELECT * FROM categories WHERE id = $1', [id]);
+        if (category.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: `No se encontró una categoría con ID ${id}`
+            });
         }
-        const result = await database_1.pool.query('UPDATE categories SET name = $1, icon = $2 WHERE id = $3 RETURNING *', [name, icon, id]);
-        if (result.rows.length === 0) {
-            return res.status(404).json({ error: 'Categoría no encontrada' });
+        // Si se proporciona un nombre, verificar que no exista ya otra categoría con ese nombre
+        if (name) {
+            const existingCategory = await database_1.pool.query('SELECT * FROM categories WHERE LOWER(name) = LOWER($1) AND id <> $2', [name, id]);
+            if (existingCategory.rows.length > 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: `Ya existe otra categoría con el nombre ${name}`
+                });
+            }
         }
-        res.json({
-            message: 'Categoría actualizada correctamente',
-            category: result.rows[0]
+        // Construir consulta dinámica para actualizar solo los campos proporcionados
+        let updateQuery = 'UPDATE categories SET ';
+        const values = [];
+        let paramCount = 1;
+        if (name !== undefined) {
+            updateQuery += `name = $${paramCount++}, `;
+            values.push(name);
+        }
+        if (icon !== undefined) {
+            updateQuery += `icon = $${paramCount++}, `;
+            values.push(icon);
+        }
+        if (color !== undefined) {
+            updateQuery += `color = $${paramCount++}, `;
+            values.push(color);
+        }
+        // Eliminar la coma final y añadir la condición WHERE
+        updateQuery = updateQuery.slice(0, -2);
+        updateQuery += ` WHERE id = $${paramCount} RETURNING *`;
+        values.push(id);
+        // Ejecutar la actualización
+        const result = await database_1.pool.query(updateQuery, values);
+        return res.status(200).json({
+            success: true,
+            message: 'Categoría actualizada con éxito',
+            data: result.rows[0]
         });
     }
     catch (error) {
-        console.error('Error al actualizar categoría:', error);
-        res.status(500).json({ error: 'Error al actualizar categoría' });
+        console.error(`Error al actualizar categoría con ID ${id}:`, error);
+        return res.status(500).json({
+            success: false,
+            message: 'Error al actualizar la categoría',
+            error: error.message
+        });
     }
 };
 exports.updateCategory = updateCategory;
@@ -98,24 +157,36 @@ const deleteCategory = async (req, res) => {
     const { id } = req.params;
     try {
         // Verificar si la categoría existe
-        const checkResult = await database_1.pool.query('SELECT * FROM categories WHERE id = $1', [id]);
-        if (checkResult.rows.length === 0) {
-            return res.status(404).json({ error: 'Categoría no encontrada' });
+        const category = await database_1.pool.query('SELECT * FROM categories WHERE id = $1', [id]);
+        if (category.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: `No se encontró una categoría con ID ${id}`
+            });
         }
-        // Verificar si hay juegos asociados a esta categoría
-        const gamesResult = await database_1.pool.query('SELECT COUNT(*) FROM games WHERE category_id = $1', [id]);
-        if (parseInt(gamesResult.rows[0].count) > 0) {
+        // Verificar si la categoría está en uso en algún juego
+        const inUse = await database_1.pool.query('SELECT COUNT(*) FROM game_categories WHERE category_id = $1', [id]);
+        if (parseInt(inUse.rows[0].count) > 0) {
             return res.status(400).json({
-                error: 'No se puede eliminar la categoría porque hay juegos asociados a ella'
+                success: false,
+                message: `No se puede eliminar la categoría porque está siendo utilizada por ${inUse.rows[0].count} juegos`
             });
         }
         // Eliminar la categoría
         await database_1.pool.query('DELETE FROM categories WHERE id = $1', [id]);
-        res.json({ message: 'Categoría eliminada correctamente' });
+        return res.status(200).json({
+            success: true,
+            message: 'Categoría eliminada con éxito',
+            data: { id: parseInt(id) }
+        });
     }
     catch (error) {
-        console.error('Error al eliminar categoría:', error);
-        res.status(500).json({ error: 'Error al eliminar categoría' });
+        console.error(`Error al eliminar categoría con ID ${id}:`, error);
+        return res.status(500).json({
+            success: false,
+            message: 'Error al eliminar la categoría',
+            error: error.message
+        });
     }
 };
 exports.deleteCategory = deleteCategory;

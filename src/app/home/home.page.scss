@@ -265,6 +265,67 @@ ion-title {
       max-width: 90vw;
     }
   }
+  .header-title {
+    font-size: 1.3rem !important;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .header-logo-img {
+    height: 40px !important;
+    width: 40px !important;
+  }
+  .header-center-group {
+    gap: 8px;
+  }
+  .header-searchbar {
+    max-width: 320px;
+    min-width: 120px;
+    width: 100%;
+    font-size: 0.95rem;
+  }
+  .header-avatar-img {
+    width: 32px;
+    height: 32px;
+  }
+}
+@media (max-width: 600px) {
+  .header-title {
+    font-size: 1rem !important;
+    max-width: 48px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    letter-spacing: 0;
+  }
+  .header-logo-img {
+    height: 28px !important;
+    width: 28px !important;
+  }
+  .header-center-group {
+    gap: 4px;
+  }
+  .header-searchbar {
+    max-width: 120px;
+    min-width: 60px;
+    font-size: 0.8rem;
+    padding: 0 2px;
+  }
+  .header-icon-label {
+    display: none;
+  }
+  .header-avatar-img {
+    width: 26px;
+    height: 26px;
+  }
+  .header-flex-row {
+    flex-direction: row;
+    gap: 2px;
+  }
+  ion-toolbar.main-header {
+    padding: 0 2px !important;
+  }
 }
 
 // Títulos de sección
@@ -457,39 +518,94 @@ ion-title {
 .offers-slider {
   position: relative;
   margin: 0 16px 30px;
-  .slider-arrow {
+  padding-bottom: 24px;
+  .slider-controls {
     position: absolute;
     top: 50%;
+    left: 0;
+    right: 0;
     transform: translateY(-50%);
     z-index: 10;
-    width: 48px;
-    height: 48px;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    width: 100%;
+    padding: 0;
+  }
+  .slider-arrow {
+    pointer-events: auto;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: rgba(33,150,243,0.85);
+    background: linear-gradient(135deg, #2196f3 0%, #33eaff 100%);
     color: #fff;
-    border: none;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    border: 2.5px solid rgba(255,255,255,0.7);
+    box-shadow: 0 2px 8px 0 #1976d255;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
+    font-size: 1.6rem;
     cursor: pointer;
-    transition: background 0.2s;
-    &:hover {
-      background: #1976d2;
-    }
+    transition: background 0.18s, box-shadow 0.18s, transform 0.18s, filter 0.18s;
+    margin: 0;
+    opacity: 0.98;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    backdrop-filter: blur(1.5px) saturate(1.1);
   }
-  .slider-arrow.prev { left: -24px; }
-  .slider-arrow.next { right: -24px; }
-  .scroll-container {
-    display: flex;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding: 10px 0;
-    gap: 16px;
-    scrollbar-width: none;
-    &::-webkit-scrollbar { display: none; }
+  .slider-arrow.prev {
+    left: 12px;
   }
+  .slider-arrow.next {
+    right: 12px;
+  }
+  .slider-arrow:hover, .slider-arrow:focus {
+    background: linear-gradient(135deg, #33eaff 0%, #2196f3 100%);
+    box-shadow: 0 4px 12px 0 #33eaff88;
+    transform: translateY(-50%) scale(1.08);
+    filter: none;
+    opacity: 1;
+    animation: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .offers-slider .slider-arrow {
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+  }
+  .offers-slider .slider-arrow.prev {
+    left: 8px;
+  }
+  .offers-slider .slider-arrow.next {
+    right: 8px;
+  }
+}
+@media (max-width: 600px) {
+  .offers-slider .slider-arrow {
+    width: 24px;
+    height: 24px;
+    font-size: 0.9rem;
+  }
+  .offers-slider .slider-arrow.prev {
+    left: 4px;
+  }
+  .offers-slider .slider-arrow.next {
+    right: 4px;
+  }
+}
+
+.scroll-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 0;
+  gap: 16px;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
   
   .offer-card {
     min-width: 280px;
@@ -580,7 +696,7 @@ ion-title {
       transform: translateX(0);
     }
   }
-}
+
 
 // Categorías
 .categories-grid {
@@ -931,884 +1047,129 @@ ion-header ion-toolbar {
   }
 }
 
-.main-banner {
-  position: relative;
-  width: 100%;
-  height: 280px;
-  overflow: hidden;
-  
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(0.7);
-    transition: transform 1s ease;
-  }
-  
-  &:hover img {
-    transform: scale(1.05);
-  }
-  
-  .banner-content {
-    position: absolute;
-    bottom: 30px;
-    left: 20px;
-    color: white;
-    z-index: 2;
-    text-align: left;
-    max-width: 80%;
-    
-    h2 {
-      font-size: 2rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    }
-    
-    p {
-      margin-bottom: 20px;
-      font-size: 1rem;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-    }
-    
-    ion-button {
-      --background: var(--ion-color-primary);
-      --color: white;
-      --border-radius: 50px;
-      --padding-start: 20px;
-      --padding-end: 20px;
-      font-weight: 600;
-    }
-  }
-  
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 50%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-  }
-}
-
-/* Encabezados de sección */
-.section-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 16px 10px;
-  
-  h2 {
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin: 0;
-    position: relative;
-    
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 40px;
-      height: 3px;
-      background: var(--ion-color-primary);
-      border-radius: 3px;
-    }
-  }
-  
-  .section-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    
-    ion-button {
-      font-weight: 500;
-      --border-radius: 12px;
-      height: 36px;
-      
-      &:hover {
-        --background: var(--ion-color-primary-shade);
-        --color: white;
-      }
-      
-      ion-icon {
-        margin-right: 4px;
-        font-size: 18px;
-      }
-    }
-    
-    ion-chip {
-      font-size: 12px;
-      font-weight: 500;
-      height: 24px;
-      
-      ion-icon {
-        margin-left: 4px;
-      }
-    }
-  }
-}
-
-/* Panel de filtros */
-.filters-panel {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.5s ease;
-  background: var(--ion-color-light);
-  
-  &.show-filters {
-    max-height: 500px;
-  }
-  
-  .filters-content {
-    padding: 16px;
-    border-radius: 12px;
-    margin: 0 16px 16px;
-    background: white;
-    box-shadow: var(--card-shadow);
-  }
-  
-  .filter-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 16px;
-  }
-}
-
-/* Tarjetas de juegos */
-.game-card {
-  margin: 0;
-  border-radius: var(--card-border-radius);
-  overflow: hidden;
-  background: white;
-  box-shadow: var(--card-shadow);
-  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  
-  &:hover {
-    transform: var(--hover-transform);
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
-  }
-  
-  .game-image-container {
-    position: relative;
-    height: 160px;
-    overflow: hidden;
-    
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
-    
-    &:hover img {
-      transform: scale(1.05);
-    }
-    
-    .game-discount {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: var(--ion-color-danger);
-      color: white;
-      font-weight: bold;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 0.85rem;
-      z-index: 1;
-    }
-    
-    .game-platform {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      z-index: 1;
-      
-      ion-chip {
-        margin: 0;
-        height: 20px;
-        font-size: 10px;
-      }
-    }
-  }
-  
-  ion-card-header {
-    padding: 12px 10px 8px;
-    
-    ion-card-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      margin-bottom: 4px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      height: 2.6rem;
-    }
-    
-    ion-card-subtitle {
-      font-size: 0.7rem;
-      color: var(--ion-color-medium);
-      text-transform: none;
-      margin-bottom: 8px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-  
-  ion-card-content {
-    padding: 0 10px 12px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    
-    .price-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      
-      .price-info {
-        display: flex;
-        flex-direction: column;
-        
-        .original-price {
-          font-size: 0.8rem;
-          color: var(--ion-color-medium);
-          text-decoration: line-through;
-        }
-        
-        .current-price {
-          font-size: 1.1rem;
-          font-weight: 700;
-          color: var(--ion-color-primary);
-        }
-      }
-      
-      .add-cart-btn {
-        --padding-start: 8px;
-        --padding-end: 8px;
-        
-        ion-icon {
-          font-size: 1.3rem;
-        }
-        
-        &:hover {
-          --background: rgba(var(--ion-color-primary-rgb), 0.1);
-        }
-      }
-    }
-  }
-  
-  .game-badges {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    
-    ion-badge {
-      font-size: 0.6rem;
-      padding: 4px 6px;
-      border-radius: 4px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-  }
-}
-
-/* Animación de entrada de las tarjetas */
-.animate-card {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeInUp 0.5s forwards;
-}
-
-@keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Carrusel de ofertas */
-.offers-slider {
-  position: relative;
-  padding: 0 16px 30px;
-  
-  .slider-controls {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    transform: translateY(-50%);
-    z-index: 2;
-    pointer-events: none;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 5px;
-    
-    .slider-arrow {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: rgba(0, 0, 0, 0.3);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: none;
-      pointer-events: auto;
-      cursor: pointer;
-      transition: background 0.3s;
-      
-      &:hover {
-        background: var(--ion-color-primary);
-      }
-      
-      ion-icon {
-        font-size: 24px;
-      }
-    }
-  }
-  
-  .scroll-container {
-    display: flex;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding: 10px 5px;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    gap: 15px;
-    
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
-  
-  .offer-card {
-    min-width: 280px;
-    margin: 0;
-    border-radius: var(--card-border-radius);
-    overflow: hidden;
-    box-shadow: var(--card-shadow);
-    flex: 0 0 auto;
-    transition: transform var(--transition-speed);
-    
-    &:hover {
-      transform: var(--hover-transform);
-    }
-    
-    .offer-image-container {
-      position: relative;
-      height: 150px;
-      
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s;
-      }
-      
-      &:hover img {
-        transform: scale(1.05);
-      }
-      
-      .game-discount {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: var(--ion-color-danger);
-        color: white;
-        font-weight: bold;
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 0.85rem;
-        z-index: 1;
-      }
-    }
-    
-    .offer-content {
-      padding: 15px;
-      
-      h3 {
-        font-size: 1rem;
-        font-weight: 700;
-        margin: 0 0 8px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      
-      .price-row {
-        margin: 10px 0;
-        display: flex;
-        align-items: baseline;
-        gap: 10px;
-        
-        .original-price {
-          font-size: 0.85rem;
-          text-decoration: line-through;
-          color: var(--ion-color-medium);
-        }
-        
-        .current-price {
-          font-size: 1.1rem;
-          font-weight: 700;
-          color: var(--ion-color-primary);
-        }
-      }
-      
-      .add-to-cart-btn {
-        margin-top: 10px;
-        --border-radius: 50px;
-      }
-    }
-  }
-  
-  .animate-offer {
-    opacity: 0;
-    transform: translateX(20px);
-    animation: fadeInRight 0.5s forwards;
-  }
-  
-  @keyframes fadeInRight {
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-}
-
-/* Sección de categorías */
-.categories-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 15px;
-  padding: 10px 16px 30px;
-  
-  .category-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    
-    .category-icon {
-      width: 60px;
-      height: 60px;
-      border-radius: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 8px;
-      transition: transform 0.3s;
-      
-      ion-icon {
-        font-size: 30px;
-        color: white;
-      }
-    }
-    
-    .category-name {
-      font-size: 0.85rem;
-      font-weight: 500;
-      text-align: center;
-    }
-    
-    &:hover .category-icon {
-      transform: scale(1.1);
-    }
-  }
-}
-
-/* Sección de valoraciones */
-.top-rated-games {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  padding: 0 16px 30px;
-  
-  .rating-card {
-    flex: 1;
-    min-width: 280px;
-    margin: 0;
-    border-radius: var(--card-border-radius);
-    overflow: hidden;
-    box-shadow: var(--card-shadow);
-    
-    .rating-card-inner {
-      display: flex;
-      height: 100%;
-    }
-    
-    .rating-image {
-      width: 100px;
-      flex-shrink: 0;
-      
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-    
-    .rating-content {
-      padding: 12px;
-      flex-grow: 1;
-      
-      h3 {
-        font-size: 1rem;
-        font-weight: 700;
-        margin: 0 0 8px;
-      }
-      
-      .rating-meta {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin: 5px 0 10px;
-        
-        .rating-value {
-          font-weight: 700;
-          color: var(--ion-color-warning);
-        }
-        
-        .rating-count {
-          font-size: 0.8rem;
-          color: var(--ion-color-medium);
-        }
-      }
-    }
-  }
-}
-
-/* Estados de carga y errores */
-.loading-container, .no-games-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 30px;
-  text-align: center;
-  
-  ion-icon {
-    font-size: 48px;
-    color: var(--ion-color-medium);
-    margin-bottom: 16px;
-  }
-  
-  p {
-    color: var(--ion-color-medium);
-    margin-bottom: 16px;
-  }
-}
-
-/* Ajustes responsivos */
-@media (max-width: 576px) {
-  .main-banner {
-    height: 200px;
-    
-    .banner-content h2 {
-      font-size: 1.5rem;
-    }
-  }
-  
-  .game-card .game-image-container {
-    height: 140px;
-  }
-  
-  .categories-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  
-  .top-rated-games .rating-card {
-    min-width: 100%;
-  }
-}
-
-@media (min-width: 992px) {
-  .main-banner {
-    height: 350px;
-    
-    .banner-content {
-      left: 50px;
-      bottom: 50px;
-      
-      h2 {
-        font-size: 2.5rem;
-      }
-      
-      p {
-        font-size: 1.1rem;
-        max-width: 500px;
-      }
-    }
-  }
-  
-  .game-card .game-image-container {
-    height: 180px;
-  }
-}
-
-.filters-modal {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.filters-modal-backdrop {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(30, 41, 59, 0.55);
-  backdrop-filter: blur(2.5px);
-  z-index: 1;
-  transition: background 0.3s;
-}
-.filters-modal-content {
-  position: relative;
-  z-index: 2;
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 8px 40px rgba(33,150,243,0.13), 0 2px 8px rgba(0,0,0,0.10);
-  padding: 32px 28px 24px 28px;
-  min-width: 340px;
-  max-width: 95vw;
-  max-height: 90vh;
-  overflow-y: auto;
-  animation: modalIn 0.25s cubic-bezier(.4,0,.2,1);
-}
-@keyframes modalIn {
-  from { opacity: 0; transform: translateY(40px) scale(0.98); }
-  to { opacity: 1; transform: none; }
-}
-@media (max-width: 600px) {
-  .filters-modal-content {
-    min-width: 90vw;
-    padding: 18px 8px 12px 8px;
-  }
-}
-
-.sidebar-categories {
-  margin: 24px 0 12px 0;
-}
-.sidebar-categories-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 10px;
-  padding-left: 2px;
-}
-.sidebar-categories-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.sidebar-category-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border: none;
-  border-radius: 12px;
-  padding: 10px 16px;
-  font-size: 1rem;
-  font-weight: 600;
-  background: #e3e9f1;
-  color: #222;
-  cursor: pointer;
-  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
-  outline: none;
-  box-shadow: 0 1.5px 6px rgba(0,0,0,0.04);
-}
-.sidebar-category-btn.selected {
-  color: #fff;
-  background: var(--ion-color-primary, #2196f3);
-  box-shadow: 0 4px 16px rgba(33,150,243,0.13);
-}
-.sidebar-category-btn:hover:not(.selected) {
-  background: #d0e6fa;
-}
-.sidebar-category-btn ion-icon {
-  font-size: 1.3rem;
-  margin-right: 4px;
-}
-
-// Mejorar visualización de imágenes en ofertas
-.offer-image-container img {
-  width: 100%;
-  height: 170px;
-  object-fit: cover;
-  object-position: center;
-  border-radius: 8px 8px 0 0;
-  background: #222;
-}
-
-.categories-section {
-  margin: 38px 0 24px 0;
-  padding: 0 24px;
-}
-.categories-title {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #222;
-  margin-bottom: 18px;
-  letter-spacing: -1px;
-}
-.categories-cards-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 22px;
-  justify-content: flex-start;
-}
-.category-visual-card {
-  min-width: 170px;
-  max-width: 210px;
-  flex: 1 1 170px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 32px 18px 22px 18px;
-  border-radius: 22px;
-  box-shadow: 0 4px 24px rgba(33,150,243,0.10), 0 1.5px 6px rgba(0,0,0,0.04);
-  cursor: pointer;
-  transition: box-shadow 0.22s, transform 0.22s, background 0.22s;
-  position: relative;
-  margin-bottom: 8px;
-  border: 2.5px solid transparent;
-  background: linear-gradient(135deg, #fff, #e3e9f1);
-}
-.category-visual-card.selected {
-  border: 2.5px solid var(--ion-color-primary, #2196f3);
-  background: linear-gradient(135deg, var(--ion-color-primary, #2196f3), #222);
-  color: #fff;
-  box-shadow: 0 8px 32px rgba(33,150,243,0.18);
-}
-.category-visual-card:hover {
-  transform: translateY(-6px) scale(1.04);
-  box-shadow: 0 12px 40px rgba(33,150,243,0.18);
-  background: linear-gradient(135deg, #e3f2fd, #fff);
-}
-.category-icon-visual {
-  width: 64px;
-  height: 64px;
-  border-radius: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-  background: #eee;
-  transition: background 0.22s;
-}
-.category-visual-card.selected .category-icon-visual {
-  background: #fff;
-}
-.category-icon-visual ion-icon {
-  font-size: 2.3rem;
-  color: #fff;
-  transition: color 0.22s;
-}
-.category-visual-card.selected .category-icon-visual ion-icon {
-  color: var(--ion-color-primary, #2196f3);
-}
-.category-name-visual {
-  font-size: 1.13rem;
-  font-weight: 700;
-  text-align: center;
-  color: inherit;
-  letter-spacing: -0.5px;
-}
-@media (max-width: 900px) {
-  .categories-cards-row {
-    gap: 12px;
-  }
-  .category-visual-card {
-    min-width: 120px;
-    max-width: 160px;
-    padding: 18px 8px 12px 8px;
-  }
-  .category-icon-visual {
-    width: 44px;
-    height: 44px;
-    margin-bottom: 10px;
-  }
-  .category-name-visual {
-    font-size: 0.95rem;
-  }
-}
-
 .main-banner-visual {
   position: relative;
   width: 100%;
-  height: 260px;
+  height: 340px;
   min-height: 180px;
-  max-height: 320px;
+  max-height: 420px;
   background-size: cover;
   background-position: center;
-  border-radius: 18px 18px 0 0;
+  border-radius: 38px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 0 auto 32px auto;
+  box-shadow: 0 12px 40px 0 rgba(33,150,243,0.18), 0 2px 8px rgba(0,0,0,0.13);
+  transition: box-shadow 0.3s, opacity 0.7s cubic-bezier(.4,0,.2,1);
+  opacity: 1;
+  border: 3.5px solid rgba(255,255,255,0.32);
+  &.fade-out { opacity: 0; }
+  &:hover {
+    box-shadow: 0 20px 60px 0 rgba(33,150,243,0.28), 0 4px 16px rgba(0,0,0,0.18);
+    img { transform: scale(1.04); }
+  }
+  animation: fadeSlideBanner 0.7s cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes fadeSlideBanner {
+  0% { opacity: 0; transform: translateX(40px) scale(0.98); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
 }
 
 .main-banner-gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(20,20,30,0.85) 0%, rgba(20,20,30,0.2) 100%);
-  z-index: 1;
+  display: none !important;
 }
 
 .main-banner-content {
   position: relative;
   z-index: 2;
-  padding: 2.5rem 2.5rem 2.5rem 2.5rem;
+  padding: 2.5rem 2.5rem 2.5rem 3.5rem;
   color: #fff;
+  width: 100%;
   max-width: 60%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
+  background: none !important;
+  box-shadow: none !important;
+  margin: 0;
+  border-radius: 32px;
+  overflow: hidden;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10, 10, 20, 0.52);
+    border-radius: 32px;
+    z-index: -1;
+    pointer-events: none;
+    filter: blur(3px) saturate(1.05);
+    box-shadow: 0 6px 24px 0 rgba(33,150,243,0.10), 0 1.5px 6px rgba(0,0,0,0.07);
+    border: 1.5px solid rgba(255,255,255,0.18);
+  }
 }
 
 .main-banner-title {
-  font-size: 2.3rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  text-shadow: 0 2px 8px #000a;
+  font-size: 3.2rem;
+  font-weight: 900;
+  margin-bottom: 1.1rem;
+  text-shadow: 0 4px 18px #000b, 0 2px 8px #1976d2cc;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
 }
 
 .main-banner-desc {
-  font-size: 1.15rem;
-  margin-bottom: 1.5rem;
-  text-shadow: 0 1px 4px #0008;
-  max-width: 90%;
+  font-size: 1.25rem;
+  margin-bottom: 1.7rem;
+  text-shadow: 0 2px 8px #000a;
+  max-width: 95%;
+  opacity: 0.98;
+  font-weight: 500;
 }
 
 .main-banner-btn {
-  margin-top: 1.2rem;
-  min-width: 180px;
-  height: 48px;
-  font-size: 1.15rem;
-  border-radius: 24px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
+  margin-top: 0.2rem;
+  min-width: 190px;
+  height: 56px;
+  font-size: 1.25rem;
+  border-radius: 30px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  box-shadow: 0 4px 18px 0 #1976d2aa, 0 2px 8px #0002;
+  transition: background 0.18s, box-shadow 0.18s, transform 0.18s;
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  &:hover, &:focus {
+    background: linear-gradient(90deg, #1976d2 60%, #33a1ff 100%);
+    color: #fff;
+    box-shadow: 0 8px 32px 4px #1976d2cc;
+    transform: scale(1.08);
+    animation: pulseBtn 0.4s;
+  }
+}
+@keyframes pulseBtn {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.13); }
+  100% { transform: scale(1.08); }
 }
 
-@media (max-width: 768px) {
-  .main-banner-content { max-width: 100%; padding: 1rem; }
-  .main-banner-title { font-size: 1.5rem; }
+@media (max-width: 900px) {
+  .main-banner-visual { height: 220px; border-radius: 24px; }
+  .main-banner-content { padding: 1.2rem; max-width: 100%; border-radius: 18px; }
+  .main-banner-title { font-size: 1.7rem; }
   .main-banner-desc { font-size: 1rem; }
+}
+@media (max-width: 600px) {
+  .main-banner-visual { height: 140px; border-radius: 14px; }
+  .main-banner-content { padding: 0.7rem; border-radius: 10px; }
+  .main-banner-title { font-size: 1.1rem; }
+  .main-banner-desc { font-size: 0.85rem; }
 }
 
 .categories-horizontal {
@@ -1935,14 +1296,14 @@ ion-buttons[slot="end"] {
   gap: 8px;
   min-width: 140px;
   padding: 4px 10px;
-  background-color: rgba(255, 255, 255, 0.1);
+  /* background-color: rgba(255, 255, 255, 0.1); */
   border-radius: 12px;
   margin-left: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  /* box-shadow: 0 2px 6px rgba(0,0,0,0.2); */
   transition: all 0.3s ease;
   
   &:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    /* background-color: rgba(255, 255, 255, 0.2); */
     transform: translateY(-1px);
   }
 }
@@ -1967,8 +1328,8 @@ ion-buttons[slot="end"] {
 }
 
 .header-title {
-  font-size: 1.45rem;
-  font-weight: 700;
+  font-size: 3rem !important;
+  font-weight: bold;
   color: #fff;
   letter-spacing: -0.5px;
   margin-left: 0;
@@ -2314,4 +1675,141 @@ ion-badge {
       margin-right: 8px;
     }
   }
+}
+
+.header-logo-img {
+  height: 72px !important;
+  width: 72px !important;
+  object-fit: contain;
+}
+
+.user-menu-float {
+  position: fixed;
+  top: 95px;
+  right: 16px;
+  min-width: 180px;
+  background: #232b4e;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(33,150,243,0.18), 0 2px 8px rgba(0,0,0,0.13), 0 -4px 16px -4px rgba(33,150,243,0.13);
+  z-index: 1000;
+  padding: 0 0 6px 0;
+  animation: fadeInDropdown 0.28s cubic-bezier(.4,0,.2,1);
+  border: 1.5px solid #1976d2;
+  backdrop-filter: blur(4px) saturate(1.2);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.user-menu-arrow {
+  position: absolute;
+  top: -14px;
+  right: 16px;
+  width: 28px;
+  height: 18px;
+  overflow: visible;
+  z-index: 1001;
+}
+.user-menu-arrow::after {
+  content: '';
+  display: block;
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, #232b4e 80%, #1976d2 100%);
+  border-left: 1.5px solid #1976d2;
+  border-top: 1.5px solid #1976d2;
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  box-shadow: 0 -2px 8px 0 rgba(33,150,243,0.13);
+}
+.user-menu-list {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 12px 0 6px 0;
+}
+.user-menu-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 22px 8px 22px;
+  border-bottom: 1px solid rgba(33,150,243,0.10);
+  margin-bottom: 6px;
+}
+.user-menu-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #1976d2;
+  box-shadow: 0 2px 12px 0 #1976d2aa, 0 1.5px 4px #0002;
+  background: #fff;
+  transition: box-shadow 0.18s, border 0.18s;
+}
+.user-menu-username {
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 4px #1976d2cc;
+}
+.menu-item {
+  margin: 12px 22px !important;
+  padding: 16px 0 !important;
+  font-size: 1.15rem;
+  border-radius: 12px;
+  letter-spacing: 0.01em;
+}
+.menu-item:hover, .menu-item:focus {
+  background: linear-gradient(90deg, #1976d2 0%, #6a82fb 100%);
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 0 12px 2px #1976d2cc;
+  transform: scale(1.04);
+}
+.menu-separator {
+  height: 2px;
+  background: linear-gradient(90deg, #1976d2 0%, #6a82fb 100%);
+  opacity: 0.22;
+  margin: 10px 0 10px 0;
+  border-radius: 2px;
+}
+.logout-btn {
+  margin: 0 22px;
+  padding: 12px 0;
+  border-radius: 10px;
+  font-size: 1.12rem;
+  color: #ff5252;
+  font-weight: 700;
+  background: none;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s;
+}
+.logout-btn:hover, .logout-btn:focus {
+  background: linear-gradient(90deg, #ff5252 0%, #ffb199 100%);
+  color: #fff;
+  box-shadow: 0 0 16px 2px #ff525299;
+  transform: scale(1.04);
+}
+@keyframes fadeInDropdown {
+  from {
+  opacity: 0;
+    transform: translateY(-16px) scale(0.98);
+}
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.header-avatar-img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2.5px solid #fff;
+  box-shadow: 0 2px 8px #1976d2aa;
+  background: #fff;
+  transition: box-shadow 0.18s, border 0.18s;
+  margin: 0;
+  padding: 0;
 }

@@ -44,7 +44,7 @@ const initDatabase = async () => {
     });
     // Crear tabla de usuarios mejorada
     await netgamesPool.query(`
-      CREATE TABLE users (
+      CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         username VARCHAR(50) UNIQUE NOT NULL,
         email VARCHAR(100) UNIQUE NOT NULL,
@@ -61,12 +61,12 @@ const initDatabase = async () => {
         email_verified BOOLEAN DEFAULT false,
         verification_token VARCHAR(255)
       );
-      CREATE INDEX idx_users_email ON users(email);
+      CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
     `);
 
     // Crear tabla de categorías
     await netgamesPool.query(`
-      CREATE TABLE categories (
+      CREATE TABLE IF NOT EXISTS categories (
         id SERIAL PRIMARY KEY,
         name VARCHAR(50) UNIQUE NOT NULL,
         icon VARCHAR(50),
@@ -74,12 +74,12 @@ const initDatabase = async () => {
         description TEXT,
         created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
       );
-      CREATE INDEX idx_categories_name ON categories(name);
+      CREATE INDEX IF NOT EXISTS idx_categories_name ON categories(name);
     `);
 
     // Crear tabla de desarrolladores
     await netgamesPool.query(`
-      CREATE TABLE developers (
+      CREATE TABLE IF NOT EXISTS developers (
         id SERIAL PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
         website VARCHAR(255)
@@ -88,7 +88,7 @@ const initDatabase = async () => {
 
     // Crear tabla de juegos mejorada
     await netgamesPool.query(`
-      CREATE TABLE games (
+      CREATE TABLE IF NOT EXISTS games (
         id SERIAL PRIMARY KEY,
         title VARCHAR(100) NOT NULL,
         description TEXT,
@@ -120,14 +120,14 @@ const initDatabase = async () => {
         updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         deleted_at TIMESTAMPTZ
       );
-      CREATE INDEX idx_games_title ON games(title);
-      CREATE INDEX idx_games_slug ON games(slug);
-      CREATE INDEX idx_games_category_id ON games(category_id);
+      CREATE INDEX IF NOT EXISTS idx_games_title ON games(title);
+      CREATE INDEX IF NOT EXISTS idx_games_slug ON games(slug);
+      CREATE INDEX IF NOT EXISTS idx_games_category_id ON games(category_id);
     `);
 
     // Crear tabla de carritos
     await netgamesPool.query(`
-      CREATE TABLE carts (
+      CREATE TABLE IF NOT EXISTS carts (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
         created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
@@ -137,7 +137,7 @@ const initDatabase = async () => {
 
     // Crear tabla de items de carrito
     await netgamesPool.query(`
-      CREATE TABLE cart_items (
+      CREATE TABLE IF NOT EXISTS cart_items (
         id SERIAL PRIMARY KEY,
         cart_id INTEGER REFERENCES carts(id) ON DELETE CASCADE,
         game_id INTEGER REFERENCES games(id) ON DELETE CASCADE,
@@ -149,7 +149,7 @@ const initDatabase = async () => {
 
     // Crear tabla de órdenes
     await netgamesPool.query(`
-      CREATE TABLE orders (
+      CREATE TABLE IF NOT EXISTS orders (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id),
         total_amount DECIMAL(10,2) NOT NULL,
@@ -165,7 +165,7 @@ const initDatabase = async () => {
 
     // Crear tabla de detalles de orden
     await netgamesPool.query(`
-      CREATE TABLE order_items (
+      CREATE TABLE IF NOT EXISTS order_items (
         id SERIAL PRIMARY KEY,
         order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
         game_id INTEGER REFERENCES games(id) ON DELETE SET NULL,
@@ -177,7 +177,7 @@ const initDatabase = async () => {
 
     // Crear tabla de reviews
     await netgamesPool.query(`
-      CREATE TABLE reviews (
+      CREATE TABLE IF NOT EXISTS reviews (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
         game_id INTEGER REFERENCES games(id) ON DELETE CASCADE,
@@ -191,7 +191,7 @@ const initDatabase = async () => {
 
     // Crear tabla de favoritos
     await netgamesPool.query(`
-      CREATE TABLE favorites (
+      CREATE TABLE IF NOT EXISTS favorites (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
         game_id INTEGER REFERENCES games(id) ON DELETE CASCADE,
@@ -200,9 +200,29 @@ const initDatabase = async () => {
       );
     `);
 
+    // Crear tabla de wallet (cartera)
+    await netgamesPool.query(`
+      CREATE TABLE IF NOT EXISTS wallet (
+        user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+        balance NUMERIC(12,2) DEFAULT 0
+      );
+    `);
+
+    // Crear tabla de movimientos de wallet
+    await netgamesPool.query(`
+      CREATE TABLE IF NOT EXISTS wallet_movements (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        type VARCHAR(20) NOT NULL, -- 'deposit', 'purchase', 'refund', etc.
+        amount NUMERIC(12,2) NOT NULL,
+        description TEXT,
+        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
     // Crear tabla de roles
     await netgamesPool.query(`
-      CREATE TABLE roles (
+      CREATE TABLE IF NOT EXISTS roles (
         id SERIAL PRIMARY KEY,
         name VARCHAR(50) UNIQUE NOT NULL
       );
@@ -214,24 +234,9 @@ const initDatabase = async () => {
       ALTER TABLE users ADD COLUMN IF NOT EXISTS role_id INTEGER REFERENCES roles(id) DEFAULT 1;
     `);
 
-    // Crear tabla de direcciones
-    await netgamesPool.query(`
-      CREATE TABLE addresses (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-        address_line1 VARCHAR(255) NOT NULL,
-        address_line2 VARCHAR(255),
-        city VARCHAR(100) NOT NULL,
-        state VARCHAR(100),
-        postal_code VARCHAR(20),
-        country VARCHAR(100) NOT NULL,
-        is_default BOOLEAN DEFAULT false
-      );
-    `);
-
     // Tabla intermedia juego-desarrollador
     await netgamesPool.query(`
-      CREATE TABLE game_developers (
+      CREATE TABLE IF NOT EXISTS game_developers (
         game_id INTEGER REFERENCES games(id) ON DELETE CASCADE,
         developer_id INTEGER REFERENCES developers(id) ON DELETE CASCADE,
         PRIMARY KEY (game_id, developer_id)
@@ -240,7 +245,7 @@ const initDatabase = async () => {
 
     // Tabla de cupones
     await netgamesPool.query(`
-      CREATE TABLE coupons (
+      CREATE TABLE IF NOT EXISTS coupons (
         id SERIAL PRIMARY KEY,
         code VARCHAR(50) UNIQUE NOT NULL,
         description TEXT,
@@ -252,7 +257,7 @@ const initDatabase = async () => {
 
     // Tabla intermedia orden-cupon
     await netgamesPool.query(`
-      CREATE TABLE order_coupons (
+      CREATE TABLE IF NOT EXISTS order_coupons (
         order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
         coupon_id INTEGER REFERENCES coupons(id) ON DELETE CASCADE,
         PRIMARY KEY (order_id, coupon_id)
@@ -261,7 +266,7 @@ const initDatabase = async () => {
 
     // Tabla de pagos
     await netgamesPool.query(`
-      CREATE TABLE payments (
+      CREATE TABLE IF NOT EXISTS payments (
         id SERIAL PRIMARY KEY,
         order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
         payment_method VARCHAR(50),
@@ -273,7 +278,7 @@ const initDatabase = async () => {
 
     // Tabla de reportes
     await netgamesPool.query(`
-      CREATE TABLE reports (
+      CREATE TABLE IF NOT EXISTS reports (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
         game_id INTEGER REFERENCES games(id) ON DELETE SET NULL,
@@ -285,7 +290,7 @@ const initDatabase = async () => {
 
     // Tabla de logs de actividad
     await netgamesPool.query(`
-      CREATE TABLE activity_logs (
+      CREATE TABLE IF NOT EXISTS activity_logs (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
         action VARCHAR(100) NOT NULL,
@@ -296,7 +301,7 @@ const initDatabase = async () => {
 
     // Tabla de refresh tokens
     await netgamesPool.query(`
-      CREATE TABLE refresh_tokens (
+      CREATE TABLE IF NOT EXISTS refresh_tokens (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
         token VARCHAR(255) NOT NULL,
@@ -351,15 +356,11 @@ const initDatabase = async () => {
           VALUES (999, 'anonymous', 'anonymous@netgames.com', 'no-password', 'Usuario Anónimo', 'Anónimo', 'guest')
           ON CONFLICT (id) DO NOTHING;
         `);
-        console.log('✅ Usuario anónimo creado correctamente');
-      } else {
-        console.log('✅ Usuario anónimo ya existe');
       }
     } catch (error) {
       console.error('❌ Error al crear usuario anónimo:', error);
     }
 
-    console.log('✅ Tablas creadas exitosamente');
     await netgamesPool.end();
     
     return netgamesPool;

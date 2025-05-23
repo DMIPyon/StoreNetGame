@@ -16,16 +16,10 @@ export class GameService {
   getGames(): Observable<Game[]> {
     return this.http.get<any>(`${this.apiUrl}/games`).pipe(
       map(response => {
-        // La respuesta puede ser un objeto con { juegos: [...], Count: number }
         const games = Array.isArray(response) ? response : response.juegos || response;
         return this.adaptApiGames(games);
       }),
       catchError(error => {
-        console.error('Error al cargar juegos desde la API:', error);
-        // Si hay un error en la API, mostrar en consola información detallada
-        if (error.status) {
-          console.error(`Estado HTTP: ${error.status}, Mensaje: ${error.message}`);
-        }
         return throwError(() => new Error('No se pudieron cargar los juegos. Verifica que el servidor backend esté funcionando en el puerto 3000.'));
       })
     );

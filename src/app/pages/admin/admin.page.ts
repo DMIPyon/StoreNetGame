@@ -92,7 +92,6 @@ export class AdminPage implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error al cargar estadísticas:', error);
         // Fallback a datos simulados si la API falla
         setTimeout(() => {
           this.totalUsers = 125;
@@ -136,7 +135,6 @@ export class AdminPage implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error al cargar juegos:', error);
         this.isLoading = false;
         this.presentToast('Error al cargar juegos', 'danger');
       }
@@ -152,7 +150,6 @@ export class AdminPage implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error al cargar categorías:', error);
         this.isLoading = false;
         this.presentToast('Error al cargar categorías', 'danger');
       }
@@ -177,7 +174,6 @@ export class AdminPage implements OnInit {
         }));
       },
       error: (error) => {
-        console.error('Error al cargar usuarios:', error);
         this.isLoading = false;
         this.presentToast('Error al cargar usuarios. Usando datos en caché.', 'warning');
         
@@ -193,7 +189,6 @@ export class AdminPage implements OnInit {
             const timeDiff = Math.floor((loadTime.getTime() - cacheTime.getTime()) / (1000 * 60)); // minutos
             this.presentToast(`Mostrando datos guardados hace ${timeDiff} minutos`, 'warning');
           } catch (e) {
-            console.error('Error al leer caché:', e);
             // Usar datos de fallback si falla el caché
             this.users = [
               { id: 1, username: 'admin', email: 'admin@example.com', role: 'admin' },
@@ -231,7 +226,6 @@ export class AdminPage implements OnInit {
         }));
       },
       error: (error) => {
-        console.error('Error al cargar pedidos:', error);
         this.isLoading = false;
         this.presentToast('Error al cargar pedidos. Usando datos en caché.', 'warning');
         
@@ -247,7 +241,6 @@ export class AdminPage implements OnInit {
             const timeDiff = Math.floor((loadTime.getTime() - cacheTime.getTime()) / (1000 * 60)); // minutos
             this.presentToast(`Mostrando datos guardados hace ${timeDiff} minutos`, 'warning');
           } catch (e) {
-            console.error('Error al leer caché:', e);
             // Usar datos de fallback si falla el caché
             this.orders = [
               { id: 1, userId: 2, total: 29990, status: 'completed', date: new Date() },
@@ -318,6 +311,7 @@ export class AdminPage implements OnInit {
                 this.presentToast('Error al crear el juego', 'danger');
               }
             });
+            return true;
           }
         }
       ]
@@ -380,6 +374,7 @@ export class AdminPage implements OnInit {
                 this.presentToast('Error al actualizar el juego', 'danger');
               }
             });
+            return true;
           }
         }
       ]
@@ -456,6 +451,7 @@ export class AdminPage implements OnInit {
                 this.presentToast('Error al crear la categoría', 'danger');
               }
             });
+            return true;
           }
         }
       ]
@@ -487,7 +483,6 @@ export class AdminPage implements OnInit {
               this.presentToast('El nombre es obligatorio', 'warning');
               return false;
             }
-            
             this.isLoading = true;
             this.adminService.updateCategory(category.id, data).subscribe({
               next: (response) => {
@@ -500,6 +495,7 @@ export class AdminPage implements OnInit {
                 this.presentToast('Error al actualizar la categoría', 'danger');
               }
             });
+            return true;
           }
         }
       ]

@@ -92,6 +92,14 @@ export class HomePage implements OnInit {
   showAdvancedFilters: boolean = false;
   minRating: string = "0";
   
+  showUserDropdown = false;
+  showUserCardDropdown = false;
+  
+  currentBannerIndex: number = 0;
+  private bannerInterval: any;
+  
+  isBannerFading: boolean = false;
+  
   constructor(
     private gameService: GameService,
     private router: Router,
@@ -110,6 +118,7 @@ export class HomePage implements OnInit {
   // Cargar todos los juegos al iniciar
   ngOnInit() {
     this.loadAllData();
+    this.startBannerAutoplay();
     
     // Verificar estado de autenticación
     this.isAuthenticated = this.authService.isAuthenticated;
@@ -276,7 +285,6 @@ export class HomePage implements OnInit {
    */
   logout() {
     this.authService.logout();
-    this.notificationService.showNotification('Sesión cerrada', 'Has cerrado sesión correctamente');
   }
   
   // Manejar errores de carga de imágenes
@@ -289,17 +297,17 @@ export class HomePage implements OnInit {
       
       if (isBanner) {
         // Si es un banner, usar imagen de placeholder más grande
-        event.target.src = 'https://via.placeholder.com/1200x600?text=Juego+Premium';
+        event.target.src = 'https://placehold.co/1200x600?text=Juego+Premium';
       } else {
         // Para tarjetas de juego, usar imagen de tamaño mediano
-        event.target.src = 'https://via.placeholder.com/400x200?text=Juego+Disponible';
+        event.target.src = 'https://placehold.co/400x200?text=Juego+Disponible';
       }
       
       // Añadir clase para mejorar la presentación de la imagen de fallback
       event.target.classList.add('placeholder-image');
     } else {
       // Imagen genérica si no podemos determinar el contexto
-      event.target.src = 'https://via.placeholder.com/400x200?text=Juego+No+Disponible';
+      event.target.src = 'https://placehold.co/400x200?text=Juego+No+Disponible';
     }
   }
   
@@ -487,45 +495,45 @@ export class HomePage implements OnInit {
    * y actualiza la lista de juegos mostrados.
    */
   applyFilters() {
-    console.log('Aplicando filtros. Categoría seleccionada ID:', this.selectedCategoryId);
+    // console.log('Aplicando filtros. Categoría seleccionada ID:', this.selectedCategoryId);
     
     // Iniciar con todos los juegos
     let filtered = [...this.games];
-    console.log('Total de juegos antes de filtrar:', filtered.length);
+    // console.log('Total de juegos antes de filtrar:', filtered.length);
     
     // Depurar la estructura de algunos juegos para ver cómo están sus categorías
     if (filtered.length > 0) {
-      console.log('Estructura del primer juego:', JSON.stringify({
-        id: filtered[0].id,
-        title: filtered[0].title,
-        categories: filtered[0].categories,
-        category_ids: filtered[0].category_ids
-      }));
+      // console.log('Estructura del primer juego:', JSON.stringify({
+      //   id: filtered[0].id,
+      //   title: filtered[0].title,
+      //   categories: filtered[0].categories,
+      //   category_ids: filtered[0].category_ids
+      // }));
     }
     
     // Depurar categorías disponibles
-    console.log('Categorías disponibles:', this.categories);
+    // console.log('Categorías disponibles:', this.categories);
     
     // Filtrar por categoría si hay una seleccionada
     if (this.selectedCategoryId !== null) {
       const category = this.categories.find(c => c.id === this.selectedCategoryId);
-      console.log('Categoría encontrada por ID:', category);
+      // console.log('Categoría encontrada por ID:', category);
       
       if (!category) {
-        console.error('¡Error! No se encontró la categoría con ID:', this.selectedCategoryId);
+        // console.error('¡Error! No se encontró la categoría con ID:', this.selectedCategoryId);
         return;
       }
       
       const categoryName = category.name;
       this.selectedCategoryName = categoryName;
       
-      console.log('Filtrando por categoría:', categoryName);
+      // console.log('Filtrando por categoría:', categoryName);
       
       // Filtrar juegos por categoría
       filtered = filtered.filter(game => {
         // Primero verificar si el juego tiene categorías
         if (!game.categories || !Array.isArray(game.categories)) {
-          console.log(`Juego ${game.id} (${game.title}) no tiene categorías definidas`);
+          // console.log(`Juego ${game.id} (${game.title}) no tiene categorías definidas`);
           return false;
         }
         
@@ -542,7 +550,7 @@ export class HomePage implements OnInit {
                                normalizedCategory.includes(normalizedCat);
           
           if (exactMatch || containsMatch) {
-            console.log(`Juego ${game.id} (${game.title}) coincide con categoría ${categoryName}`);
+            // console.log(`Juego ${game.id} (${game.title}) coincide con categoría ${categoryName}`);
             return true;
           }
           return false;
@@ -553,7 +561,7 @@ export class HomePage implements OnInit {
           const hasCategoryById = game.category_ids.includes(this.selectedCategoryId as number);
           
           if (hasCategoryById) {
-            console.log(`Juego ${game.id} (${game.title}) coincide por category_ids con ${categoryName}`);
+            // console.log(`Juego ${game.id} (${game.title}) coincide por category_ids con ${categoryName}`);
             return true;
           }
         }
@@ -561,11 +569,11 @@ export class HomePage implements OnInit {
         return hasCategory;
       });
       
-      console.log('Juegos filtrados por categoría:', filtered.length);
+      // console.log('Juegos filtrados por categoría:', filtered.length);
       
       // Si no se encontraron juegos, probar una estrategia alternativa
       if (filtered.length === 0) {
-        console.log('No se encontraron juegos con la estrategia principal. Probando alternativa...');
+        // console.log('No se encontraron juegos con la estrategia principal. Probando alternativa...');
         
         // Buscar de forma menos estricta (cualquier coincidencia parcial)
         filtered = this.games.filter(game => {
@@ -581,7 +589,7 @@ export class HomePage implements OnInit {
           });
         });
         
-        console.log('Juegos encontrados con estrategia alternativa:', filtered.length);
+        // console.log('Juegos encontrados con estrategia alternativa:', filtered.length);
       }
     } else {
       this.selectedCategoryName = null;
@@ -627,7 +635,7 @@ export class HomePage implements OnInit {
     this.filteredGames = filtered;
     this.popularGames = this.filteredGames.slice(0, 8);
     
-    console.log('Filtrado finalizado. Juegos resultantes:', this.filteredGames.length);
+    // console.log('Filtrado finalizado. Juegos resultantes:', this.filteredGames.length);
     
     // Actualizar el contador de filtros activos
     this.countActiveFilters();
@@ -877,13 +885,13 @@ export class HomePage implements OnInit {
   }
 
   selectCategoryFromModal(categoryId: number | null) {
-    console.log('Categoría seleccionada desde modal:', categoryId);
+    // console.log('Categoría seleccionada desde modal:', categoryId);
     this.selectedCategoryId = categoryId;
     
     // Si se seleccionó una categoría, buscar su nombre para mostrarlo
     if (categoryId !== null) {
       const category = this.categories.find(c => c.id === categoryId);
-      console.log('Categoría encontrada:', category);
+      // console.log('Categoría encontrada:', category);
     }
     
     // Aplicar filtros para actualizar la lista de juegos
@@ -920,6 +928,97 @@ export class HomePage implements OnInit {
         this.loadWishlistGameIds();
       });
     }
+  }
+
+  toggleUserDropdown(event: Event) {
+    event.stopPropagation();
+    this.showUserDropdown = !this.showUserDropdown;
+    if (this.showUserDropdown) {
+      setTimeout(() => {
+        document.addEventListener('click', this.handleOutsideClick, true);
+      }, 0);
+    }
+  }
+
+  closeUserDropdown() {
+    this.showUserDropdown = false;
+    document.removeEventListener('click', this.handleOutsideClick, true);
+  }
+
+  handleOutsideClick = (event: Event) => {
+    const dropdown = document.querySelector('.user-dropdown-menu');
+    if (dropdown && !dropdown.contains(event.target as Node)) {
+      this.closeUserDropdown();
+    }
+  };
+
+  toggleUserCardDropdown(event: Event) {
+    event.stopPropagation();
+    this.showUserCardDropdown = !this.showUserCardDropdown;
+    if (this.showUserCardDropdown) {
+      setTimeout(() => {
+        document.addEventListener('click', this.handleOutsideClickCard, true);
+      }, 0);
+    }
+  }
+
+  closeUserCardDropdown() {
+    this.showUserCardDropdown = false;
+    document.removeEventListener('click', this.handleOutsideClickCard, true);
+  }
+
+  handleOutsideClickCard = (event: Event) => {
+    const dropdown = document.querySelector('.user-card-dropdown');
+    if (dropdown && !dropdown.contains(event.target as Node)) {
+      this.closeUserCardDropdown();
+    }
+  };
+
+  goToProfile() {
+    this.router.navigate(['/profile']);
+  }
+
+  goToOrders() {
+    this.router.navigate(['/orders']);
+  }
+
+  goToWallet() {
+    this.router.navigate(['/wallet']);
+  }
+
+  goToAdminPanel() {
+    this.router.navigate(['/admin']);
+  }
+
+  startBannerAutoplay() {
+    if (this.bannerInterval) clearInterval(this.bannerInterval);
+    this.bannerInterval = setInterval(() => {
+      this.nextBanner();
+    }, 6000); // Cambia cada 6 segundos
+  }
+
+  prevBanner(event?: Event) {
+    if (event) event.stopPropagation();
+    this.isBannerFading = true;
+    setTimeout(() => {
+      this.currentBannerIndex = (this.currentBannerIndex - 1 + this.featuredGames.length) % this.featuredGames.length;
+      this.isBannerFading = false;
+    }, 700);
+    this.startBannerAutoplay();
+  }
+
+  nextBanner(event?: Event) {
+    if (event) event.stopPropagation();
+    this.isBannerFading = true;
+    setTimeout(() => {
+      this.currentBannerIndex = (this.currentBannerIndex + 1) % this.featuredGames.length;
+      this.isBannerFading = false;
+    }, 700);
+    this.startBannerAutoplay();
+  }
+
+  ngOnDestroy() {
+    if (this.bannerInterval) clearInterval(this.bannerInterval);
   }
 }
 

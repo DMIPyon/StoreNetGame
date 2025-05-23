@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Historial de Compras</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list *ngIf="orders.length > 0; else noOrders">
+    <ion-item *ngFor="let order of orders">
+      <ion-label>
+        <h2>Orden: {{ order.order_number }}</h2>
+        <p>Fecha: {{ order.created_at | date:'short' }}</p>
+        <p>Total: ${{ order.total_amount }}</p>
+        <p>Estado: {{ order.status }}</p>
+        <p>Método de pago: {{ order.payment_method }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <ng-template #noOrders>
+    <ion-text color="medium">
+      <p>No tienes compras registradas.</p>
+    </ion-text>
+  </ng-template>
+  <ion-spinner *ngIf="loading"></ion-spinner>
+</ion-content> 
