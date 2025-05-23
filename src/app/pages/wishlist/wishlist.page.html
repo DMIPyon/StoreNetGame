@@ -1,0 +1,114 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <div class="header-title">
+        <ion-icon name="heart"></ion-icon>
+        Mi Lista de Deseos
+      </div>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/cart">
+        <ion-icon name="cart-outline" style="font-size: 24px;"></ion-icon>
+        <ion-badge *ngIf="cartItemCount > 0" color="danger" class="cart-badge cart-badge-animation">{{ cartItemCount }}</ion-badge>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="wishlist-container">
+    <!-- Loading indicator -->
+    <div class="loading-container" *ngIf="isLoading">
+      <ion-spinner></ion-spinner>
+      <p>Cargando tu lista de deseos...</p>
+    </div>
+
+    <!-- Empty wishlist message -->
+    <div class="empty-wishlist" *ngIf="!isLoading && wishlistItems.length === 0">
+      <ion-icon name="heart-outline" class="empty-icon"></ion-icon>
+      <h2>Tu lista de deseos está vacía</h2>
+      <p>Añade juegos que te gusten para tenerlos a mano</p>
+      <ion-button routerLink="/home" expand="block" color="primary">
+        Explorar juegos
+      </ion-button>
+    </div>
+
+    <!-- Wishlist items -->
+    <div class="wishlist-items" *ngIf="!isLoading && wishlistItems.length > 0">
+      <div class="wishlist-header">
+        <h2>Mis juegos deseados ({{ wishlistItems.length }})</h2>
+        
+        <div class="wishlist-actions">
+          <ion-button fill="clear" color="primary" (click)="presentSortOptions()">
+            <ion-icon name="filter-outline" slot="start"></ion-icon>
+            Ordenar
+          </ion-button>
+          
+          <ion-button fill="clear" color="success" (click)="addAllToCart()" *ngIf="wishlistItems.length > 0">
+            <ion-icon name="cart-outline" slot="start"></ion-icon>
+            Añadir todos
+          </ion-button>
+          
+          <ion-button fill="clear" color="medium" (click)="clearWishlist()" *ngIf="wishlistItems.length > 0">
+            <ion-icon name="trash-outline" slot="start"></ion-icon>
+            Vaciar
+          </ion-button>
+        </div>
+      </div>
+
+      <div class="sort-info" *ngIf="sortBy !== 'default'">
+        <ion-chip outline color="medium">
+          <ion-label>
+            Ordenado por: 
+            {{ sortBy === 'price-asc' ? 'Menor precio' : 
+               sortBy === 'price-desc' ? 'Mayor precio' : 
+               sortBy === 'rating-desc' ? 'Mejor calificación' : 'Por defecto' }}
+          </ion-label>
+          <ion-icon name="close-circle" (click)="sortBy = 'default'; applySort()"></ion-icon>
+        </ion-chip>
+      </div>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" size-md="6" *ngFor="let item of filteredItems">
+            <ion-card class="wishlist-card" (click)="viewGameDetails(item.game_id)">
+              <div class="card-content">
+                <div class="image-container">
+                  <img [src]="item.cover_url || 'assets/img/placeholder.png'" [alt]="item.title">
+                  <div class="discount-badge" *ngIf="item.discount">-{{ item.discount }}%</div>
+                </div>
+                <div class="item-details">
+                  <h3>{{ item.title }}</h3>
+                  
+                  <div class="rating-container">
+                    <app-star-rating [rating]="item.rating || 0" size="small"></app-star-rating>
+                  </div>
+                  
+                  <div class="price-info">
+                    <div class="original-price" *ngIf="item.discount && item.original_price">
+                      {{ item.original_price | formatClp }}
+                    </div>
+                    <div class="current-price">{{ item.price | formatClp }}</div>
+                  </div>
+                  
+                  <div class="action-buttons">
+                    <ion-button color="primary" (click)="addToCart(item.game_id, $event)">
+                      <ion-icon name="cart-outline" slot="start"></ion-icon>
+                      Añadir al carrito
+                    </ion-button>
+                    <ion-button color="danger" fill="clear" (click)="removeFromWishlist(item.game_id, $event)">
+                      <ion-icon name="close-circle-outline"></ion-icon>
+                    </ion-button>
+                  </div>
+                </div>
+              </div>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </div>
+</ion-content> 

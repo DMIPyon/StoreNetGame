@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Inicio de Sesión</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="login-container">
+    <div class="logo-container">
+      <ion-icon name="game-controller" class="logo-icon"></ion-icon>
+      <h2>NetGames</h2>
+      <p>Tu tienda de videojuegos</p>
+    </div>
+
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <ion-item>
+        <ion-label position="floating">Correo electrónico</ion-label>
+        <ion-input formControlName="email" type="email" required></ion-input>
+        <ion-icon name="mail-outline" slot="start"></ion-icon>
+        <ion-note slot="error" *ngIf="f['email'].touched && f['email'].invalid">
+          <span *ngIf="f['email'].errors?.['required']">El correo es obligatorio</span>
+          <span *ngIf="f['email'].errors?.['email']">Ingrese un correo válido</span>
+        </ion-note>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Contraseña</ion-label>
+        <ion-input formControlName="password" [type]="showPassword ? 'text' : 'password'" required></ion-input>
+        <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+        <ion-icon 
+          slot="end" 
+          [name]="showPassword ? 'eye-outline' : 'eye-off-outline'"
+          (click)="togglePasswordVisibility()">
+        </ion-icon>
+        <ion-note slot="error" *ngIf="f['password'].touched && f['password'].invalid">
+          <span *ngIf="f['password'].errors?.['required']">La contraseña es obligatoria</span>
+          <span *ngIf="f['password'].errors?.['minlength']">Mínimo 6 caracteres</span>
+        </ion-note>
+      </ion-item>
+
+      <div class="forgot-password">
+        <a (click)="forgotPassword()">¿Olvidaste tu contraseña?</a>
+      </div>
+
+      <ion-text color="danger" *ngIf="loginError">
+        <p class="error-message text-center">{{ loginError }}</p>
+      </ion-text>
+
+      <ion-button expand="block" type="submit" color="primary" class="login-button" [disabled]="isLoading">
+        <ion-spinner *ngIf="isLoading" name="circles"></ion-spinner>
+        <span *ngIf="!isLoading">Iniciar Sesión</span>
+      </ion-button>
+
+      <div class="register-link">
+        <p>¿No tienes una cuenta? <a (click)="navigateToRegister()">Regístrate</a></p>
+      </div>
+    </form>
+  </div>
+</ion-content> 

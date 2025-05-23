@@ -1,0 +1,498 @@
+ion-toolbar {
+  --background: #0066cc;
+  --color: white;
+  
+  ion-back-button {
+    --color: #66c0f4;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-size: 1.05rem;
+  }
+  
+  ion-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  ion-button {
+    --color: #66c0f4;
+  }
+}
+
+ion-content {
+  --background: #f4f5f8;
+}
+
+// Estado de carga
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  text-align: center;
+  
+  ion-spinner {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
+    color: var(--ion-color-primary);
+  }
+  
+  p {
+    font-size: 16px;
+    color: var(--ion-color-medium);
+  }
+}
+
+// Mensaje de no encontrado
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  text-align: center;
+  padding: 20px;
+  
+  ion-icon {
+    font-size: 60px;
+    color: var(--ion-color-danger);
+    margin-bottom: 20px;
+  }
+  
+  h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: var(--ion-color-dark);
+  }
+  
+  p {
+    color: var(--ion-color-medium);
+    margin-bottom: 30px;
+  }
+}
+
+// Contenedor principal
+.game-details-container {
+  background-color: #fff;
+  min-height: 100%;
+}
+
+// Banner del juego
+.game-banner {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20,20,30,0.2) 0%, rgba(20,20,30,0.85) 100%);
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  padding: 2rem;
+}
+
+.game-title {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  text-shadow: 0 2px 8px #000a;
+}
+
+.game-cover {
+  position: absolute;
+  left: 2rem;
+  bottom: -60px;
+  z-index: 3;
+  width: 120px;
+  height: 170px;
+  box-shadow: 0 8px 32px #0008;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+// Contenido principal
+.main-content {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 5;
+  margin-top: -50px;
+}
+
+// Etiquetas
+.game-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+  
+  ion-chip {
+    --background: #e0e5ff;
+    --color: #4a6bff;
+    font-weight: 500;
+    font-size: 13px;
+  }
+}
+
+// Sección de precio
+.price-section {
+  position: relative;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  
+  .discount-badge {
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    background-color: var(--ion-color-danger);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .price-info {
+    margin-bottom: 16px;
+    
+    .original-price {
+      text-decoration: line-through;
+      color: var(--ion-color-medium);
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    
+    .final-price {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--ion-color-dark);
+    }
+  }
+  
+  ion-button {
+    --background: #4a6bff;
+    --background-hover: #3651e0;
+    --color: white;
+    --border-radius: 8px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+    margin-top: 10px;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      --box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// Descripción
+.description-section {
+  margin-bottom: 30px;
+  
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--ion-color-dark);
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+  }
+  
+  p {
+    line-height: 1.6;
+    color: var(--ion-color-medium-shade);
+    font-size: 15px;
+  }
+}
+
+// Características
+.features-section {
+  margin-bottom: 30px;
+  
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--ion-color-dark);
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+  }
+  
+  ion-item {
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    --background: transparent;
+    margin-bottom: 12px;
+    
+    ion-icon {
+      margin-right: 15px;
+      color: var(--ion-color-primary);
+      font-size: 20px;
+    }
+    
+    ion-label {
+      display: flex;
+      flex-direction: column;
+      white-space: normal;
+      
+      .feature-title {
+        font-weight: 600;
+        color: var(--ion-color-dark);
+        font-size: 15px;
+        margin-bottom: 4px;
+      }
+      
+      .feature-value {
+        color: var(--ion-color-medium-shade);
+        font-size: 14px;
+        
+        .tag {
+          display: inline-block;
+          background: #f1f3ff;
+          color: #4a6bff;
+          padding: 2px 10px;
+          border-radius: 50px;
+          margin-right: 8px;
+          margin-bottom: 8px;
+          font-size: 12px;
+        }
+        
+        .rating-star {
+          color: #ffb74d;
+          margin-right: 2px;
+          font-size: 18px;
+        }
+      }
+    }
+  }
+}
+
+// Requisitos del sistema
+.requirements-section {
+  margin-bottom: 30px;
+  
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--ion-color-dark);
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+  }
+  
+  .requirements-card {
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: var(--ion-color-dark);
+      padding-bottom: 5px;
+      border-bottom: 1px solid #eaeaea;
+    }
+    
+    ion-item {
+      --padding-start: 0;
+      --inner-padding-end: 0;
+      --background: transparent;
+      margin-bottom: 10px;
+      
+      ion-icon {
+        margin-right: 15px;
+        color: var(--ion-color-primary);
+        font-size: 18px;
+      }
+      
+      ion-label {
+        display: flex;
+        flex-direction: column;
+        white-space: normal;
+        
+        .req-title {
+          font-weight: 500;
+          color: var(--ion-color-medium);
+          font-size: 13px;
+        }
+        
+        .req-value {
+          color: var(--ion-color-dark);
+          font-size: 14px;
+          margin-top: 3px;
+        }
+      }
+    }
+  }
+}
+
+// Notificación del carrito
+.custom-notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  animation: slideIn 0.3s forwards;
+  width: 300px;
+  max-width: 90vw;
+}
+
+.notification-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.notification-header {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.notification-message {
+  color: var(--ion-color-medium);
+  font-size: 14px;
+}
+
+.notification-icon {
+  margin-left: 15px;
+  color: var(--ion-color-success);
+  font-size: 22px;
+}
+
+// Animaciones
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.hide {
+  animation: slideOut 0.3s forwards;
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+// Media queries para responsividad
+@media (max-width: 768px) {
+  .banner-overlay { padding: 1rem; }
+  .game-cover { left: 1rem; width: 80px; height: 110px; bottom: -40px; }
+  
+  .main-content {
+    padding: 20px;
+    margin-top: 0;
+  }
+  
+  .price-section {
+    .price-info {
+      .final-price {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .game-banner {
+    height: 250px;
+    
+    .banner-overlay {
+      .game-title {
+        max-width: calc(100% - 80px);
+        
+        h1 {
+          font-size: 20px;
+        }
+      }
+    }
+    
+    .game-cover {
+      width: 80px;
+      height: 115px;
+    }
+  }
+  
+  .main-content {
+    padding: 15px;
+  }
+  
+  .price-section {
+    .discount-badge {
+      top: 10px;
+      right: 10px;
+      font-size: 1rem;
+    }
+  }
+}
+
+.cart-button {
+  position: relative;
+  
+  .cart-badge {
+    margin-left: 5px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+    font-size: 11px;
+    --padding-start: 5px;
+    --padding-end: 5px;
+    --padding-top: 3px;
+    --padding-bottom: 3px;
+    height: auto;
+    border-radius: 10px;
+  }
+} 

@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Ofertas especiales</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <div class="icon-bar">
+        <div class="icon-container">
+          <ion-icon name="cart" style="font-size: 2.2rem; color: #2ecc40;"></ion-icon>
+          <div class="icon-label">Carrito</div>
+        </div>
+        <div class="icon-container">
+          <ion-icon name="person-circle" style="font-size: 2.2rem; color: #0074D9;"></ion-icon>
+          <div class="icon-label">Perfil</div>
+        </div>
+      </div>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="offers-container">
+    <ion-grid *ngIf="!isLoading">
+      <ion-row>
+        <ion-col size="12" size-md="4" size-lg="3" *ngFor="let game of discountedGames">
+          <ion-card class="offer-card" (click)="viewGameDetails(game.id)">
+            <img [src]="game.cover_url || 'https://via.placeholder.com/400x200?text=No+Imagen+Disponible'" [alt]="game.name">
+            <ion-card-header>
+              <ion-card-title>{{ game.name }}</ion-card-title>
+              <ion-card-subtitle *ngIf="game.discount">-{{ game.discount }}% OFF</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <div class="price-row">
+                <span class="original-price" *ngIf="game.originalPrice">{{ game.originalPrice | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
+                <span class="current-price">{{ game.price | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+              <ion-button expand="block" fill="solid" color="primary">Ver detalles</ion-button>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <div *ngIf="isLoading" class="loading-container">
+      <ion-spinner></ion-spinner>
+      <p>Cargando ofertas...</p>
+    </div>
+    <div *ngIf="!isLoading && discountedGames.length === 0" class="no-offers-container">
+      <ion-icon name="pricetag-outline"></ion-icon>
+      <p>No hay ofertas disponibles en este momento.</p>
+    </div>
+  </div>
+</ion-content> 

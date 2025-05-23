@@ -1,0 +1,94 @@
+/* Estilos para la página de inicio de sesión */
+
+.login-container {
+  padding: 20px;
+  height: 100%;
+}
+
+.logo-container {
+  text-align: center;
+  margin: 40px 0;
+}
+
+.logo-icon {
+  font-size: 70px;
+  color: var(--ion-color-primary);
+}
+
+.logo-container h2 {
+  margin: 10px 0 0;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+}
+
+.logo-container p {
+  margin: 5px 0 0;
+  color: var(--ion-color-medium);
+  font-size: 14px;
+}
+
+.login-form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+ion-item {
+  --padding-start: 0;
+  margin-bottom: 15px;
+  --border-color: var(--ion-color-light);
+  --highlight-color-focused: var(--ion-color-primary);
+}
+
+.forgot-password {
+  text-align: right;
+  margin: 10px 0 20px;
+}
+
+.forgot-password a {
+  color: var(--ion-color-medium);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.login-button {
+  margin: 20px 0;
+}
+
+.register-link {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.register-link p {
+  color: var(--ion-color-medium);
+  font-size: 14px;
+}
+
+.register-link a {
+  color: var(--ion-color-primary);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 30px 0;
+  color: var(--ion-color-medium);
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid var(--ion-color-light);
+}
+
+.divider span {
+  padding: 0 10px;
+  font-size: 14px;
+}
+
+.social-button {
+  margin-bottom: 15px;
+} 

@@ -1,0 +1,9 @@
+<div class="star-rating" [class]="size">
+  <ion-icon 
+    *ngFor="let star of stars" 
+    [name]="star.filled ? 'star' : 'star-outline'"
+    [class.filled]="star.filled"
+    (click)="rate(star.value)">
+  </ion-icon>
+  <span *ngIf="rating > 0" class="rating-text">{{ rating.toFixed(1) }}</span>
+</div>

@@ -1,0 +1,138 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Registro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="register-container">
+    <ion-card>
+      <ion-card-content>
+        <h1 class="title">Crear cuenta</h1>
+        <p class="subtitle">Por favor completa el siguiente formulario para crear tu cuenta</p>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+          <!-- Nombre de usuario -->
+          <ion-item class="form-item">
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+            <ion-input 
+              label="Nombre de usuario" 
+              labelPlacement="floating"
+              formControlName="username" 
+              autocomplete="username"
+              [class.ion-invalid]="f['username'].invalid && f['username'].touched">
+            </ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="f['username'].invalid && f['username'].touched">
+            <p class="error-message" *ngIf="f['username'].errors?.['required']">El nombre de usuario es obligatorio</p>
+            <p class="error-message" *ngIf="f['username'].errors?.['minlength']">El nombre de usuario debe tener al menos 3 caracteres</p>
+          </ion-text>
+
+          <!-- Correo electrónico -->
+          <ion-item class="form-item">
+            <ion-icon name="mail-outline" slot="start"></ion-icon>
+            <ion-input 
+              label="Correo electrónico" 
+              labelPlacement="floating"
+              formControlName="email" 
+              type="email" 
+              autocomplete="email"
+              [class.ion-invalid]="f['email'].invalid && f['email'].touched">
+            </ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="f['email'].invalid && f['email'].touched">
+            <p class="error-message" *ngIf="f['email'].errors?.['required']">El correo es obligatorio</p>
+            <p class="error-message" *ngIf="f['email'].errors?.['email']">Ingrese un correo válido</p>
+          </ion-text>
+
+          <!-- Contraseña -->
+          <ion-item class="form-item">
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+            <ion-input 
+              label="Contraseña" 
+              labelPlacement="floating"
+              formControlName="password" 
+              [type]="showPassword ? 'text' : 'password'" 
+              autocomplete="new-password"
+              [class.ion-invalid]="f['password'].invalid && f['password'].touched">
+            </ion-input>
+            <ion-icon 
+              slot="end" 
+              [name]="showPassword ? 'eye-outline' : 'eye-off-outline'"
+              (click)="togglePasswordVisibility()">
+            </ion-icon>
+          </ion-item>
+          <ion-text color="danger" *ngIf="f['password'].invalid && f['password'].touched">
+            <p class="error-message" *ngIf="f['password'].errors?.['required']">La contraseña es obligatoria</p>
+            <p class="error-message" *ngIf="f['password'].errors?.['minlength']">La contraseña debe tener al menos 6 caracteres</p>
+          </ion-text>
+
+          <!-- Confirmar contraseña -->
+          <ion-item class="form-item">
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+            <ion-input 
+              label="Confirmar contraseña" 
+              labelPlacement="floating"
+              formControlName="confirmPassword" 
+              [type]="showPassword ? 'text' : 'password'" 
+              autocomplete="new-password"
+              [class.ion-invalid]="f['confirmPassword'].invalid && f['confirmPassword'].touched">
+            </ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="f['confirmPassword'].invalid && f['confirmPassword'].touched">
+            <p class="error-message" *ngIf="f['confirmPassword'].errors?.['required']">Debe confirmar la contraseña</p>
+            <p class="error-message" *ngIf="f['confirmPassword'].errors?.['passwordMismatch']">Las contraseñas no coinciden</p>
+          </ion-text>
+
+          <!-- Nombre (opcional) -->
+          <ion-item class="form-item">
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+            <ion-input 
+              label="Nombre (opcional)" 
+              labelPlacement="floating"
+              formControlName="firstName"
+              autocomplete="given-name">
+            </ion-input>
+          </ion-item>
+
+          <!-- Apellido (opcional) -->
+          <ion-item class="form-item">
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+            <ion-input 
+              label="Apellido (opcional)" 
+              labelPlacement="floating"
+              formControlName="lastName"
+              autocomplete="family-name">
+            </ion-input>
+          </ion-item>
+
+          <ion-text color="danger" *ngIf="registerError">
+            <p class="error-message text-center">{{ registerError }}</p>
+          </ion-text>
+
+          <ion-button 
+            expand="block" 
+            type="submit" 
+            [disabled]="registerForm.invalid || isLoading" 
+            class="register-button">
+            <ion-icon *ngIf="!isLoading" name="person-add-outline" slot="start"></ion-icon>
+            <ion-spinner *ngIf="isLoading" name="circles"></ion-spinner>
+            <span *ngIf="!isLoading">Crear cuenta</span>
+          </ion-button>
+        </form>
+      </ion-card-content>
+    </ion-card>
+
+    <div class="login-prompt">
+      <p>¿Ya tienes una cuenta?</p>
+      <ion-button 
+        fill="clear" 
+        (click)="goToLogin()">
+        Iniciar sesión
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

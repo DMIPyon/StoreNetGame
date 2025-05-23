@@ -1,0 +1,48 @@
+/* Estilo base */
+body {
+  background-color: #f8f9fa;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Navbar personalizado */
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.75rem;
+}
+
+/* Hero section */
+.hero {
+  position: relative;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/hero-bg.jpg') center/cover no-repeat;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-align: center;
+}
+.hero .display-4 {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+/* Card hover effect */
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+/* Footer estilizado */
+.site-footer {
+  background-color: #343a40;
+  color: #fff;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+/* Ajuste de títulos de sección */
+h2 {
+  font-weight: 600;
+  margin-top: 2rem;
+} 

@@ -30,7 +30,7 @@ log.txt
 /bazel-out
 
 # Node
-/node_modules
+node_modules/
 npm-debug.log
 yarn-error.log
 
@@ -60,7 +60,6 @@ yarn-error.log
 /.nx
 /.nx/cache
 /connect.lock
-/coverage
 /libpeerconnection.log
 testem.log
 /typings
@@ -68,3 +67,19 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# New additions
+.env
+yarn-debug.log*
+
+# Ignorar posibles archivos de base de datos y configuraciones sensibles
+*.db
+*.sqlite
+*.sqlite3
+*.env.*
+/server/src/db/*.db
+/server/src/db/*.sqlite
+/server/src/db/*.sqlite3
+/server/src/config/*.local.*
+/server/src/config/*.secret.*
+*.ts

@@ -25,3 +25,1791 @@
 #container a {
   text-decoration: none;
 }
+
+// Configuración del header
+ion-toolbar {
+  --background: #171a21;
+  --color: #ffffff;
+  padding: 0 16px;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  
+  .header-logo { 
+    font-size: 3.2rem;
+    color: #fff;
+  }
+  
+  .title-text {
+    color: #ffffff;
+    font-size: 1.5rem;
+    transform: translateY(-10px);
+    display: inline-block;
+    line-height: 1;
+    padding: 0px 0px 0px 5px;
+  }
+}
+
+.nav-links {
+  margin-left: 20px;
+  
+  ion-button {
+    --color: #b8b6b4;
+    
+    &:hover {
+      --color: #ffffff;
+    }
+  }
+}
+
+// Layout principal
+.home-layout {
+  display: block;
+  min-height: 100vh;
+}
+
+.main-content {
+  width: 100%;
+  padding: 0;
+  background: #f5f5f5;
+  min-width: 0;
+}
+
+// Barra de búsqueda
+.search-container {
+  background: #1b2838;
+  padding: 10px 20px;
+  
+  .custom-searchbar {
+    --background: #2a475e;
+    --color: #ffffff;
+    --placeholder-color: #8f98a0;
+    --border-radius: 4px;
+    --box-shadow: none;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}
+
+// Sidebar de categorías
+.sidebar {
+  width: 220px;
+  background: #1a3749;
+  padding: 20px 0;
+  
+  ion-list {
+    background: transparent;
+    
+    ion-item {
+      --background: transparent;
+      --color: #b8b6b4;
+      --border-color: transparent;
+      
+      &:hover, &.active { 
+        --color: #ffffff;
+        --background: rgba(255, 255, 255, 0.1);
+      }
+      
+      ion-icon {
+        margin-right: 8px;
+        color: #66c0f4;
+      }
+    }
+  }
+}
+
+// Estilos del header
+ion-header {
+  ion-toolbar {
+    --background: #171a21;
+    --color: white;
+
+    ion-searchbar {
+      --background: rgba(255, 255, 255, 0.1);
+      --color: white;
+      --placeholder-color: rgba(255, 255, 255, 0.6);
+      --icon-color: rgba(255, 255, 255, 0.6);
+      --border-radius: 8px;
+      padding: 0 10px;
+    }
+  }
+}
+
+// Contenido principal
+ion-content {
+  --background: #f5f5f5;
+}
+
+// Grid de juegos
+ion-grid {
+  padding: 16px;
+}
+
+// Estilos para la página de inicio
+
+// Estilos para el header
+ion-title {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  
+  ion-icon {
+    margin-right: 8px;
+    font-size: 24px;
+  }
+}
+
+// Banner principal
+.main-banner {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  min-height: 320px;
+  max-height: 70vh;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.88);
+    border-radius: 0 0 32px 32px;
+    box-shadow: 0 8px 32px rgba(33,150,243,0.13), 0 2px 8px rgba(0,0,0,0.10);
+  }
+
+  .banner-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 70%, rgba(0,0,0,0.2) 100%);
+    z-index: 1;
+  }
+
+  .banner-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    padding: 48px 40px 40px 64px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 800px;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+  }
+
+  .banner-title {
+    font-size: 3.2rem;
+    font-weight: 800;
+    margin-bottom: 18px;
+    line-height: 1.1;
+  }
+
+  .banner-desc {
+    font-size: 1.25rem;
+    margin-bottom: 28px;
+    max-width: 600px;
+    opacity: 0.92;
+  }
+
+  .banner-btn {
+    font-size: 1.15rem;
+    padding: 0 32px;
+    height: 54px;
+    border-radius: 18px;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(33,150,243,0.13);
+    letter-spacing: 0.5px;
+  }
+}
+
+@media (max-width: 900px) {
+  .home-layout {
+    flex-direction: column;
+  }
+  .filters-sidebar {
+    position: fixed;
+    left: -320px;
+    top: 0;
+    height: 100vh;
+    min-height: unset;
+    z-index: 1001;
+    width: 90vw;
+    max-width: 340px;
+    box-shadow: 4px 0 32px rgba(33,150,243,0.13);
+    background: #1a3749;
+    transition: left 0.3s;
+  }
+  .filters-sidebar.open {
+    left: 0;
+  }
+  .main-content {
+    padding: 0;
+  }
+  .main-banner {
+    height: 340px;
+    .banner-content {
+      padding: 24px 16px 16px 24px;
+      max-width: 95vw;
+    }
+    .banner-title {
+      font-size: 2.1rem;
+    }
+    .banner-desc {
+      font-size: 1rem;
+      max-width: 90vw;
+    }
+  }
+  .header-title {
+    font-size: 1.3rem !important;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .header-logo-img {
+    height: 40px !important;
+    width: 40px !important;
+  }
+  .header-center-group {
+    gap: 8px;
+  }
+  .header-searchbar {
+    max-width: 320px;
+    min-width: 120px;
+    width: 100%;
+    font-size: 0.95rem;
+  }
+  .header-avatar-img {
+    width: 32px;
+    height: 32px;
+  }
+}
+@media (max-width: 600px) {
+  .header-title {
+    font-size: 1rem !important;
+    max-width: 48px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    letter-spacing: 0;
+  }
+  .header-logo-img {
+    height: 28px !important;
+    width: 28px !important;
+  }
+  .header-center-group {
+    gap: 4px;
+  }
+  .header-searchbar {
+    max-width: 120px;
+    min-width: 60px;
+    font-size: 0.8rem;
+    padding: 0 2px;
+  }
+  .header-icon-label {
+    display: none;
+  }
+  .header-avatar-img {
+    width: 26px;
+    height: 26px;
+  }
+  .header-flex-row {
+    flex-direction: row;
+    gap: 2px;
+  }
+  ion-toolbar.main-header {
+    padding: 0 2px !important;
+  }
+}
+
+// Títulos de sección
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 16px 10px;
+  
+  h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: var(--ion-color-primary);
+      border-radius: 3px;
+    }
+  }
+  
+  .section-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    ion-button {
+      font-weight: 500;
+      --border-radius: 12px;
+      height: 36px;
+      
+      &:hover {
+        --background: var(--ion-color-primary-shade);
+        --color: white;
+      }
+      
+      ion-icon {
+        margin-right: 4px;
+        font-size: 18px;
+      }
+    }
+    
+    ion-chip {
+      font-size: 12px;
+      font-weight: 500;
+      height: 24px;
+      
+      ion-icon {
+        margin-left: 4px;
+      }
+    }
+  }
+}
+
+// Tarjetas de juegos
+.game-card {
+  position: relative;
+  height: 100%;
+  margin-bottom: 16px;
+  border-radius: var(--card-border-radius);
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 2px 12px rgba(33,150,243,0.07), 0 1.5px 6px rgba(0,0,0,0.04);
+  transition: transform 0.22s, box-shadow 0.22s;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 8px 32px rgba(33,150,243,0.13), 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .game-image-container {
+    position: relative;
+    width: 100%;
+    padding-top: 140%;
+    overflow: hidden;
+    img {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 0.5s;
+    }
+    &:hover img {
+      transform: scale(1.05);
+    }
+    .discount-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--ion-color-danger);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+    }
+  }
+  .game-info {
+    padding: 14px 12px 10px 12px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    .game-title {
+      font-size: 1.08rem;
+      font-weight: 700;
+      margin: 0 0 8px;
+      color: #222;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .price-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+      .price-info {
+        display: flex;
+        flex-direction: column;
+        .original-price {
+          text-decoration: line-through;
+          color: #b0b0b0;
+          font-size: 0.9rem;
+        }
+        .final-price {
+          font-size: 1.15rem;
+          font-weight: 800;
+          color: var(--ion-color-primary);
+        }
+      }
+    }
+  }
+}
+
+.game-card ion-button, .offer-card ion-button, .add-to-cart-btn {
+  --background: var(--ion-color-primary);
+  --color: #fff;
+  --border-radius: 20px;
+  --box-shadow: 0 2px 8px rgba(33,150,243,0.13);
+  font-weight: 600;
+  font-size: 1rem;
+  margin-top: 10px;
+  transition: filter 0.2s, transform 0.2s;
+}
+.game-card ion-button:hover, .offer-card ion-button:hover, .add-to-cart-btn:hover {
+  filter: brightness(1.1);
+  transform: scale(1.04);
+}
+
+@media (max-width: 768px) {
+  .game-card {
+    margin-bottom: 14px;
+    .game-info {
+      padding: 10px 8px 8px 8px;
+      .game-title {
+        font-size: 0.98rem;
+      }
+    }
+  }
+}
+
+// Animación para las tarjetas
+.animate-card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Estilos para la sección de ofertas
+.offers-slider {
+  position: relative;
+  margin: 0 16px 30px;
+  padding-bottom: 24px;
+  .slider-controls {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    width: 100%;
+    padding: 0;
+  }
+  .slider-arrow {
+    pointer-events: auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2196f3 0%, #33eaff 100%);
+    color: #fff;
+    border: 2.5px solid rgba(255,255,255,0.7);
+    box-shadow: 0 2px 8px 0 #1976d255;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    cursor: pointer;
+    transition: background 0.18s, box-shadow 0.18s, transform 0.18s, filter 0.18s;
+    margin: 0;
+    opacity: 0.98;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    backdrop-filter: blur(1.5px) saturate(1.1);
+  }
+  .slider-arrow.prev {
+    left: 12px;
+  }
+  .slider-arrow.next {
+    right: 12px;
+  }
+  .slider-arrow:hover, .slider-arrow:focus {
+    background: linear-gradient(135deg, #33eaff 0%, #2196f3 100%);
+    box-shadow: 0 4px 12px 0 #33eaff88;
+    transform: translateY(-50%) scale(1.08);
+    filter: none;
+    opacity: 1;
+    animation: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .offers-slider .slider-arrow {
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+  }
+  .offers-slider .slider-arrow.prev {
+    left: 8px;
+  }
+  .offers-slider .slider-arrow.next {
+    right: 8px;
+  }
+}
+@media (max-width: 600px) {
+  .offers-slider .slider-arrow {
+    width: 24px;
+    height: 24px;
+    font-size: 0.9rem;
+  }
+  .offers-slider .slider-arrow.prev {
+    left: 4px;
+  }
+  .offers-slider .slider-arrow.next {
+    right: 4px;
+  }
+}
+
+.scroll-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 0;
+  gap: 16px;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+  
+  .offer-card {
+    min-width: 280px;
+    max-width: 280px;
+    margin: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s;
+    
+    &:hover {
+      transform: translateY(-5px);
+    }
+    
+    .offer-card-inner {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .offer-image-container {
+      position: relative;
+      height: 150px;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+      
+      .game-discount {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #f44336;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: bold;
+      }
+    }
+    
+    .offer-content {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      
+      h3 {
+        margin: 0 0 8px;
+        font-size: 16px;
+        font-weight: 600;
+      }
+      
+      .price-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 10px 0;
+        
+        .original-price {
+          text-decoration: line-through;
+          opacity: 0.7;
+          font-size: 14px;
+        }
+        
+        .current-price {
+          font-weight: bold;
+          font-size: 18px;
+        }
+      }
+      
+      .add-to-cart-btn {
+        margin-top: auto;
+      }
+    }
+  }
+  
+  .animate-offer {
+    opacity: 0;
+    transform: translateX(20px);
+    animation: fadeInLeft 0.5s forwards;
+  }
+  
+  @keyframes fadeInLeft {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+
+// Categorías
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 15px;
+  padding: 10px 16px 30px;
+
+  .category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 18px;
+    transition: box-shadow 0.3s, transform 0.2s, background 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    background: #fff;
+    position: relative;
+    outline: none;
+    border: 2px solid transparent;
+    min-height: 110px;
+
+    &:hover, &:focus {
+      transform: translateY(-4px) scale(1.04);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+      background: #f0f7ff;
+    }
+
+    &.selected {
+      border: 2px solid var(--ion-color-primary);
+      background: #e3f2fd;
+      box-shadow: 0 8px 32px rgba(33,150,243,0.10);
+    }
+
+    .category-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      transition: transform 0.3s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      ion-icon {
+        font-size: 30px;
+        color: white;
+      }
+    }
+    .category-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-align: center;
+      color: #222;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .categories-grid {
+    grid-template-columns: repeat(3, 1fr);
+    .category-card {
+      min-height: 90px;
+      .category-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+      }
+      .category-name {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+// Estilos para juegos mejor valorados
+.top-rated-games {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  padding: 0 16px 24px;
+  
+  .rating-card {
+    border-radius: 12px;
+    overflow: hidden;
+    
+    .rating-card-inner {
+      display: flex;
+      height: 100%;
+    }
+    
+    .rating-image {
+      width: 120px;
+      height: 120px;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    
+    .rating-content {
+      flex: 1;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      
+      h3 {
+        margin: 0 0 8px;
+        font-size: 16px;
+        font-weight: 600;
+      }
+      
+      .rating-meta {
+        display: flex;
+        gap: 10px;
+        margin: 10px 0;
+        font-size: 13px;
+        
+        .rating-value {
+          font-weight: 600;
+        }
+        
+        .rating-count {
+          opacity: 0.7;
+        }
+      }
+    }
+  }
+}
+
+// Filtros
+.filters-panel {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin: 0 16px 16px;
+  
+  &.show-filters {
+    height: auto;
+    opacity: 1;
+    padding: 16px;
+  }
+  
+  .filters-content {
+    padding: 16px 0;
+  }
+  
+  .filter-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 16px;
+  }
+}
+
+// Estilos para estados de carga y vacío
+.loading-container, .no-games-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+  text-align: center;
+  ion-icon, ion-spinner {
+    font-size: 54px;
+    margin-bottom: 18px;
+    opacity: 0.8;
+    color: var(--ion-color-primary);
+  }
+  p {
+    margin: 0 0 20px;
+    font-size: 1.15rem;
+    opacity: 0.8;
+    color: #333;
+  }
+  ion-button {
+    margin-top: 10px;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  ion-grid {
+    padding: 12px;
+  }
+
+  .game-card {
+    margin-bottom: 16px;
+
+    img {
+      height: 180px;
+    }
+
+    ion-card-header {
+      padding: 12px;
+
+      ion-card-title {
+        font-size: 1.1rem;
+      }
+    }
+
+    ion-card-content {
+      padding: 0 12px 12px;
+    }
+  }
+}
+
+// Color de fondo general
+ion-content {
+  --background: #f4f5f8;
+}
+
+// Botón de carrito en el header
+.cart-button {
+  position: relative;
+  --color: #b8b6b4;
+  
+  &:hover {
+    --color: #ffffff;
+  }
+  
+  ion-icon {
+    font-size: 20px;
+    margin-right: 5px;
+  }
+  
+  .cart-badge {
+    margin-left: 5px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+    font-size: 11px;
+    --padding-start: 5px;
+    --padding-end: 5px;
+    --padding-top: 3px;
+    --padding-bottom: 3px;
+    height: auto;
+    border-radius: 10px;
+  }
+}
+
+// Botón de usuario en el header
+.user-button {
+  --color: #b8b6b4;
+  
+  &:hover {
+    --color: #ffffff;
+  }
+  
+  ion-icon {
+    font-size: 20px;
+    margin-right: 5px;
+  }
+}
+
+// Ajustes para modo responsivo
+@media (max-width: 576px) {
+  .nav-links {
+    display: none;
+  }
+  
+  .title-container {
+    .title-text {
+      font-size: 1.2rem;
+    }
+    
+    .header-logo {
+      height: 30px;
+    }
+  }
+  
+  .game-card {
+    height: 380px;
+  }
+  
+  .game-info {
+    padding: 10px;
+    height: 180px;
+  }
+  
+  .game-card .game-image-container {
+    padding-top: 140%; // Mantener la proporción en móviles
+  }
+}
+
+@media (min-width: 992px) {
+  .game-card .game-image-container {
+    padding-top: 140%; // Mantener la proporción en escritorio
+  }
+}
+
+/* Variables y estilos globales */
+:host {
+  --card-border-radius: 12px;
+  --primary-gradient: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-primary-shade));
+  --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  --hover-transform: translateY(-5px);
+  --transition-speed: 0.3s;
+}
+
+/* Barra de navegación */
+ion-header ion-toolbar {
+  --background: var(--ion-color-primary);
+  --color: white;
+  --border-width: 0;
+  --min-height: 60px;
+  
+  ion-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    
+    ion-icon {
+      margin-right: 8px;
+      font-size: 1.4rem;
+    }
+  }
+  
+  ion-buttons ion-button {
+    position: relative;
+    
+    ion-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: 10px;
+      padding: 2px 4px;
+      min-width: 16px;
+      min-height: 16px;
+      border-radius: 8px;
+    }
+  }
+}
+
+/* Banner principal con carrusel */
+.banner-slides {
+  height: 280px;
+  
+  ion-slide {
+    width: 100%;
+  }
+}
+
+.main-banner-visual {
+  position: relative;
+  width: 100%;
+  height: 340px;
+  min-height: 180px;
+  max-height: 420px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 38px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  max-width: 1200px;
+  margin: 0 auto 32px auto;
+  box-shadow: 0 12px 40px 0 rgba(33,150,243,0.18), 0 2px 8px rgba(0,0,0,0.13);
+  transition: box-shadow 0.3s, opacity 0.7s cubic-bezier(.4,0,.2,1);
+  opacity: 1;
+  border: 3.5px solid rgba(255,255,255,0.32);
+  &.fade-out { opacity: 0; }
+  &:hover {
+    box-shadow: 0 20px 60px 0 rgba(33,150,243,0.28), 0 4px 16px rgba(0,0,0,0.18);
+    img { transform: scale(1.04); }
+  }
+  animation: fadeSlideBanner 0.7s cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes fadeSlideBanner {
+  0% { opacity: 0; transform: translateX(40px) scale(0.98); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+.main-banner-gradient {
+  display: none !important;
+}
+
+.main-banner-content {
+  position: relative;
+  z-index: 2;
+  padding: 2.5rem 2.5rem 2.5rem 3.5rem;
+  color: #fff;
+  width: 100%;
+  max-width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  background: none !important;
+  box-shadow: none !important;
+  margin: 0;
+  border-radius: 32px;
+  overflow: hidden;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10, 10, 20, 0.52);
+    border-radius: 32px;
+    z-index: -1;
+    pointer-events: none;
+    filter: blur(3px) saturate(1.05);
+    box-shadow: 0 6px 24px 0 rgba(33,150,243,0.10), 0 1.5px 6px rgba(0,0,0,0.07);
+    border: 1.5px solid rgba(255,255,255,0.18);
+  }
+}
+
+.main-banner-title {
+  font-size: 3.2rem;
+  font-weight: 900;
+  margin-bottom: 1.1rem;
+  text-shadow: 0 4px 18px #000b, 0 2px 8px #1976d2cc;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+}
+
+.main-banner-desc {
+  font-size: 1.25rem;
+  margin-bottom: 1.7rem;
+  text-shadow: 0 2px 8px #000a;
+  max-width: 95%;
+  opacity: 0.98;
+  font-weight: 500;
+}
+
+.main-banner-btn {
+  margin-top: 0.2rem;
+  min-width: 190px;
+  height: 56px;
+  font-size: 1.25rem;
+  border-radius: 30px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  box-shadow: 0 4px 18px 0 #1976d2aa, 0 2px 8px #0002;
+  transition: background 0.18s, box-shadow 0.18s, transform 0.18s;
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  &:hover, &:focus {
+    background: linear-gradient(90deg, #1976d2 60%, #33a1ff 100%);
+    color: #fff;
+    box-shadow: 0 8px 32px 4px #1976d2cc;
+    transform: scale(1.08);
+    animation: pulseBtn 0.4s;
+  }
+}
+@keyframes pulseBtn {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.13); }
+  100% { transform: scale(1.08); }
+}
+
+@media (max-width: 900px) {
+  .main-banner-visual { height: 220px; border-radius: 24px; }
+  .main-banner-content { padding: 1.2rem; max-width: 100%; border-radius: 18px; }
+  .main-banner-title { font-size: 1.7rem; }
+  .main-banner-desc { font-size: 1rem; }
+}
+@media (max-width: 600px) {
+  .main-banner-visual { height: 140px; border-radius: 14px; }
+  .main-banner-content { padding: 0.7rem; border-radius: 10px; }
+  .main-banner-title { font-size: 1.1rem; }
+  .main-banner-desc { font-size: 0.85rem; }
+}
+
+.categories-horizontal {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  align-items: center;
+  margin: 32px 0 18px 0;
+  flex-wrap: wrap;
+  background: linear-gradient(90deg, #e3e9f1 0%, #f5faff 100%);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(33,150,243,0.08);
+  padding: 18px 0 10px 0;
+  animation: fadeInCategories 0.7s cubic-bezier(.4,0,.2,1);
+}
+@keyframes fadeInCategories {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: none; }
+}
+.category-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #e3e9f1;
+  color: #222;
+  border: none;
+  border-radius: 22px;
+  padding: 12px 28px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s;
+  box-shadow: 0 2px 8px rgba(33,150,243,0.07);
+  letter-spacing: 0.2px;
+  outline: none;
+}
+.category-chip.selected {
+  background: linear-gradient(90deg, var(--ion-color-primary, #2196f3) 60%, #33a1ff 100%);
+  color: #fff;
+  box-shadow: 0 6px 24px rgba(33,150,243,0.18);
+  transform: scale(1.08);
+}
+.category-chip:hover:not(.selected), .category-chip:focus-visible:not(.selected) {
+  color: #fff !important;
+  box-shadow: 0 4px 16px rgba(33,150,243,0.13);
+  transform: scale(1.06);
+}
+.category-chip:hover:not(.selected) ion-icon,
+.category-chip:focus-visible:not(.selected) ion-icon {
+  color: #fff !important;
+}
+// Ocultar la sidebar de categorías visuales
+.filters-sidebar, .sidebar-categories-section, .sidebar-categories-list, .sidebar-categories-title, .sidebar-category-btn {
+  display: none !important;
+}
+
+.header-flex-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.header-center-group {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  justify-content: center;
+  gap: 18px;
+}
+
+.header-icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 8px;
+  position: relative;
+  
+  ion-button {
+    position: relative;
+    
+    ion-icon {
+      font-size: 24px;
+    }
+    
+    ion-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: bold;
+      min-width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+  }
+}
+
+.header-icon-label {
+  font-size: 0.85rem;
+  color: #fff;
+  margin-top: 2px;
+  text-align: center;
+  font-weight: 500;
+  letter-spacing: 0.1px;
+}
+
+ion-buttons[slot="end"] {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-left: 0;
+}
+
+.logo-title-group {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 8px;
+  min-width: 140px;
+  padding: 4px 10px;
+  /* background-color: rgba(255, 255, 255, 0.1); */
+  border-radius: 12px;
+  margin-left: 8px;
+  /* box-shadow: 0 2px 6px rgba(0,0,0,0.2); */
+  transition: all 0.3s ease;
+  
+  &:hover {
+    /* background-color: rgba(255, 255, 255, 0.2); */
+    transform: translateY(-1px);
+  }
+}
+
+.header-logo {
+  font-size: 24px;
+  color: #fff;
+  margin-right: 4px;
+  animation: pulse 1.5s infinite alternate;
+  filter: drop-shadow(0 0 3px rgba(255,255,255,0.5));
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.header-title {
+  font-size: 3rem !important;
+  font-weight: bold;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin-left: 0;
+  display: inline-block;
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+// Animación para el badge del carrito
+ion-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  transform-origin: center;
+}
+
+.cart-badge-animation {
+  animation: cartBadgeAnimation 0.5s ease-in-out;
+}
+
+@keyframes cartBadgeAnimation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+// Estilos para el contenedor del icono de carrito
+.header-icon-container {
+  position: relative;
+  
+  ion-button {
+    position: relative;
+    
+    ion-icon {
+      font-size: 24px;
+    }
+  }
+}
+
+// Estilos para el grupo de botones
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  
+  ion-button {
+    margin: 0;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+    --padding-start: 10px;
+    --padding-end: 10px;
+    height: 36px;
+    font-size: 13px;
+    
+    ion-icon {
+      margin-right: 4px;
+      font-size: 16px;
+    }
+  }
+  
+  .buy-now-btn {
+    transition: all 0.2s ease;
+    
+    &:hover, &:focus {
+      --background: var(--ion-color-secondary);
+      --color: white;
+    }
+  }
+}
+
+// Mejora visual de tarjetas
+.game-card, .offer-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+}
+
+// Vista previa rápida
+.game-card {
+  position: relative;
+  
+  .quick-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    padding: 12px;
+    z-index: 2;
+    pointer-events: none;
+    
+    h4 {
+      color: white;
+      margin: 8px 0;
+      font-size: 16px;
+    }
+    
+    p {
+      color: rgba(255,255,255,0.8);
+      font-size: 12px;
+      text-align: center;
+      margin: 4px 0;
+    }
+  }
+  
+  &:hover .quick-preview {
+    opacity: 1;
+  }
+}
+
+// Estilos para el botón de wishlist - ajustando posición
+.wishlist-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  
+  ion-icon {
+    font-size: 20px;
+  }
+  
+  &:hover {
+    transform: scale(1.1);
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+// Ajustando la posición del botón wishlist en las tarjetas con descuento
+.game-image-container, .offer-image-container {
+  position: relative;
+  
+  .discount-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1;
+  }
+  
+  .wishlist-button {
+    right: 8px;
+    top: 48px;
+    z-index: 1;
+  }
+}
+
+// Animación para el icono del wishlist
+@keyframes heartPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.wishlist-button ion-icon[name="heart"] {
+  animation: heartPulse 0.5s ease-in-out;
+}
+
+// Estilos para filtros avanzados
+.advanced-filters-panel {
+  background-color: var(--ion-color-light);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  
+  .filter-section {
+    margin-bottom: 20px;
+    
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0 0 12px 0;
+      color: var(--ion-color-dark);
+    }
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  .categories-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    
+    ion-chip {
+      margin: 0;
+      --background: var(--ion-color-light-shade);
+      
+      &:hover {
+        --background: var(--ion-color-light-tint);
+      }
+    }
+  }
+  
+  .price-range-values {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--ion-color-medium);
+  }
+  
+  .rating-filter {
+    margin-top: 8px;
+  }
+  
+  .filter-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+  }
+}
+
+// Mejora de la sección de título con filtros
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 24px 0 16px;
+  
+  h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+  }
+  
+  .section-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+/* Contenedor para el botón de categorías */
+.categories-button-container {
+  padding: 0 16px 16px;
+  margin-top: -5px;
+  
+  .category-selector-btn {
+    --border-radius: 12px;
+    height: 44px;
+    font-weight: 600;
+    margin: 0;
+    --box-shadow: 0 2px 6px rgba(33,150,243,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      --box-shadow: 0 4px 12px rgba(33,150,243,0.2);
+    }
+    
+    ion-icon {
+      font-size: 18px;
+      margin-right: 8px;
+    }
+  }
+}
+
+// Estilos para el mensaje de no resultados
+.no-results-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 16px;
+  text-align: center;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  margin: 16px 16px 40px 16px;
+  
+  .no-results-icon {
+    font-size: 64px;
+    color: var(--ion-color-medium);
+    margin-bottom: 16px;
+    opacity: 0.7;
+  }
+  
+  h3 {
+    margin: 0 0 12px;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ion-color-dark);
+  }
+  
+  p {
+    margin: 0 0 24px;
+    color: var(--ion-color-medium);
+    font-size: 16px;
+    max-width: 280px;
+    line-height: 1.5;
+  }
+  
+  ion-button {
+    --border-radius: 12px;
+    font-weight: 600;
+    
+    ion-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+.header-logo-img {
+  height: 72px !important;
+  width: 72px !important;
+  object-fit: contain;
+}
+
+.user-menu-float {
+  position: fixed;
+  top: 95px;
+  right: 16px;
+  min-width: 180px;
+  background: #232b4e;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(33,150,243,0.18), 0 2px 8px rgba(0,0,0,0.13), 0 -4px 16px -4px rgba(33,150,243,0.13);
+  z-index: 1000;
+  padding: 0 0 6px 0;
+  animation: fadeInDropdown 0.28s cubic-bezier(.4,0,.2,1);
+  border: 1.5px solid #1976d2;
+  backdrop-filter: blur(4px) saturate(1.2);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.user-menu-arrow {
+  position: absolute;
+  top: -14px;
+  right: 16px;
+  width: 28px;
+  height: 18px;
+  overflow: visible;
+  z-index: 1001;
+}
+.user-menu-arrow::after {
+  content: '';
+  display: block;
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, #232b4e 80%, #1976d2 100%);
+  border-left: 1.5px solid #1976d2;
+  border-top: 1.5px solid #1976d2;
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  box-shadow: 0 -2px 8px 0 rgba(33,150,243,0.13);
+}
+.user-menu-list {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 12px 0 6px 0;
+}
+.user-menu-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 22px 8px 22px;
+  border-bottom: 1px solid rgba(33,150,243,0.10);
+  margin-bottom: 6px;
+}
+.user-menu-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #1976d2;
+  box-shadow: 0 2px 12px 0 #1976d2aa, 0 1.5px 4px #0002;
+  background: #fff;
+  transition: box-shadow 0.18s, border 0.18s;
+}
+.user-menu-username {
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 4px #1976d2cc;
+}
+.menu-item {
+  margin: 12px 22px !important;
+  padding: 16px 0 !important;
+  font-size: 1.15rem;
+  border-radius: 12px;
+  letter-spacing: 0.01em;
+}
+.menu-item:hover, .menu-item:focus {
+  background: linear-gradient(90deg, #1976d2 0%, #6a82fb 100%);
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 0 12px 2px #1976d2cc;
+  transform: scale(1.04);
+}
+.menu-separator {
+  height: 2px;
+  background: linear-gradient(90deg, #1976d2 0%, #6a82fb 100%);
+  opacity: 0.22;
+  margin: 10px 0 10px 0;
+  border-radius: 2px;
+}
+.logout-btn {
+  margin: 0 22px;
+  padding: 12px 0;
+  border-radius: 10px;
+  font-size: 1.12rem;
+  color: #ff5252;
+  font-weight: 700;
+  background: none;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s;
+}
+.logout-btn:hover, .logout-btn:focus {
+  background: linear-gradient(90deg, #ff5252 0%, #ffb199 100%);
+  color: #fff;
+  box-shadow: 0 0 16px 2px #ff525299;
+  transform: scale(1.04);
+}
+@keyframes fadeInDropdown {
+  from {
+  opacity: 0;
+    transform: translateY(-16px) scale(0.98);
+}
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.header-avatar-img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2.5px solid #fff;
+  box-shadow: 0 2px 8px #1976d2aa;
+  background: #fff;
+  transition: box-shadow 0.18s, border 0.18s;
+  margin: 0;
+  padding: 0;
+}

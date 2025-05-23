@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mi Carrito</ion-title>
+    <ion-buttons slot="end" *ngIf="cartItems.length > 0">
+      <ion-button (click)="clearCart()" color="danger">
+        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="cart-container">
+    <!-- Estado vacío -->
+    <div class="empty-cart" *ngIf="cartItems.length === 0">
+      <ion-icon name="cart-outline"></ion-icon>
+      <h2>Tu carrito está vacío</h2>
+      <p>Añade juegos a tu carrito para comenzar a comprar</p>
+      <ion-button routerLink="/home">Explorar Juegos</ion-button>
+    </div>
+
+    <!-- Lista de ítems del carrito -->
+    <div class="cart-items" *ngIf="cartItems.length > 0">
+      <div class="cart-item" *ngFor="let item of cartItems">
+        <div class="item-image">
+          <img [src]="item.image" [alt]="item.name">
+        </div>
+        <div class="item-details">
+          <div class="item-info">
+            <h3>{{ item.name }}</h3>
+            <div class="price-info">
+              <span *ngIf="item.originalPrice && item.originalPrice > item.price" class="original-price">{{item.originalPrice | formatClp}}</span>
+              <span class="final-price">{{item.price | formatClp}}</span>
+            </div>
+          </div>
+          <div class="item-actions">
+            <div class="quantity-control">
+              <button class="quantity-btn" (click)="updateQuantity(item, -1)" [disabled]="item.quantity <= 1">
+                <span class="button-symbol">−</span>
+              </button>
+              <span class="quantity">{{ item.quantity }}</span>
+              <button class="quantity-btn" (click)="updateQuantity(item, 1)">
+                <span class="button-symbol">+</span>
+              </button>
+            </div>
+            <button class="remove-btn" (click)="removeItem(item)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resumen del carrito -->
+    <div class="cart-summary" *ngIf="cartItems.length > 0">
+      <div class="summary-line">
+        <span>Subtotal</span>
+        <span>{{getSubtotal() | formatClp}}</span>
+      </div>
+      <div class="summary-line">
+        <span>IVA (19%)</span>
+        <span>{{getVAT() | formatClp}}</span>
+      </div>
+      <div class="summary-line total">
+        <span>Total</span>
+        <span>{{getTotal() | formatClp}}</span>
+      </div>
+      <ion-button expand="block" class="checkout-button" (click)="checkoutCart()" [disabled]="isProcessing">
+        {{ isProcessing ? 'Procesando...' : 'Finalizar Compra' }}
+        <ion-icon name="arrow-forward" slot="end" *ngIf="!isProcessing"></ion-icon>
+        <ion-spinner name="dots" *ngIf="isProcessing"></ion-spinner>
+      </ion-button>
+    </div>
+  </div>
+</ion-content> 
