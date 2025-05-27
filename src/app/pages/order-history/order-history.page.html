@@ -6,12 +6,17 @@
 
 <ion-content>
   <ion-list *ngIf="orders.length > 0; else noOrders">
-    <ion-item *ngFor="let order of orders">
+    <ion-item *ngFor="let order of orders" (click)="verDetalle(order.id)">
       <ion-label>
         <h2>Orden: {{ order.order_number }}</h2>
         <p>Fecha: {{ order.created_at | date:'short' }}</p>
         <p>Total: ${{ order.total_amount }}</p>
-        <p>Estado: {{ order.status }}</p>
+        <p>
+          Estado:
+          <ion-chip [color]="order.status === 'completed' ? 'success' : (order.status === 'pending' || order.status === 'processing' ? 'warning' : 'danger')" style="margin-left: 4px;">
+            {{ order.status === 'completed' ? 'Completada' : (order.status === 'pending' ? 'Pendiente' : (order.status === 'processing' ? 'Procesando' : 'Cancelada')) }}
+          </ion-chip>
+        </p>
         <p>Método de pago: {{ order.payment_method }}</p>
       </ion-label>
     </ion-item>

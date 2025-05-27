@@ -72,12 +72,17 @@ export const getGameById = async (req: Request, res: Response) => {
       GROUP BY g.id, d.name
     `, [id]);
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Juego no encontrado' });
+      return res.status(404).json({ success: false, message: 'Juego no encontrado' });
     }
-    res.json(result.rows[0]);
+    const game = result.rows[0];
+    // Convertir campos a número
+    game.price = parseFloat(game.price);
+    game.original_price = parseFloat(game.original_price);
+    game.rating = parseFloat(game.rating);
+    return res.json({ success: true, data: game });
   } catch (error) {
     console.error('Error al obtener juego:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ success: false, message: 'Error interno del servidor' });
   }
 };
 

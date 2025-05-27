@@ -99,10 +99,21 @@
           <span>{{ getTotal() | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
         </div>
         
-        <ion-button expand="block" color="success" (click)="checkout()" class="checkout-button">
+        <ion-button 
+          expand="block" 
+          color="success" 
+          (click)="checkout()" 
+          class="checkout-button"
+          [disabled]="cartItems.length === 0">
           <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
           Completar compra
         </ion-button>
+        
+        <!-- Mensaje informativo si no hay sesión -->
+        <div *ngIf="!isAuthenticated && cartItems.length > 0" class="alert alert-warning" style="margin: 16px;">
+          <ion-icon name="warning-outline"></ion-icon>
+          Puedes comprar sin iniciar sesión, pero deberás ingresar tu correo para recibir el código.
+        </div>
         
         <ion-button expand="block" fill="outline" routerLink="/home" class="continue-shopping">
           <ion-icon name="arrow-back-outline" slot="start"></ion-icon>

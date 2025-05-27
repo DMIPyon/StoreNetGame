@@ -7,6 +7,7 @@ import {
   getOrderHistory 
 } from '../controllers/orders.controller';
 import { authenticateJWT } from '../middlewares/auth.middleware';
+import { checkout } from '../controllers/order.controller';
 
 const router = express.Router();
 
@@ -24,5 +25,7 @@ router.put('/:id/cancel', authenticateJWT, cancelOrder);
 
 // Historial de compras del usuario
 router.get('/history', authenticateJWT, getOrderHistory);
+
+router.post('/checkout', checkout);
 
 export default router; 

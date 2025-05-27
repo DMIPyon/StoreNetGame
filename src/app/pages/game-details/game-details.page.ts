@@ -11,17 +11,19 @@ import { CartService } from '../../services/cart.service';
 import { ToastService } from '../../services/toast.service';
 import { WishlistService } from '../../services/wishlist.service';
 import { StarRatingComponent } from '../../components/star-rating/star-rating.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-game-details',
   templateUrl: './game-details.page.html',
   styleUrls: ['./game-details.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, HttpClientModule, StarRatingComponent]
+  imports: [IonicModule, CommonModule, FormsModule, HttpClientModule, StarRatingComponent, RouterModule]
 })
 export class GameDetailsPage implements OnInit {
   game: Game | null = null;
   isLoading = true;
+  loadError = false;
   cartItemCount = 0;
   isInWishlist = false;
 
@@ -59,6 +61,7 @@ export class GameDetailsPage implements OnInit {
 
   loadGameDetails(id: number) {
     this.isLoading = true;
+    this.loadError = false;
     this.gameService.getGameById(id).subscribe({
       next: (game) => {
         this.game = game;
@@ -81,6 +84,8 @@ export class GameDetailsPage implements OnInit {
       },
       error: (error) => {
         this.isLoading = false;
+        this.loadError = true;
+        this.game = null;
       }
     });
   }
@@ -93,7 +98,8 @@ export class GameDetailsPage implements OnInit {
             // Asegurarse de que el toast se muestra usando NgZone
             this.ngZone.run(() => {
               this.toastService.showSuccess('Juego agregado al carrito');
-              
+              // ACTUALIZAR CONTADOR DEL CARRITO
+              this.loadCartItemCount();
               // Animar el badge del carrito
               const badge = document.querySelector('ion-badge');
               if (badge) {

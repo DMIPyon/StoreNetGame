@@ -1,0 +1,57 @@
+<ion-content class="ion-padding">
+  <div *ngIf="loading" class="center-content">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Confirmando pago...</p>
+  </div>
+
+  <div *ngIf="error" class="center-content error">
+    <ion-icon name="close-circle" color="danger"></ion-icon>
+    <h2>Ocurrió un error</h2>
+    <p>{{ error }}</p>
+    <ion-button expand="block" color="primary" (click)="volverATienda()">Volver a la tienda</ion-button>
+  </div>
+
+  <div *ngIf="resultado && resultado.success" class="center-content success">
+    <ion-icon name="checkmark-circle" color="success" style="font-size: 4em;"></ion-icon>
+    <h2>¡Compra exitosa!</h2>
+    <p>{{ resultado.message }}</p>
+    <ion-card *ngIf="resultado.data">
+      <ion-card-content>
+        <p *ngIf="resultado.data.email"><b>Correo:</b> {{ resultado.data.email }}</p>
+        <p *ngIf="resultado.data.order_code"><b>Código de compra:</b> {{ resultado.data.order_code }}</p>
+        <p><b>Monto pagado:</b> {{ resultado.data.amount | currency:'CLP':'symbol' }}</p>
+        <p><b>Código de autorización:</b> {{ resultado.data.authorization_code }}</p>
+        <p><b>Fecha:</b> {{ resultado.data.transaction_date | date:'medium' }}</p>
+      </ion-card-content>
+    </ion-card>
+    <ion-button expand="block" color="primary" (click)="volverATienda()">Volver a la tienda</ion-button>
+  </div>
+
+  <div *ngIf="resultado && !resultado.success" class="center-content error">
+    <ion-icon name="close-circle" color="danger"></ion-icon>
+    <h2>Pago no exitoso</h2>
+    <p>{{ resultado.message }}</p>
+    <ion-button expand="block" color="primary" (click)="volverATienda()">Volver a la tienda</ion-button>
+  </div>
+</ion-content>
+
+<style>
+.center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2em;
+}
+.success h2 {
+  color: #2dd36f;
+}
+.error h2 {
+  color: #eb445a;
+}
+ion-card {
+  width: 100%;
+  max-width: 400px;
+  margin: 1em auto;
+}
+</style> 

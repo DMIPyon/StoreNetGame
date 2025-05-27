@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title>Detalles del Juego</ion-title>
     <ion-buttons slot="end">
-      <ion-button routerLink="/cart">
+      <ion-button [routerLink]="['/cart']">
         <ion-icon name="cart-outline" style="font-size: 24px;"></ion-icon>
         <ion-badge *ngIf="cartItemCount > 0" color="danger" class="cart-badge cart-badge-animation">{{ cartItemCount }}</ion-badge>
       </ion-button>
@@ -19,7 +19,7 @@
     <p>Cargando detalles...</p>
   </div>
 
-  <div class="game-details" *ngIf="!isLoading && game">
+  <div class="game-details" *ngIf="!isLoading && !loadError && game">
     <!-- Hero Section -->
     <div class="hero-section" [style.background-image]="'url(' + (game.banner_url || 'https://via.placeholder.com/1200x600?text=No+Imagen+Disponible') + ')'">
       <div class="hero-content">
@@ -154,7 +154,7 @@
   </div>
 
   <!-- Mensaje de error si no se encuentra el juego -->
-  <div class="error-container" *ngIf="!isLoading && !game">
+  <div class="error-container" *ngIf="!isLoading && loadError">
     <ion-icon name="alert-circle-outline" size="large"></ion-icon>
     <h2>Juego no encontrado</h2>
     <p>Lo sentimos, no pudimos encontrar el juego que buscas.</p>

@@ -5,6 +5,7 @@ import { RouterModule, Router } from '@angular/router';
 import { CartService, CartItem } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
 import { AnimationController } from '@ionic/angular';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-cart',
@@ -16,6 +17,7 @@ import { AnimationController } from '@ionic/angular';
 export class CartPage implements OnInit {
   cartItems: CartItem[] = [];
   isUpdating = false;
+  isAuthenticated = false;
   
   constructor(
     private cartService: CartService,
@@ -23,10 +25,14 @@ export class CartPage implements OnInit {
     private toastController: ToastController,
     private alertController: AlertController,
     private router: Router,
-    private animationCtrl: AnimationController
+    private animationCtrl: AnimationController,
+    private http: HttpClient
   ) {}
 
   ngOnInit() {
+    this.authService.currentUser$.subscribe(user => {
+      this.isAuthenticated = !!user;
+    });
     this.loadCart();
   }
   
@@ -172,58 +178,68 @@ export class CartPage implements OnInit {
   }
 
   async checkout() {
-    if (!this.authService.isAuthenticated) {
-      const toast = await this.toastController.create({
-        message: 'Debes iniciar sesión para completar la compra',
-        duration: 2000,
-        color: 'warning',
-        position: 'bottom',
+    let email = '';
+
+    if (!this.isAuthenticated) {
+      const alert = await this.alertController.create({
+        header: 'Correo electrónico requerido',
+        message: 'Necesitamos tu correo para enviarte el recibo y el código del producto.',
+        inputs: [
+          {
+            name: 'email',
+            type: 'email',
+            placeholder: 'tu@email.com'
+          }
+        ],
         buttons: [
           {
-            text: 'Iniciar sesión',
-            role: 'cancel',
-            handler: () => {
-              this.router.navigate(['/main-login']);
+            text: 'Cancelar',
+            role: 'cancel'
+          },
+          {
+            text: 'Continuar',
+            handler: (data) => {
+              email = data.email;
+              if (!email || !this.validateEmail(email)) {
+                this.toastController.create({
+                  message: 'Por favor ingresa un correo válido.',
+                  duration: 2000,
+                  color: 'danger'
+                }).then(toast => toast.present());
+                return false;
+              }
+              this.iniciarPagoWebpay(email);
+              return true;
             }
           }
         ]
       });
-      await toast.present();
+      await alert.present();
       return;
     }
-    
-    // Mostrar un loader durante el procesamiento
-    const loading = await this.alertController.create({
-      header: 'Procesando...',
-      message: 'Estamos procesando tu compra',
-      backdropDismiss: false
+
+    email = this.authService.currentUser?.email || '';
+    this.iniciarPagoWebpay(email);
+  }
+
+  validateEmail(email: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  iniciarPagoWebpay(email: string) {
+    const amount = this.getTotal();
+    this.http.post<any>('http://localhost:3000/api/payment/webpay', { email, amount }).subscribe({
+      next: (response) => {
+        // Redirige a Webpay
+        window.location.href = `${response.url}?token_ws=${response.token}`;
+      },
+      error: () => {
+        this.toastController.create({
+          message: 'Error al iniciar el pago con Webpay',
+          duration: 3000,
+          color: 'danger'
+        }).then(toast => toast.present());
+      }
     });
-    await loading.present();
-    
-    // Simulamos un tiempo de procesamiento
-    setTimeout(async () => {
-      await loading.dismiss();
-      
-      // Aquí iría la lógica real de compra
-      const toast = await this.toastController.create({
-        message: '¡Compra realizada con éxito!',
-        duration: 3000,
-        color: 'success',
-        position: 'middle',
-        buttons: [
-          {
-            text: 'Ver mis compras',
-            handler: () => {
-              // Navegación a una hipotética página de "mis compras"
-              // this.router.navigate(['/my-orders']);
-            }
-          }
-        ]
-      });
-      await toast.present();
-      
-      // Limpiar el carrito después de la compra
-      this.cartService.clearCart().subscribe();
-    }, 2000);
   }
 } 

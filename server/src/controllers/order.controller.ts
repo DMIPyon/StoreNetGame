@@ -1,5 +1,15 @@
 import { Request, Response } from 'express';
 import { pool } from '../db/database';
+import nodemailer from 'nodemailer';
+import type { Transporter } from 'nodemailer';
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER, // tu correo
+    pass: process.env.EMAIL_PASS  // tu contraseña o app password
+  }
+});
 
 // Obtener todos los pedidos (para administradores)
 export const getOrders = async (req: Request, res: Response) => {
@@ -126,5 +136,36 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
       message: 'Error al actualizar el estado del pedido',
       error: (error as Error).message
     });
+  }
+};
+
+export const checkout = async (req: Request, res: Response) => {
+  const { email, cart } = req.body;
+
+  if (!email || !cart || !Array.isArray(cart)) {
+    return res.status(400).json({ success: false, message: 'Datos incompletos' });
+  }
+
+  // Simula un código de producto
+  const codigo = Math.random().toString(36).substring(2, 10).toUpperCase();
+
+  try {
+    await transporter.sendMail({
+      from: '"NetGames" <no-reply@netgames.com>',
+      to: email,
+      subject: '¡Gracias por tu compra!',
+      html: `
+        <h2>¡Gracias por tu compra!</h2>
+        <p>Tu código de producto es: <b>${codigo}</b></p>
+        <p>Resumen de tu compra:</p>
+        <ul>
+          ${cart.map((item: any) => `<li>${item.title} x${item.quantity} - $${item.price}</li>`).join('')}
+        </ul>
+      `
+    });
+
+    return res.json({ success: true, message: 'Correo enviado', codigo });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: 'Error enviando el correo', error: err });
   }
 }; 

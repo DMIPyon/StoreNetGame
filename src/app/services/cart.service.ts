@@ -75,7 +75,7 @@ export class CartService {
    */
   getCartItemCount(): Observable<number> {
     return this.cart$.pipe(
-      map(cart => cart?.itemCount || 0)
+      map(cart => cart?.items ? cart.items.reduce((total, item) => total + item.quantity, 0) : 0)
     );
   }
 
@@ -160,21 +160,35 @@ export class CartService {
       if (idx > -1) {
         cart.items[idx].quantity += quantity;
         cart.items[idx].itemTotal = cart.items[idx].price * cart.items[idx].quantity;
+        this.saveLocalCart(cart);
+        return new BehaviorSubject({ success: true }).asObservable();
       } else {
-        cart.items.push({
-          id: Date.now(),
-          game_id: gameId,
-          quantity,
-          title: 'Juego',
-          price: 0,
-          cover_url: '',
-          itemTotal: 0
-        });
+        // Consultar la API de juegos para obtener los datos reales
+        return this.http.get<any>(`${environment.apiUrl}/games/${gameId}`).pipe(
+          map(response => {
+            const game = response.data;
+            if (!game) {
+              throw new Error('No se encontró el juego');
+            }
+            const newItem: CartItem = {
+              id: Date.now(),
+              game_id: gameId,
+              quantity,
+              title: game.title,
+              price: game.price,
+              cover_url: game.cover_url,
+              discount: game.discount,
+              original_price: game.original_price,
+              itemTotal: game.price * quantity
+            };
+            cart.items.push(newItem);
+            cart.itemCount = cart.items.reduce((sum, i) => sum + i.quantity, 0);
+            cart.totalAmount = cart.items.reduce((sum, i) => sum + i.itemTotal, 0);
+            this.saveLocalCart(cart);
+            return { success: true };
+          })
+        );
       }
-      cart.itemCount = cart.items.reduce((sum, i) => sum + i.quantity, 0);
-      cart.totalAmount = cart.items.reduce((sum, i) => sum + i.itemTotal, 0);
-      this.saveLocalCart(cart);
-      return new BehaviorSubject({ success: true }).asObservable();
     }
     // Carrito autenticado
     this.loadingSubject.next(true);

@@ -66,7 +66,10 @@ export class GameService {
   // Obtener un juego por ID
   getGameById(id: number): Observable<Game> {
     return this.http.get<any>(`${this.apiUrl}/games/${id}`).pipe(
-      map(game => this.adaptApiGames([game])[0]),
+      map(response => {
+        const gameData = response && response.success ? response.data : response;
+        return this.adaptApiGames([gameData])[0];
+      }),
       catchError(error => {
         console.error(`Error al cargar el juego con ID ${id} desde la API:`, error);
         return throwError(() => new Error(`No se pudo cargar el juego con ID ${id}.`));

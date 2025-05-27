@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Detalle de la Orden</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrar()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content *ngIf="order">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Orden: {{ order.order_number }}</ion-card-title>
+      <ion-card-subtitle>Fecha: {{ order.created_at | date:'medium' }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-button expand="block" color="success" (click)="descargarComprobante()" style="margin-bottom: 16px;">
+        <ion-icon name="download-outline" slot="start"></ion-icon>
+        Descargar comprobante
+      </ion-button>
+      <p><b>Total:</b> ${{ order.total_amount }}</p>
+      <p>
+        <b>Estado:</b>
+        <ion-chip [color]="order.status === 'completed' ? 'success' : (order.status === 'pending' || order.status === 'processing' ? 'warning' : 'danger')" style="margin-left: 4px;">
+          {{ order.status === 'completed' ? 'Completada' : (order.status === 'pending' ? 'Pendiente' : (order.status === 'processing' ? 'Procesando' : 'Cancelada')) }}
+        </ion-chip>
+      </p>
+      <p><b>Método de pago:</b> {{ order.payment_method }}</p>
+      <p *ngIf="order.order_number"><b>Código de compra:</b> {{ order.order_number }}</p>
+      <p *ngIf="order.email"><b>Correo usado:</b> {{ order.email }}</p>
+      <ion-list *ngIf="order.items && order.items.length > 0">
+        <ion-list-header>Juegos comprados</ion-list-header>
+        <ion-item *ngFor="let item of order.items">
+          <ion-avatar slot="start" *ngIf="item.cover_url">
+            <img [src]="item.cover_url" [alt]="item.title" />
+          </ion-avatar>
+          <ion-label>
+            <h3>{{ item.title }}</h3>
+            <p>Cantidad: {{ item.quantity }}</p>
+            <p>Precio: ${{ item.price_at_purchase }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+<ion-content *ngIf="loading">
+  <ion-spinner></ion-spinner>
+</ion-content> 

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { OrderService } from '../../services/order.service';
 
 @Component({
@@ -10,7 +11,7 @@ export class OrderHistoryPage implements OnInit {
   orders: any[] = [];
   loading = true;
 
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService, private modalCtrl: ModalController) {}
 
   ngOnInit() {
     this.orderService.getOrderHistory().subscribe({
@@ -23,5 +24,14 @@ export class OrderHistoryPage implements OnInit {
         this.orders = [];
       }
     });
+  }
+
+  async verDetalle(orderId: number) {
+    const { OrderDetailModalComponent } = await import('./order-detail-modal.component');
+    const modal = await this.modalCtrl.create({
+      component: OrderDetailModalComponent,
+      componentProps: { orderId }
+    });
+    await modal.present();
   }
 } 

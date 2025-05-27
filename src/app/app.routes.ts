@@ -21,5 +21,7 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/admin/admin.page').then(m => m.AdminPage),
     canActivate: [AuthGuard, AdminGuard]
   },
+  { path: 'checkout-success', loadComponent: () => import('./pages/checkout-success/checkout-success.page').then(m => m.CheckoutSuccessPage) },
+  { path: 'pago-exito', redirectTo: 'checkout-success', pathMatch: 'full' },
   { path: '**', redirectTo: 'home' } // Ruta comodín para redirigir a home si no se encuentra la ruta
 ];

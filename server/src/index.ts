@@ -19,6 +19,7 @@ import { swaggerSpec } from './config/swagger';
 import { errorHandler } from './middlewares/error.middleware';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import paymentRoutes from './routes/payment.routes';
 
 // Configurar variables de entorno
 dotenv.config();
@@ -66,6 +67,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/payment', paymentRoutes);
 
 // Documentación de la API
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
