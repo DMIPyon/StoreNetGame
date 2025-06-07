@@ -20,6 +20,7 @@ import { errorHandler } from './middlewares/error.middleware';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import paymentRoutes from './routes/payment.routes';
+import walletRoutes from './routes/wallet.routes';
 
 // Configurar variables de entorno
 dotenv.config();
@@ -68,6 +69,7 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/wallet', walletRoutes);
 
 // Documentación de la API
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));

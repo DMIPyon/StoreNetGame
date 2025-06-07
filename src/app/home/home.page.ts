@@ -963,8 +963,13 @@ export class HomePage implements OnInit {
   }
 
   closeUserCardDropdown() {
-    this.showUserCardDropdown = false;
-    document.removeEventListener('click', this.handleOutsideClickCard, true);
+    // Introduce un pequeño retraso antes de ocultar el menú
+    // setTimeout(() => {
+      this.showUserCardDropdown = false;
+      document.removeEventListener('click', this.handleOutsideClickCard, true);
+      // Si el menú se agrega/elimina del DOM, quizás necesitas lógica adicional aquí
+      // Por ahora, solo cambiamos el estado para ocultarlo via *ngIf
+    // }, 100); // 100ms de retraso
   }
 
   handleOutsideClickCard = (event: Event) => {
@@ -975,15 +980,23 @@ export class HomePage implements OnInit {
   };
 
   goToProfile() {
-    this.router.navigate(['/profile']);
+    this.router.navigateByUrl('/profile');
   }
 
   goToOrders() {
-    this.router.navigate(['/orders']);
+    this.router.navigateByUrl('/order-history');
+    // El cierre del menú se maneja en el HTML, pero agregamos un pequeño retraso aquí también
+    setTimeout(() => {
+      this.closeUserCardDropdown();
+    }, 50);
   }
 
   goToWallet() {
-    this.router.navigate(['/wallet']);
+    this.router.navigateByUrl('/wallet');
+    // El cierre del menú se maneja en el HTML, pero agregamos un pequeño retraso aquí también
+    setTimeout(() => {
+      this.closeUserCardDropdown();
+    }, 50);
   }
 
   goToAdminPanel() {

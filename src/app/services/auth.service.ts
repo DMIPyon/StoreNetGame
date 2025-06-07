@@ -156,10 +156,7 @@ export class AuthService {
         }),
         catchError(error => {
           this.handleAuthError(error);
-          return of({
-            success: false,
-            message: error.error?.message || 'Error durante el inicio de sesión'
-          });
+          throw error;
         }),
         tap(() => this.loadingSubject.next(false))
       );

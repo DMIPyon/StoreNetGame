@@ -16,7 +16,7 @@ import {
   businessOutline, starOutline, carSportOutline, extensionPuzzleOutline,
   skullOutline, fishOutline, cubeOutline, apertureOutline, 
   radioButtonOffOutline, radioButtonOnOutline, refreshOutline,
-  cart, removeCircle, addCircle, filterOutline
+  cart, removeCircle, addCircle, filterOutline, star, chevronForward
 } from 'ionicons/icons';
 
 @Component({
@@ -51,10 +51,12 @@ export class AppComponent {
       'flash-outline': flashOutline,
       'apps-outline': appsOutline,
       'chevron-forward-outline': chevronForwardOutline,
+      'chevron-forward': chevronForward,
       'chevron-back-outline': chevronBackOutline,
       'calendar-outline': calendarOutline,
       'business-outline': businessOutline,
       'star-outline': starOutline,
+      'star': star,
       'flame-outline': flameOutline,
       'map-outline': mapOutline,
       'bulb-outline': bulbOutline,

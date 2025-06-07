@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mi Cartera</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="wallet-container">
+    <div *ngIf="isLoading" class="loading-container">
+      <ion-spinner></ion-spinner>
+      <p>Cargando datos de la cartera...</p>
+    </div>
+
+    <div *ngIf="!isLoading">
+      <h2>Saldo de la Cartera:</h2>
+      <p *ngIf="balance !== null">{{ balance | currency:'CLP':'symbol-narrow':'1.0-0' }}</p>
+      <p *ngIf="balance === null">No se pudo cargar el saldo.</p>
+
+      <h3>Historial de Transacciones:</h3>
+      <ion-list *ngIf="transactions.length > 0">
+        <ion-item *ngFor="let transaction of transactions">
+          <ion-label>
+            <h3>{{ transaction.description }}</h3>
+            <p>{{ transaction.date | date:'short' }} - {{ transaction.amount | currency:'CLP':'symbol-narrow':'1.0-0' }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      <p *ngIf="transactions.length === 0">No hay transacciones registradas.</p>
+    </div>
+  </div>
+</ion-content> 
