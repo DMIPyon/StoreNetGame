@@ -100,8 +100,6 @@ export class HomePage implements OnInit {
   
   isBannerFading: boolean = false;
   
-  isAdmin: boolean = false;
-  
   constructor(
     private gameService: GameService,
     private router: Router,
@@ -115,18 +113,22 @@ export class HomePage implements OnInit {
     this.searchSubject.pipe(debounceTime(300)).subscribe(term => {
       this.searchGames(term);
     });
-    this.authService.currentUser$.subscribe(user => {
-      this.currentUser = user;
-      this.isAuthenticated = !!user;
-      this.isAdmin = user?.role === 'admin';
-      console.log("Usuario actual:", user);
-    });
   }
   
   // Cargar todos los juegos al iniciar
   ngOnInit() {
     this.loadAllData();
     this.startBannerAutoplay();
+    
+    // Verificar estado de autenticación
+    this.isAuthenticated = this.authService.isAuthenticated;
+    this.currentUser = this.authService.currentUser;
+    
+    // Suscribirse a cambios en la autenticación
+    this.authService.currentUser$.subscribe(user => {
+      this.isAuthenticated = !!user;
+      this.currentUser = user;
+    });
     
     // Obtener categorías dinámicamente
     this.categoryService.getCategories().subscribe(cats => {
@@ -410,8 +412,8 @@ export class HomePage implements OnInit {
       // Crear una descripción personalizada en español
       if (!game.description || 
           game.description.trim() === '' || 
-          game.description === 'Sin descripción disponible' || 
-          game.description === 'Sin descripción disponible.' || 
+          game.description === 'Sin descripción disponible' ||
+          game.description === 'Sin descripción disponible.' ||
           game.description.includes('WARNING') || 
           game.description.includes('explicit') || 
           game.description.includes('nudity') ||
@@ -871,7 +873,7 @@ export class HomePage implements OnInit {
   }
 
   private normalizeString(str: string): string {
-    return str ? str.normalize('NFD').replace(/[0-\u036f]/g, '').toLowerCase().trim() : '';
+    return str ? str.normalize('NFD').replace(/[0-\u036f]/g, '').toLowerCase().trim() : '';
   }
 
   openCategoryModal() {
@@ -997,7 +999,7 @@ export class HomePage implements OnInit {
     }, 50);
   }
 
-  goToAdmin() {
+  goToAdminPanel() {
     this.router.navigate(['/admin']);
   }
 

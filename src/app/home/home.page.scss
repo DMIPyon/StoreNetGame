@@ -1813,23 +1813,3 @@ ion-badge {
   margin: 0;
   padding: 0;
 }
-
-.admin-btn {
-  background: linear-gradient(90deg, #1976d2 0%, #6a82fb 100%);
-  color: #fff;
-  font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
-  border-radius: 8px;
-  
-  &:hover {
-    background: linear-gradient(90deg, #1565c0 0%, #5c6bc0 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
-  }
-  
-  ion-icon {
-    color: #fff;
-    font-size: 1.2em;
-  }
-}

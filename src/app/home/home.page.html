@@ -257,11 +257,6 @@
       <button class="menu-item animate-menu" (click)="goToProfile(); closeUserCardDropdown()">Mi Perfil</button>
       <button class="menu-item animate-menu" (click)="goToOrders(); closeUserCardDropdown()">Mis Compras</button>
       <button class="menu-item animate-menu" (click)="goToWallet(); closeUserCardDropdown()">Mi Cartera</button>
-      <div class="menu-separator" *ngIf="isAdmin"></div>
-      <button class="menu-item animate-menu admin-btn" (click)="goToAdmin(); closeUserCardDropdown()">
-        <ion-icon name="shield-outline" style="margin-right: 8px;"></ion-icon>
-        Panel de Administración
-      </button>
       <div class="menu-separator"></div>
       <button class="logout-btn animate-menu" (click)="logout(); closeUserCardDropdown()">
         <span class="logout-icon">&#x2716;</span> Cerrar sesión
