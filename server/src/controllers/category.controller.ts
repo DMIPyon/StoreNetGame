@@ -45,10 +45,10 @@ export const getCategoryById = async (req: Request, res: Response) => {
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Categoría no encontrada' });
     }
-    res.json(result.rows[0]);
+    return res.json(result.rows[0]);
   } catch (error) {
     console.error('Error al obtener categoría:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    return res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
@@ -252,11 +252,11 @@ export const initializeCategories = async () => {
         );
       }
       
-      console.log('✅ Categorías inicializadas correctamente');
+      console.log('Categorías inicializadas correctamente');
     } else {
-      console.log('✅ Las categorías ya existen en la base de datos');
+      console.log('Las categorías ya existen en la base de datos');
     }
   } catch (error) {
-    console.error('❌ Error al inicializar categorías:', error);
+    console.error(' Error al inicializar categorías:', error);
   }
 }; 

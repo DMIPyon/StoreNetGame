@@ -1,12 +1,10 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import { Pool } from 'pg';
 import bcrypt from 'bcrypt';
 
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'netgames',
-  password: 'doma1128',
-  port: 5433,
+  connectionString: process.env['DATABASE_URL']
 });
 
 async function createAdmin() {
@@ -32,7 +30,7 @@ async function createAdmin() {
        VALUES ($1, $2, $3, $4, $5, $6, true, true)`,
       [username, email, passwordHash, firstName, lastName, role]
     );
-    console.log('✅ Usuario admin creado correctamente.');
+    console.log('Usuario admin creado correctamente.');
   } catch (error) {
     console.error('❌ Error al crear el usuario admin:', error);
   } finally {

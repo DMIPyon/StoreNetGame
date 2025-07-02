@@ -26,20 +26,22 @@ const initDatabase = async () => {
           TABLESPACE = pg_default
           CONNECTION LIMIT = -1;
         `);
-        console.log('✅ Base de datos creada correctamente');
+        console.log('Base de datos creada correctamente');
       } else {
-        console.log('✅ La base de datos ya existe');
+        console.log('La base de datos ya existe');
       }
     } finally {
       client.release();
     }
 
     // Ahora nos conectamos a la base de datos netgames
+    const password = 'doma1128';
+    console.log('Password usado:', password, typeof password);
     const netgamesPool = new Pool({
       user: 'postgres',
       host: 'localhost',
       database: 'netgames',
-      password: process.env.PGPASSWORD|| 'doma1128',
+      password: password,
       port: 5432,
     });
     // Crear tabla de usuarios mejorada

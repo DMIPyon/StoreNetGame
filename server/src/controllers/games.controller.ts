@@ -11,10 +11,10 @@ export const getGames = async (req: Request, res: Response) => {
       GROUP BY g.id, d.name
       ORDER BY g.id ASC
     `);
-    res.json(result.rows);
+    return res.json(result.rows);
   } catch (error) {
     console.error('Error al obtener juegos:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    return res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
@@ -29,17 +29,17 @@ export const getDiscountedGames = async (req: Request, res: Response) => {
        GROUP BY g.id, d.name
        ORDER BY g.discount DESC`
     );
-    res.json(result.rows);
+    return res.json(result.rows);
   } catch (error) {
     console.error('Error al obtener juegos en oferta:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    return res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
 // Obtener juegos populares (ordenados por rating)
 export const getPopularGames = async (req: Request, res: Response) => {
   try {
-    const limit = req.query.limit ? parseInt(req.query.limit as string) : 8;
+    const limit = req.query['limit'] ? parseInt(req.query['limit'] as string) : 8;
     const result = await pool.query(
       `SELECT g.*, d.name as developer, ARRAY_REMOVE(ARRAY_AGG(gc.category_id), NULL) as category_ids FROM games g
        LEFT JOIN developers d ON g.developer_id = d.id
@@ -50,10 +50,10 @@ export const getPopularGames = async (req: Request, res: Response) => {
        LIMIT $1`,
       [limit]
     );
-    res.json(result.rows);
+    return res.json(result.rows);
   } catch (error) {
     console.error('Error al obtener juegos populares:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    return res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
@@ -82,21 +82,21 @@ export const getGameById = async (req: Request, res: Response) => {
     return res.json({ success: true, data: game });
   } catch (error) {
     console.error('Error al obtener juego:', error);
-    res.status(500).json({ success: false, message: 'Error interno del servidor' });
+    return res.status(500).json({ success: false, message: 'Error interno del servidor' });
   }
 };
 
 export const searchGames = async (req: Request, res: Response) => {
-  const { q } = req.query;
+  const q = req.query['q'];
   try {
     const result = await pool.query(
       'SELECT * FROM games WHERE title ILIKE $1 OR description ILIKE $1',
       [`%${q}%`]
     );
-    res.json(result.rows);
+    return res.json(result.rows);
   } catch (error) {
     console.error('Error al buscar juegos:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    return res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
@@ -120,10 +120,10 @@ export const getGamesByCategory = async (req: Request, res: Response) => {
     }
     // Si no hay parámetros, devolvemos todos los juegos
     const result = await pool.query('SELECT * FROM games ORDER BY title ASC');
-    res.json(result.rows);
+    return res.json(result.rows);
   } catch (error) {
     console.error('Error al obtener juegos por categoría:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    return res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
@@ -143,12 +143,12 @@ export const createGame = async (req: Request, res: Response) => {
       [title, description, price, category, category_id, cover_url, banner_url]
     );
     
-    res.status(201).json({ 
+    return res.status(201).json({ 
       message: 'Juego creado correctamente',
       game: result.rows[0]
     });
   } catch (error) {
     console.error('Error al crear juego:', error);
-    res.status(500).json({ error: 'Error al crear juego' });
+    return res.status(500).json({ error: 'Error al crear juego' });
   }
 }; 

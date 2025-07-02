@@ -33,7 +33,7 @@ const dropTables = async () => {
       DROP TABLE IF EXISTS wishlists CASCADE;
       DROP TABLE IF EXISTS addresses CASCADE;
     `);
-    console.log('✅ Todas las tablas han sido eliminadas correctamente.');
+    console.log('Todas las tablas han sido eliminadas correctamente.');
   } catch (error) {
     console.error('❌ Error al eliminar las tablas:', error);
   } finally {

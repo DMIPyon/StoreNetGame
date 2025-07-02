@@ -30,10 +30,9 @@ export const authenticateJWT = (req: Request, res: Response, next: NextFunction)
   const token = authHeader.split(' ')[1];
   
   try {
-    // console.log('JWT_SECRET:', process.env.JWT_SECRET); // DEPURACIÓN
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secretkey') as UserPayload;
+    const decoded = jwt.verify(token, process.env['JWT_SECRET'] || 'secretkey') as UserPayload;
     req.user = decoded;
-    next();
+    return next();
   } catch (error) {
     return res.status(401).json({
       success: false,
@@ -73,11 +72,10 @@ export const isAdmin = async (req: Request, res: Response, next: NextFunction) =
         message: 'Acceso denegado. Se requieren permisos de administrador'
       });
     }
-    
-    next();
+    return next();
   } catch (error) {
     console.error('Error al verificar permisos de administrador:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Error al verificar permisos',
       error: (error as Error).message

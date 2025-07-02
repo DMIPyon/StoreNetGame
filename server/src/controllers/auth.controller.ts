@@ -8,7 +8,7 @@ import validator from 'validator';
 dotenv.config();
 
 // Clave secreta para JWT
-const JWT_SECRET = process.env.JWT_SECRET || 'netgames_secret_key_2024';
+const JWT_SECRET = process.env['JWT_SECRET'] || 'netgames_secret_key_2024';
 
 /**
  * Controlador para registro de usuarios
@@ -74,7 +74,7 @@ export const register = async (req: Request, res: Response) => {
       { expiresIn: '7d' }
     );
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: 'Usuario registrado exitosamente',
       data: {
@@ -92,7 +92,7 @@ export const register = async (req: Request, res: Response) => {
 
   } catch (error) {
     console.error('Error en registro:', error);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       success: false, 
       message: 'Error al registrar usuario',
       error: (error as Error).message
@@ -135,7 +135,7 @@ export const login = async (req: Request, res: Response) => {
       { expiresIn: '7d' }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Inicio de sesión exitoso',
       data: {
@@ -154,7 +154,7 @@ export const login = async (req: Request, res: Response) => {
 
   } catch (error) {
     console.error('Error en inicio de sesión:', error);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       success: false, 
       message: 'Error al iniciar sesión',
       error: (error as Error).message
@@ -189,7 +189,7 @@ export const getProfile = async (req: Request, res: Response) => {
 
     const user = result.rows[0];
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: {
         id: user.id,
@@ -204,7 +204,7 @@ export const getProfile = async (req: Request, res: Response) => {
 
   } catch (error) {
     console.error('Error al obtener perfil:', error);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       success: false, 
       message: 'Error al obtener perfil de usuario',
       error: (error as Error).message
@@ -249,7 +249,7 @@ export const updateProfile = async (req: Request, res: Response) => {
     if (updateFields.length === 0) {
       return res.status(400).json({
         success: false,
-        message: 'No se proporcionaron campos para actualizar'
+        message: 'No hay campos para actualizar'
       });
     }
 
@@ -270,24 +270,17 @@ export const updateProfile = async (req: Request, res: Response) => {
 
     const updatedUser = result.rows[0];
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: 'Perfil actualizado exitosamente',
-      data: {
-        id: updatedUser.id,
-        username: updatedUser.username,
-        email: updatedUser.email,
-        firstName: updatedUser.first_name,
-        lastName: updatedUser.last_name,
-        profileImage: updatedUser.profile_image
-      }
+      message: 'Perfil actualizado correctamente',
+      data: updatedUser
     });
 
   } catch (error) {
     console.error('Error al actualizar perfil:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error al actualizar perfil de usuario',
+    return res.status(500).json({ 
+      success: false, 
+      message: 'Error al actualizar perfil',
       error: (error as Error).message
     });
   }
@@ -348,15 +341,15 @@ export const changePassword = async (req: Request, res: Response) => {
       [newPasswordHash, userId]
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: 'Contraseña actualizada exitosamente'
+      message: 'Contraseña actualizada correctamente'
     });
 
   } catch (error) {
     console.error('Error al cambiar contraseña:', error);
-    res.status(500).json({
-      success: false,
+    return res.status(500).json({ 
+      success: false, 
       message: 'Error al cambiar contraseña',
       error: (error as Error).message
     });

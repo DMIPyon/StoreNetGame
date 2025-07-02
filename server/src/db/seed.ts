@@ -5,7 +5,7 @@ const pool = new Pool({
   host: 'localhost',
   database: 'netgames',
   password: 'doma1128',
-  port: 5433,
+  port: 5432,
 });
 
 async function seed() {
@@ -528,7 +528,7 @@ async function seed() {
       }
     }
 
-    console.log('✅ Seed completado con 20 juegos populares.');
+    console.log('Seed completado con 20 juegos populares.');
   } catch (error) {
     console.error('❌ Error en el seed:', error);
   } finally {

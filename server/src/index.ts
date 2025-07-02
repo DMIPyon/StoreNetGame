@@ -35,7 +35,7 @@ if (missingEnv.length > 0) {
 
 // Inicializar app Express
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env['PORT'] || 3000;
 
 // Middleware
 app.use(cors());
@@ -93,25 +93,27 @@ app.get('/', async (req, res, next) => {
 // Manejador de errores global
 app.use(errorHandler);
 
-// Iniciar servidor
-app.listen(PORT, async () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
-  
-  // Inicializar la base de datos si es necesario
-  try {
-    if (process.env.INIT_DB === 'true') {
-      console.log('Inicializando base de datos...');
-      await initDatabase();
-      console.log('Base de datos inicializada correctamente');
-    }
-    
-    // Inicializar categorías predefinidas
-    await initializeCategories();
-  } catch (error) {
-    console.error('Error durante la inicialización:', error);
-  }
+// Exportar la app para pruebas
+export default app;
 
-  console.log('JWT_SECRET:', process.env.JWT_SECRET);
-  console.log('RAWG_API_KEY:', process.env.RAWG_API_KEY);
-  console.log('DATABASE_URL:', process.env.DATABASE_URL);
-}); 
+// Iniciar servidor solo si se ejecuta directamente
+if (require.main === module) {
+  app.listen(PORT, async () => {
+    console.log(`Servidor corriendo en el puerto ${PORT}`);
+    // Inicializar la base de datos si es necesario
+    try {
+      if (process.env['INIT_DB'] === 'true') {
+        console.log('Inicializando base de datos...');
+        await initDatabase();
+        console.log('Base de datos inicializada correctamente');
+      }
+      // Inicializar categorías predefinidas
+      await initializeCategories();
+    } catch (error) {
+      console.error('Error durante la inicialización:', error);
+    }
+    console.log('JWT_SECRET:', process.env['JWT_SECRET']);
+    console.log('RAWG_API_KEY:', process.env['RAWG_API_KEY']);
+    console.log('DATABASE_URL:', process.env['DATABASE_URL']);
+  });
+} 

@@ -145,7 +145,7 @@ export const addItemToCart = async (req: Request, res: Response) => {
       [cartId]
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Producto añadido al carrito',
       data: {
@@ -156,7 +156,7 @@ export const addItemToCart = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('Error al añadir item al carrito:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Error al añadir producto al carrito',
       error: (error as Error).message
@@ -210,7 +210,7 @@ export const updateCartItem = async (req: Request, res: Response) => {
       [itemResult.rows[0].cart_id]
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Cantidad actualizada',
       data: {
@@ -222,7 +222,7 @@ export const updateCartItem = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('Error al actualizar item del carrito:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Error al actualizar la cantidad',
       error: (error as Error).message
@@ -268,15 +268,19 @@ export const removeFromCart = async (req: Request, res: Response) => {
       [itemResult.rows[0].cart_id]
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: 'Producto eliminado del carrito'
+      message: 'Item eliminado del carrito',
+      data: {
+        itemId,
+        gameTitle: itemResult.rows[0].title
+      }
     });
   } catch (error) {
     console.error('Error al eliminar item del carrito:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: 'Error al eliminar producto del carrito',
+      message: 'Error al eliminar item del carrito',
       error: (error as Error).message
     });
   }
@@ -317,15 +321,15 @@ export const clearCart = async (req: Request, res: Response) => {
       [cartId]
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: 'Carrito vaciado correctamente'
+      message: 'Carrito limpiado correctamente'
     });
   } catch (error) {
-    console.error('Error al vaciar el carrito:', error);
-    res.status(500).json({
+    console.error('Error al limpiar carrito:', error);
+    return res.status(500).json({
       success: false,
-      message: 'Error al vaciar el carrito',
+      message: 'Error al limpiar el carrito',
       error: (error as Error).message
     });
   }
@@ -351,13 +355,15 @@ export const checkAuthStatus = async (req: Request, res: Response) => {
     // Si hay token, el usuario está autenticado
     return res.status(200).json({
       success: true,
-      isAuthenticated: true
+      isAuthenticated: true,
+      message: 'Usuario autenticado',
+      user: req.user
     });
   } catch (error) {
-    console.error('Error al verificar estado de autenticación:', error);
-    res.status(500).json({
+    console.error('Error al verificar autenticación:', error);
+    return res.status(500).json({
       success: false,
-      message: 'Error al verificar estado de autenticación',
+      message: 'Error al verificar autenticación',
       error: (error as Error).message
     });
   }

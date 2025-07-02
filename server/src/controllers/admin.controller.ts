@@ -31,35 +31,31 @@ export const getAllUsers = async (req: Request, res: Response) => {
  */
 export const getUserById = async (req: Request, res: Response) => {
   try {
-    const userId = parseInt(req.params.id);
-
+    const userId = parseInt(req.params['id']);
     if (isNaN(userId)) {
       return res.status(400).json({
         success: false,
         message: 'ID de usuario inválido'
       });
     }
-
     const result = await pool.query(
       `SELECT id, username, email, first_name, last_name, profile_image, role, created_at
        FROM users WHERE id = $1`,
       [userId]
     );
-
     if (result.rows.length === 0) {
       return res.status(404).json({
         success: false,
         message: 'Usuario no encontrado'
       });
     }
-
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: result.rows[0]
     });
   } catch (error) {
     console.error('Error al obtener usuario:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Error al obtener usuario',
       error: (error as Error).message
@@ -72,64 +68,53 @@ export const getUserById = async (req: Request, res: Response) => {
  */
 export const updateUser = async (req: Request, res: Response) => {
   try {
-    const userId = parseInt(req.params.id);
+    const userId = parseInt(req.params['id']);
     const { username, email, firstName, lastName, profileImage, role } = req.body;
-
     if (isNaN(userId)) {
       return res.status(400).json({
         success: false,
         message: 'ID de usuario inválido'
       });
     }
-
     // Verificar si el usuario existe
     const checkUser = await pool.query(
       'SELECT id FROM users WHERE id = $1',
       [userId]
     );
-
     if (checkUser.rows.length === 0) {
       return res.status(404).json({
         success: false,
         message: 'Usuario no encontrado'
       });
     }
-
     // Actualizar solo los campos proporcionados
     let updateQuery = 'UPDATE users SET ';
     const updateValues = [];
     const updateFields = [];
-
     if (username !== undefined) {
       updateFields.push(`username = $${updateValues.length + 1}`);
       updateValues.push(username);
     }
-    
     if (email !== undefined) {
       updateFields.push(`email = $${updateValues.length + 1}`);
       updateValues.push(email);
     }
-    
     if (firstName !== undefined) {
       updateFields.push(`first_name = $${updateValues.length + 1}`);
       updateValues.push(firstName);
     }
-    
     if (lastName !== undefined) {
       updateFields.push(`last_name = $${updateValues.length + 1}`);
       updateValues.push(lastName);
     }
-    
     if (profileImage !== undefined) {
       updateFields.push(`profile_image = $${updateValues.length + 1}`);
       updateValues.push(profileImage);
     }
-    
     if (role !== undefined) {
       updateFields.push(`role = $${updateValues.length + 1}`);
       updateValues.push(role);
     }
-
     // Si no hay campos para actualizar
     if (updateFields.length === 0) {
       return res.status(400).json({
@@ -137,23 +122,20 @@ export const updateUser = async (req: Request, res: Response) => {
         message: 'No se proporcionaron campos para actualizar'
       });
     }
-
     // Completar la consulta
     updateQuery += updateFields.join(', ');
     updateQuery += ` WHERE id = $${updateValues.length + 1} RETURNING id, username, email, first_name, last_name, profile_image, role`;
     updateValues.push(userId);
-
     // Ejecutar la actualización
     const result = await pool.query(updateQuery, updateValues);
-
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Usuario actualizado exitosamente',
       data: result.rows[0]
     });
   } catch (error) {
     console.error('Error al actualizar usuario:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Error al actualizar usuario',
       error: (error as Error).message
@@ -166,28 +148,24 @@ export const updateUser = async (req: Request, res: Response) => {
  */
 export const deleteUser = async (req: Request, res: Response) => {
   try {
-    const userId = parseInt(req.params.id);
-
+    const userId = parseInt(req.params['id']);
     if (isNaN(userId)) {
       return res.status(400).json({
         success: false,
         message: 'ID de usuario inválido'
       });
     }
-
     // Verificar si el usuario existe
     const checkUser = await pool.query(
       'SELECT id FROM users WHERE id = $1',
       [userId]
     );
-
     if (checkUser.rows.length === 0) {
       return res.status(404).json({
         success: false,
         message: 'Usuario no encontrado'
       });
     }
-
     // Proteger contra eliminación de usuario administrador principal (ID 1)
     if (userId === 1) {
       return res.status(403).json({
@@ -195,20 +173,18 @@ export const deleteUser = async (req: Request, res: Response) => {
         message: 'No se puede eliminar al administrador principal'
       });
     }
-
     // Eliminar el usuario
     await pool.query(
       'DELETE FROM users WHERE id = $1',
       [userId]
     );
-
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Usuario eliminado exitosamente'
     });
   } catch (error) {
     console.error('Error al eliminar usuario:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Error al eliminar usuario',
       error: (error as Error).message
