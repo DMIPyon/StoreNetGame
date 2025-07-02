@@ -39,8 +39,8 @@ const initDatabase = async () => {
       user: 'postgres',
       host: 'localhost',
       database: 'netgames',
-      password: 'doma1128',
-      port: 5433,
+      password: process.env.PGPASSWORD|| 'doma1128',
+      port: 5432,
     });
     // Crear tabla de usuarios mejorada
     await netgamesPool.query(`

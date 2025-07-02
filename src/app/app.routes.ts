@@ -25,7 +25,7 @@ export const routes: Routes = [
   { path: 'pago-exito', redirectTo: 'checkout-success', pathMatch: 'full' },
   { path: '**', redirectTo: 'home' },   {
     path: 'wallet',
-    loadComponent: () => import('./src/app/pages/wallet/wallet.page').then( m => m.WalletPage)
+    loadComponent: () => import('./pages/wallet/wallet.page').then( m => m.WalletPage)
   }
 // Ruta comodín para redirigir a home si no se encuentra la ruta
 ];
